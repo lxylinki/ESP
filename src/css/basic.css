@@ -1,0 +1,161 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+ul{
+  list-style-type: none;
+}
+
+li {
+	list-style-type: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+* {
+  font-family: "Microsoft YaHei";
+}
+
+select {
+  border-color: #d7d7d7;
+}
+
+
+/* operations text buttons */
+.op{
+    position: relative;
+    bottom: 5px;
+    font-size: 14px;
+    /*color: #333333;*/
+ }    
+
+.selectclass {
+  height: 60px;
+  background: #f7f7f7;
+  /*must set this*/
+  overflow: hidden;
+  width: 100%;
+}
+
+.pagetitle {
+  font-weight: bold;
+  font-size: 20px;
+  color: #333333;
+  text-align: left;
+}
+
+/*element ui*/
+.el-main{
+	background: #ffffff;
+}
+
+.el-input__inner{
+  height: 30px;
+  width: 190px;
+  border-radius: 0;
+}
+
+.el-table td {
+  height: 40px;
+  /*text-overflow: ellipsis !important;*/
+  text-align: center;
+}
+
+.el-table__row .cell {
+  line-height: 20px;
+  font-size: 14px;
+  height: 19px;
+  /*text-align: center;*/
+}
+
+.el-button {
+	line-height: 0;
+}
+
+/* Table Head */
+.el-table th{
+  background:#f7f7f7;
+  font-size: 14px;
+  color: black;
+  line-height: 0px;
+  text-align: center;
+}
+
+.el-table__header .cell {
+  line-height: 20px;
+  height: 18px;
+  /*text-align: center;*/
+}
+
+.el-table__body tr.current-row>td {
+  background: #f7f8fc !important;
+}
+
+/*添加按钮颜色*/
+.addbtn, .addbtn:hover, .addbtn:active, .addbtn:focus {
+  background: #5a98de;
+  color: #ffffff;
+  border-color: #5a98de;
+} 
+
+.addbtn {
+  font-size: 14px;
+  font-family: "Microsoft YaHei";
+  width: 97px;
+  height: 34px;
+}
+
+/*搜索框样式*/
+
+.searchwindow {
+   display: flex;
+   float: right; 
+   margin: 20px;
+   /*background: grey;*/
+}
+
+.searchbtn {
+  width: 30px; 
+  height: 30px; 
+  background: #31313c; 
+  border: solid #31313c;
+  /*position: absolute;*/
+  top: 218px;
+  right: 40px;
+}
+
+.longinput {
+  width: 283px;
+  height: 30px;
+  border: 1px solid #d7d7d7;
+  padding-left: 15px;
+}
+
+/*Records*/
+.el-progress--circle .el-progress__text {
+  font-weight: bold;
+  color: #333333;
+  /*overwrite default inline style 16px*/
+  font-size: 30px !important;
+}
+
+.el-progress-bar__inner, .el-progress-bar__outer {
+  border-radius: 0;
+}
+
+.el-progress-bar__innerText {
+  opacity: 0;
+}
+
+.el-textarea__inner {
+  width: 576px;
+  height: 140px;
+}
+
+
+
+
+
