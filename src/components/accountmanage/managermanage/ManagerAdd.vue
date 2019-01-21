@@ -9,14 +9,13 @@
 
 		<div>
 			<div class='texts'>
+				<!--
 				<div> 学校名称： 
 					<input class="longinput" type="text" v-model="schname">
-					<!--<el-input class="usrenter" v-model="usrid" placeholder=""></el-input>-->
 					<span class="redalert" v-show="!schname">*</span>
 					<span class="whitedefault"v-show="schname">*</span>
-					<!---->
 				</div>
-				<div style="height: 30px;"></div>
+				<div style="height: 30px;"></div>-->
 				<div> 用户名： 
 					<input class="longinput" type="text" v-model="username">
 					<!--<el-input class="usrenter" v-model="usrid" placeholder=""></el-input>-->
@@ -76,7 +75,7 @@
 	export default {
 		data(){
 			return {
-				schname: '',
+				//schname: '',
 				username: '',
 				password: '',
 				realname: '',

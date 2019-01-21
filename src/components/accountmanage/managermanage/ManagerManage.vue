@@ -242,7 +242,7 @@
 						}
 					}
 					this.$http.post(api, data).then((resp)=>{
-						console.log(resp);
+						//console.log(resp);
 						layer.close(this.loading);
 						resolve(resp);
 						
