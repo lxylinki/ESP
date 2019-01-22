@@ -65,6 +65,10 @@
 		      prop="status"
 		      label="状态"
 		      min-width="200">
+		      <template slot-scope="scope">
+		      	<span v-if="scope.row.status == 1">启用</span>
+		      	<span class="notinuse" v-if="scope.row.status == 0">失效</span>
+		      </template>
 		    </el-table-column>
 
 		    <el-table-column
@@ -306,7 +310,11 @@
   	bottom: 5px;
   	vertical-align: top;
   	line-height: 0;
- }  	
+ }  
+
+ .notinuse {
+ 	color: #a1a1a1;
+ }	
 
 
 </style>

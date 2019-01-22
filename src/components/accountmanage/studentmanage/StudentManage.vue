@@ -232,7 +232,7 @@
 			},
 
 			searchReq(){
-				this.reqData(this.search_state,'','',this.curPage);
+				this.reqData(this.search_state,'','', 1);
 			},
 
 			filterStatus(){
