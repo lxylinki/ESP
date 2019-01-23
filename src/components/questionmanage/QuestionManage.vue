@@ -448,21 +448,36 @@
 			} else {
 				this.reqExpData('', 1);
 				this.exp_value = this.$store.state.exp_id;
-				//console.log(this.exp_value);
 				this.reqExamData('', this.exp_value, 1);
 				this.exam_value = this.$store.state.exam_id;
 				
-				//this.selectExam();
-				var before = this.$store.state.row_num_before;
-				var after = this.$store.state.row_num_after;
-				this.rowsPerPage = this.$store.state.rows_per_page;
-				
-				var page;
-				if (after>before) {
-					page = Math.ceil(after / this.rowsPerPage);
+				var name = this.$store.state.last_author;
+
+				if(name === this.mod_name) {
+					var before = this.$store.state.row_num_before,
+						after = this.$store.state.row_num_after,
+						pagesize = this.$store.state.rows_per_page,
+						keyword = this.$store.state.current_search,
+						curpage = this.$store.state.current_page;
+
+					if (pagesize > 0) {
+						this.rowsPerPage = pagesize;
+					}
+
+					if (keyword) {
+						this.search_state = keyword;
+					}
+
+					//item added: default append to list end
+					if(after > before) {
+						this.curPage = Math.ceil(after / this.rowsPerPage);	
+
+					} else if(curpage > 0) {
+						this.curPage = curpage;
+					} 				
 				}
 
-				this.reqUnQsData(this.exam_value, 1, '', page);
+				this.reqUnQsData(this.exam_value, 1, '', this.curPage);
 				this.reqSlQsData(this.exam_value, 1, '', 1);				
 			}
 		}

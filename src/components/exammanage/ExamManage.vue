@@ -323,30 +323,30 @@
 		mounted(){
 			this.reqExpData('', 0);
 
-			var before = this.$store.state.row_num_before;
-			var after = this.$store.state.row_num_after;
-			var lastpage = this.$store.state.current_page;
-
-			//console.log(before, after, lastpage);
-
-			if (this.$store.state.rows_per_page > 0) {
-				this.rowsPerPage = this.$store.state.rows_per_page;
-			}
-
-			//if new row added at the end
-			if (after>before) {
-				this.curPage = Math.ceil(after / this.rowsPerPage);
-
-			} else if(lastpage > 0) {
-				this.curPage = this.$store.state.current_page;
-				//sometimes this will be 2
-				//console.log(this.$store.state.current_page);
-			}
-
 			var name = this.$store.state.last_author;
 
-			if (!(name === this.mod_name)) {
-				this.curPage = 1;
+			if(name === this.mod_name) {
+				var before = this.$store.state.row_num_before,
+					after = this.$store.state.row_num_after,
+					pagesize = this.$store.state.rows_per_page,
+					keyword = this.$store.state.current_search,
+					curpage = this.$store.state.current_page;
+
+				if (pagesize > 0) {
+					this.rowsPerPage = pagesize;
+				}
+
+				if (keyword) {
+					this.search_state = keyword;
+				}
+
+				//item added: default append to list end
+				if(after > before) {
+					this.curPage = Math.ceil(after / this.rowsPerPage);	
+
+				} else if(curpage > 0) {
+					this.curPage = curpage;
+				} 				
 			}
 
 			this.reqData(this.search_state, null, this.curPage);
