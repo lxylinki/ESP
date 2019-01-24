@@ -61,7 +61,7 @@
 				id:'',
 				expname:'',
 				note:'',
-				ufile:'',
+				ufile:null,
 				exp_row:{}
 			}
 		},
