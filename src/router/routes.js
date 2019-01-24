@@ -85,7 +85,7 @@ const myRoutes = [
 		
 
 		{path: '/expmanage', meta: {title:'实验管理'}, component: ExpManage},
-		{path: '/ExpAdd', meta: {title:'实验管理'}, component: ExpAdd},
+		{path: '/expadd', meta: {title:'实验管理'}, component: ExpAdd},
 		{path: '/expedit',  meta: {title:'实验管理'}, component: ExpEdit},
 
 

@@ -167,7 +167,7 @@
 
 		methods: {
 			addExp(){
-				this.$router.push('/expupload');
+				this.$router.push('/expadd');
 			},
 
 			editRow(row){
