@@ -1,7 +1,7 @@
 <template>
 	<div class="nav">
 		<ul class="asideMenu">
-          	<li v-for="(item,index) in menuList" v-show="contains(curGroup, item.userGroup)">
+          	<li v-for="(item,index) in menuList" v-show="item.userGroup.includes(curGroup)">
 				<div class="oneMenu" v-on:click="showToggle(item)">
 
 	                <a class="oneMenuText" 
@@ -49,15 +49,6 @@
 	      showPage(url){
 	      	this.$router.push(url);
 	      },
-
-	      contains(item, arr) {
-	      	for(var i=0; i<arr.length; i++) {
-	      		if(item == arr[i]) {
-	      			return true;
-	      		}
-	      	}
-	      	return false;
-	      }
 		},
 
 		mounted(){
