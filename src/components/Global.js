@@ -24,14 +24,17 @@
 	const student_delete = url_prefix + 'user/student/delete';
 
 
-	const exp_list = url_prefix + 'esp_admin/experiment/search';
+	//const exp_list = url_prefix + 'esp_admin/experiment/search';
+	const exp_list = url_prefix + 'esp_admin/experiment-assign/assign-list';
+	const exp_tlist = url_prefix + 'esp_admin/experiment-assign/teacher-list?=';
 	const exp_check = url_prefix + 'esp_admin/experiment/questions';
 	const exp_create = url_prefix + 'esp_admin/experiment/create';
 	const exp_update = url_prefix + 'esp_admin/experiment/update';
 	const exp_delete = url_prefix + 'esp_admin/experiment/delete';
 
 
-	const exam_list = url_prefix + 'esp_admin/exam/search';
+	//const exam_list = url_prefix + 'esp_admin/exam/search';
+	const exam_list = url_prefix + '/esp_admin/examine/list';
 	const exam_create = url_prefix + 'esp_admin/exam/create';
 	const exam_update = url_prefix + 'esp_admin/exam/update';
 	const exam_delete = url_prefix + 'esp_admin/exam/delete';
@@ -65,7 +68,6 @@
 	const teacher_group = 2;
 	const student_group = 3;
 
-
 	export default {
 		url_prefix,
 		
@@ -89,6 +91,7 @@
 		student_delete,
 
 		exp_list,
+		exp_tlist,
 		exp_check,
 		exp_create,
 		exp_update,

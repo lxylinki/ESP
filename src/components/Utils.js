@@ -2,10 +2,25 @@ import RSAKey from '@/assets/js/rsa.min.js';
 import Base from '@/assets/js/base64.js';
 import global_ from '@/components/Global.js';
 
+function lalert(text) {
+	layer.alert(text, {title:'提示', area:['280px','190px']});
+}
+
+function err_process(err, text){
+	//console.log(err);
+	if(text) {
+		lalert(text);
+	}
+
+	if (err.body.error == -403 || err.status == 403 || err.status == 401) {
+		this.$router.push('/login');
+	}
+}
+
 export default {
-	lalert(text) {
-		layer.alert(text, {title:'提示', area:['280px','190px']});
-	},
+	lalert,
+
+	err_process,
 
 	lconfirm(text, func) {
 		layer.confirm(text, {title:'提示', area:['280px','190px']}, func);		
@@ -35,6 +50,9 @@ export default {
 	},
 
 	convTime(ntime) {
+		function add0(m){
+			return m<10?'0'+m:m 
+		}
 		var unixTime = new Date(ntime * 1000);
 		
 		var y = unixTime.getFullYear();
@@ -44,13 +62,38 @@ export default {
 		var mn = unixTime.getMinutes();
 
 		var commonTime = y + '-'
-		               + this.add0(m) + '-'
-		               + this.add0(d) + ' '
-		               + this.add0(h) + ':' 
-		               + this.add0(mn);
-		               
+		               + add0(m) + '-'
+		               + add0(d) + ' '
+		               + add0(h) + ':' 
+		               + add0(mn);
+		
 		return commonTime;
 	},
+
+	//login check status
+	login_check_status(){
+		var profile = global_.status_check;
+
+		this.$http.post(profile, {}).then((resp)=>{
+			this.$router.push('/expmanage');
+
+		}, (err)=>{
+			//stay at login
+			//err_process.call(this, err, '');
+		});
+	},	
+
+	page_check_status(){
+		return new Promise((resolve, reject)=>{
+			var profile = global_.status_check;
+			this.$http.post(profile, {}).then((resp)=>{
+				resolve(resp);
+			}, (err)=>{
+				err_process.call(this, err, '');
+			});
+		});
+	},	
+
 
 	reqExpList(keyword, page){
 		return new Promise((resolve, reject)=>{

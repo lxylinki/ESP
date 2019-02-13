@@ -189,7 +189,7 @@
 
 		methods: {
 			check_status(){
-				var profile = global_.status_check;
+				let profile = global_.status_check;
 
 				this.$http.post(profile, {}).then((resp)=>{
 
@@ -222,6 +222,7 @@
 				}, (err)=>{
 					layer.alert('请求登陆状态失败', 
 						{title:'提示', area:['280px','190px']});
+					
 					console.log(err);
 					if (err.status == 403) {
 						this.$router.push('/login');

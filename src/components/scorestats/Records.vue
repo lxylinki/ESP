@@ -243,25 +243,6 @@
 				return m<10?'0'+m:m 
 			},
 
-			convTime(ntime) {
-				//var commonTime = (new Date(ntime)).toLocaleString();
-				var unixTime = new Date(ntime * 1000);
-				
-				var y = unixTime.getFullYear();
-				var m = unixTime.getMonth()+1;
-				var d = unixTime.getDate();
-				var h = unixTime.getHours();
-				var mn = unixTime.getMinutes();
-
-				var commonTime = y + '年'
-				               + this.add0(m) + '月'
-				               + this.add0(d) + '日' + '<br>'
-				               + this.add0(h) + ':' 
-				               + this.add0(mn);
-				               
-				return commonTime;
-			},
-
 			convEndTime(ntime) {
 				var unixTime = new Date(ntime * 1000);
 				var commonTime = this.add0(unixTime.getHours()) + ':'
@@ -275,7 +256,7 @@
 				this.buttons = [false, false, false, false, false];
 				for(var i=0; i<this.records.length; i++) {
 					this.buttons[i] = true;
-					this.labels[i] = this.convTime(Number(this.records[i].created_at));
+					this.labels[i] = Utils.convTime.call(this, Number(this.records[i].created_at));
 				}
 			},
 

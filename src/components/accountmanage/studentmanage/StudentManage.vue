@@ -239,10 +239,6 @@
 				this.reqData(this.search_state, '', '', 1);
 			},
 
-			add0(m){
-				return m<10?'0'+m:m 
-			},
-
 			transTime(ntime){
 				return Utils.convTime.call(this, ntime);
 			},

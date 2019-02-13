@@ -6,6 +6,7 @@ Vue.use(Vuex);
 
 var state = {
 	user_group: 0,
+	
 	//component which does the change
 	last_author: '',
 

@@ -58,7 +58,7 @@
 		    </el-table-column>
 		    
 		    <el-table-column
-		      prop="join_count"
+		      prop="learn_count"
 		      label="学习人次"
 		      min-width="300">
 		    </el-table-column>
@@ -161,7 +161,7 @@
 
 				],
 				tableData: [],
-				loading: null																				
+				loading: null																			
 			}
 		},
 
@@ -226,9 +226,16 @@
 			},
 		    
 		    // request one page 
-		    reqData(keyword, page){
+		    reqData(keyword, page, ugroup){
+		    	let api_prefix = global_.exp_list;
+
+		    	if(ugroup == global_.teacher_group){
+		    		api_prefix = global_.exp_tlist;
+		    	} 
+
 			    //list request
-			    var list_api = global_.exp_list
+			    //console.log(api_prefix);
+			    var list_api = api_prefix
 							 + '?page=' 
 							 + page 
 							 + '&pagesize=' 
@@ -261,6 +268,15 @@
 			    });  	
 		     },
 
+		     reqList(keyword, page){
+				asyncReq.call(this);
+				async function asyncReq(){
+					let resp = await Utils.page_check_status.call(this);
+					let ugroup = resp.body.group;
+					this.reqData(keyword, page, ugroup);
+				}		     	
+		     },
+
 		     searchReq(){
 		     	this.reqData(this.search_state, 1);
 		     },
@@ -270,8 +286,7 @@
 		     	if(e.keyCode == 13) {
 		     		this.searchReq();
 		     	}
-		     }
-
+		     },
 		},
 		
 		beforeMount(){
@@ -279,10 +294,13 @@
 		},
 
 		mounted(){
-			var name = this.$store.state.last_author;
+			Utils.page_check_status.call(this);
+			let name = this.$store.state.last_author;
+			//will disappear after page refresh...
+			//this.user_group = this.$store.state.user_group;
 
 			if(name === this.mod_name) {
-				var before = this.$store.state.row_num_before,
+				let before = this.$store.state.row_num_before,
 					after = this.$store.state.row_num_after,
 					pagesize = this.$store.state.rows_per_page,
 					keyword = this.$store.state.current_search,
@@ -305,7 +323,7 @@
 				} 				
 			}
 
-			this.reqData(this.search_state, this.curPage);
+			this.reqList(this.search_state, this.curPage);
 			//layer.close(this.loading);
 		}
 	}

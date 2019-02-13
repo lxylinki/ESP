@@ -41,15 +41,17 @@
 	//import {setCookie, getCookie} from '../../assets/js/cookie.js';
 	import RSAKey from '../../assets/js/rsa.min.js'
 	import Base from '../../assets/js/base64.js'
+	import Utils from '../Utils.js';
 
 	export default {
 		mounted(){
+			Utils.login_check_status.call(this);
+			document.querySelector('.usrid').focus();
 			/*
 			if(getCookie('username')){
 				this.$router.push('/managermanage');
 			}*/
 			//this.check_status();
-
 		},
 
 		data(){
@@ -136,7 +138,7 @@
 							
 				}
 			}
-		}
+		},
 	}
 </script>
 
