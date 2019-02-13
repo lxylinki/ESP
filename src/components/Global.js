@@ -26,7 +26,8 @@
 
 	//const exp_list = url_prefix + 'esp_admin/experiment/search';
 	const exp_list = url_prefix + 'esp_admin/experiment-assign/assign-list';
-	const exp_tlist = url_prefix + 'esp_admin/experiment-assign/teacher-list?=';
+	const exp_tlist = url_prefix + 'esp_admin/experiment-assign/teacher-list';
+	const exp_stlist = url_prefix + 'esp_admin/experiment-assign/list';
 	const exp_check = url_prefix + 'esp_admin/experiment/questions';
 	const exp_create = url_prefix + 'esp_admin/experiment/create';
 	const exp_update = url_prefix + 'esp_admin/experiment/update';

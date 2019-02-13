@@ -225,22 +225,28 @@
 				});	
 			},
 		    
-		    // request one page 
+		    // request one page
 		    reqData(keyword, page, ugroup){
 		    	let api_prefix = global_.exp_list;
 
 		    	if(ugroup == global_.teacher_group){
 		    		api_prefix = global_.exp_tlist;
 		    	} 
+		    	/*
+		    	if(ugroup == global_.student_group){
+		    		api_prefix = global_.exp_stlist;
+		    	}*/
 
-			    //list request
+		    	//console.log(api_prefix);
+			    //role-based api
 			    //console.log(api_prefix);
 			    var list_api = api_prefix
 							 + '?page=' 
 							 + page 
 							 + '&pagesize=' 
 							 + this.rowsPerPage;
-
+				//console.log(list_api);
+				
 				let req_data = {
 					"search": {
 						"name": keyword
