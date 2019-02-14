@@ -193,7 +193,7 @@
 
 				this.$http.post(profile, {}).then((resp)=>{
 
-					this.$store.commit('setUserGroup', resp.body.group);
+					//this.$store.commit('setUserGroup', resp.body.group);
 
 					if(resp.body.group == global_.teacher_group) {
 						this.current_group = global_.teacher_group;

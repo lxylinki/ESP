@@ -27,16 +27,15 @@
 	//const exp_list = url_prefix + 'esp_admin/experiment/search';
 	const exp_list = url_prefix + 'esp_admin/experiment-assign/assign-list';
 	const exp_tlist = url_prefix + 'esp_admin/experiment-assign/teacher-list';
-	const exp_stlist = url_prefix + 'esp_admin/experiment-assign/list';
 	const exp_check = url_prefix + 'esp_admin/experiment/questions';
-	const exp_create = url_prefix + 'esp_admin/experiment/create';
+	const exp_create = url_prefix + 'esp_admin/experiment-assign/create';
 	const exp_update = url_prefix + 'esp_admin/experiment/update';
 	const exp_delete = url_prefix + 'esp_admin/experiment/delete';
 
 
 	//const exam_list = url_prefix + 'esp_admin/exam/search';
-	const exam_list = url_prefix + '/esp_admin/examine/list';
-	const exam_create = url_prefix + 'esp_admin/exam/create';
+	const exam_list = url_prefix + 'esp_admin/examine/list';
+	const exam_create = url_prefix + 'esp_admin/examine/create';
 	const exam_update = url_prefix + 'esp_admin/exam/update';
 	const exam_delete = url_prefix + 'esp_admin/exam/delete';
 
@@ -65,11 +64,13 @@
 	const manager_create = url_prefix + 'user/school-admin/create';
 	const manager_update = url_prefix + 'user/school-admin/update';
 
+	const super_admin_group = 0;
 	const school_admin_group = 1;
 	const teacher_group = 2;
 	const student_group = 3;
 
 	export default {
+		super_admin_group,
 		url_prefix,
 		
 		school_usr_login,
