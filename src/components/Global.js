@@ -39,7 +39,8 @@
 	const exam_update = url_prefix + 'esp_admin/exam/update';
 	const exam_delete = url_prefix + 'esp_admin/exam/delete';
 
-	const question_list = url_prefix + 'esp_admin/questions/search';
+	const question_list = url_prefix + 'esp_admin/questions-bank/search';
+	//const question_list = url_prefix + 'esp_admin/questions-bank/list';
 	const question_update = url_prefix + 'esp_admin/questions/update';
 	const question_delete = url_prefix + 'esp_admin/questions/delete';
 	const question_create = url_prefix + 'esp_admin/questions/create';
