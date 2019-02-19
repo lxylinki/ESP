@@ -11,31 +11,51 @@
 
 
 		<div class="selectclass">
-			<div class="searchwindow exp-searchwindow">
+			<div class="statustitle">分类：</div>
+			
+			<div style="display: inline-block;">
+				<el-select v-model="catag_value" v-on:change="filterExp()" placeholder="请搜索实验分类名称" filterable>
+					<el-option
+					  v-for="item in catag_options"
+					  :key="item.id"
+					  :label="item.name"
+					  :value="item.id"
+					  :class="{leafcatag: item.isleaf, midcatag: item.ismid, unselectable: item.isleaf}">
+					</el-option>
+				</el-select>
+			</div>
 
+			<!--
+		    <div class="allcatags" style="display: inline-block;">
+		    	<div class="select-header select-header-normal">
+			    	<input type="text" class="select-header-text" placeholder="请搜索实验分类名称"  v-on:focus="showToggle=true" v-model="catag_search_state"></input>
+					<i class="iconfont togglesign" v-on:click="toggleList()" v-show="!showToggle">&#xe607;</i>
+					<i class="iconfont togglesign" v-on:click="toggleList()" v-show="showToggle">&#xe608;</i>
+		    	</div>
+
+				<div class="select-list" v-show="showToggle" style="overflow-y: scroll; height: 190px;">
+					<li class="select-item" v-bind:class="{leafcatag: item.isleaf, rootcatag: item.isroot, midcatag: item.ismid}" v-for="item in filtered_catags" v-on:click="makeChoice(item)">{{item.name}}</li>	
+				</div>
+		    </div> -->
+
+			<div class="searchwindow exp-searchwindow">
 				<el-input class="exp-searchinput" 
 						  v-model="search_state"
 						  v-on:keydown.native="invokeSearch($event)"
 						  placeholder="请搜索实验名称">		  
 				</el-input>
-
 				<button class="searchbtn exp-searchbtn" v-on:click="searchReq()">
 					<i style="color: white;" class="el-icon-search"></i>
 				</button>
-
 			</div>
 
 
 		</div>
 
-		<div style="height: 20px;"></div>
-
-		<div  style="display: inline-block;">
-			<el-button class="addbtn" v-on:click="addExp()">添加</el-button>
-		</div>
+		<div style="height: 10px;"></div>
 
 		<!--choose rows per page-->
-		<div style="display: inline-block; float: right; margin: 0px;">
+		<div style="display: inline-block; float: right; margin-bottom: 10px;">
 			<span>显示 </span>
 				<select v-model="rowsPerPage" v-on:change="pageSizeChange()" style="width: 60px; height: 25px;">
 					<option v-for="item in row_nums" v-bind:value="item.value">
@@ -44,8 +64,6 @@
 				</select>
 			<span> 条</span>
 		</div>
-
-		<div style="height: 15px;"></div>
 
 		<template>
 		  <el-table
@@ -58,16 +76,29 @@
 		    </el-table-column>
 		    
 		    <el-table-column
-		      prop="learn_count"
-		      label="学习人次"
-		      min-width="300">
+		      prop="catag_belong"
+		      label="所属分类"
+		      min-width="100">
 		    </el-table-column>
 		    
-		    <!--
 		     <el-table-column
-		      prop="id"
-		      label="ID">
-		    </el-table-column>-->
+		      prop="teachers"
+		      label="老师"
+		       min-width="100">
+		    </el-table-column>
+
+		     <el-table-column
+		      prop="create_time"
+		      label="创建时间"
+		       min-width="100">
+		    </el-table-column>
+
+		     <el-table-column
+		      prop="update_time"
+		      label="更新时间"
+		       min-width="100">
+		    </el-table-column>
+
 
 		    <el-table-column
 		      prop="operation"
@@ -75,16 +106,9 @@
 		      min-width="100">
 
 		      <template slot-scope="scope">
-
-		      	<el-button  class="op" type="text" @click="editRow(scope.row)">
-		      		<i class="iconfont">&#xe61a;</i>编辑
+		      	<el-button  class="op" type="text" @click="">
+		      		授权老师
 		      	</el-button>
-		      	<!--<el-button type="text" @click="tableData.splice(scope.$index, 1)">-->
-		      	<!--<el-button class="op" type="text" @click="delRow(scope.$index)">-->
-		      	<el-button class="op" type="text" @click="deleteRow(scope.row)">
-		      		<i class="iconfont">&#xe7e0;</i>删除
-		      	</el-button>
-
 		      </template>
 		    </el-table-column>
 
@@ -127,9 +151,11 @@
 				dataChanged: false,
 
 				dialogVisible: false,
+				catag_value: '',
 				value: '',
 				search_state: '',
 				options: [],
+				catag_options: [],
 
 				rowsPerPage:10,
 				totalRows: 0,
@@ -226,8 +252,9 @@
 			},
 		    
 		    // request one page
-		    reqData(keyword, page, ugroup){
+		    reqData(cid, keyword, page, ugroup){
 		    	let api_prefix = global_.exp_list;
+		    	//console.log(api_prefix);
 
 		    	if(ugroup == global_.teacher_group){
 		    		api_prefix = global_.exp_tlist;
@@ -248,6 +275,7 @@
 				//console.log(list_api);
 				
 				let req_data = {
+					"cid": cid,
 					"search": {
 						"name": keyword
 					}
@@ -264,6 +292,17 @@
 			    	
 			    	this.totalPage = resp.body.total_page;
 			    	this.tableData = resp.body._list;
+
+			    	for(let item of this.tableData) {
+			    		console.log(item);
+			    		item.create_time = Utils.convTime(item.created_at);
+			    		item.update_time = Utils.convTime(item.updated_at);
+
+			    		if(Object.keys(resp.body.categories).includes(item.cid)){
+			    			item.catag_belong = resp.body.categories[item.cid].name;
+			    		}			    		
+			    	}
+
 			    	this.filterData(page);
 			    	layer.close(this.loading);
 
@@ -274,17 +313,21 @@
 			    });  	
 		     },
 
-		     reqList(keyword, page){
+		     filterExp(){
+		     	this.reqList(this.catag_value, null, 1);
+		     },
+
+		     reqList(cid, keyword, page){
 				asyncReq.call(this);
 				async function asyncReq(){
 					let resp = await Utils.page_check_status.call(this);
 					let ugroup = resp.body.group;
-					this.reqData(keyword, page, ugroup);
+					this.reqData(cid, keyword, page, ugroup);
 				}		     	
 		     },
 
 		     searchReq(){
-		     	this.reqData(this.search_state, 1);
+		     	this.reqList(this.catag_value, this.search_state, 1);
 		     },
 
 		     invokeSearch(e){
@@ -293,6 +336,40 @@
 		     		this.searchReq();
 		     	}
 		     },
+
+			reqCatagList(){
+				//console.log(this.catag_options);
+				this.catag_options = [];
+				let api = global_.expcatag_list;
+				let data = {
+					'all': 1
+				}
+				this.$http.post(api, data).then((resp)=>{
+					this.expandCatag(this.catag_options, resp.body);				
+					this.filtered_catags = this.catag_options;
+					this.filtered_catags.unshift({'id': null, 'name': '全部分类'});
+
+				}, (err)=>{
+					console.log(err);
+					//Utils.err_process.call(this, err, '请求实验分类列表失败');
+				});				
+			},
+
+			expandCatag(arr, tree){
+				for(let i of tree) {
+					if(i.level == -1 && i.pid) {
+						i.isleaf = true;
+					} else if(i.level == 1) {
+						i.isroot = true;
+					} else if(i.level == 2) {
+						i.ismid = true;
+					}
+					arr.push(i);
+					if(i.hasOwnProperty('sub_categories')) {
+						this.expandCatag(arr, i.sub_categories)
+					}
+				}
+			},
 		},
 		
 		beforeMount(){
@@ -301,6 +378,7 @@
 
 		mounted(){
 			Utils.page_check_status.call(this);
+
 			let name = this.$store.state.last_author;
 			//will disappear after page refresh...
 			//this.user_group = this.$store.state.user_group;
@@ -321,6 +399,7 @@
 				}
 
 				//item added: default append to list end
+				// or start?
 				if(after > before) {
 					this.curPage = Math.ceil(after / this.rowsPerPage);	
 
@@ -329,8 +408,8 @@
 				} 				
 			}
 
-			this.reqList(this.search_state, this.curPage);
-			//layer.close(this.loading);
+			this.reqCatagList();
+			this.reqList(null, this.search_state, this.curPage);
 		}
 	}
 </script>
@@ -340,5 +419,20 @@
 .exp-searchwindow {
     position: relative;
     top: -4px;
+}
+
+.statustitle {
+	display: inline-block; 
+	line-height: 60px;
+}
+
+.leafcatag {
+	padding-left: 35px;
+	color: #757575;
+}
+
+.midcatag {
+	padding-left: 25px;
+	color: #757575;
 }
 </style>

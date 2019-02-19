@@ -297,11 +297,15 @@
 		     	async function asyncReq(){
 					let expData = await Utils.reqExpList.call(this, keyword, page);
 					this.exp_options = expData.body._list;
-					this.exp_value = this.exp_options[0].id;
-
+					if(this.exp_options.length > 0) {
+						this.exp_value = this.exp_options[0].id;
+					}
+					
 					let examData = await this.reqExamData.call(this, keyword, this.exp_value, page);
-					this.exam_value = this.exam_options[0].id;
-
+					this.exam_options = examData.body._list;
+					if(this.exam_options.length > 0) {
+						this.exam_value = this.exam_options[0].id;
+					}
 					this.selectExam();		     		
 		     	}
 		     },

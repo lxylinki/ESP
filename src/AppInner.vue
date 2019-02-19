@@ -293,6 +293,7 @@
 }
 
 .setting {
+	z-index: 1;
 	vertical-align: top;
 	position: relative;
 	text-align: center;
@@ -305,6 +306,7 @@
 }
 
 .logoff {
+	z-index: 1;
 	vertical-align: top;
 	position: relative;
 	line-height: 80px;

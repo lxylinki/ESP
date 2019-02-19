@@ -262,6 +262,8 @@
 							 + '&pagesize=' 
 							 + this.rowsPerPage;
 
+				console.log(global_.exam_list);
+
 				let req_data = {
 					'exper_id': id,
 					'search': {
@@ -269,9 +271,11 @@
 					}
 				};
 
+				//console.log(req_data);
+
 				this.$http.post(list_api, req_data).then((resp)=>{
 					
-					//console.log(resp);
+					console.log(resp);
 					//this.totalRows = resp.body.total;
 					this.$store.commit('setRowNumBefore', resp.body.total);
 			    	this.$store.commit('setRowNumAfter', resp.body.total);
@@ -321,8 +325,6 @@
 			this.loading = layer.load(1, {shade: false});
 		},
 		mounted(){
-			this.reqExpData('', 0);
-
 			var name = this.$store.state.last_author;
 
 			if(name === this.mod_name) {
@@ -348,7 +350,7 @@
 					this.curPage = curpage;
 				} 				
 			}
-
+			this.reqExpData('', 1);
 			this.reqData(this.search_state, null, this.curPage);
 			//layer.close(this.loading);
 		}

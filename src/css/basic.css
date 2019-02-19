@@ -1,6 +1,7 @@
-body {
+html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
 }
 
 ul{
@@ -33,11 +34,13 @@ select {
  }    
 
 .selectclass {
+  box-sizing: border-box;
   height: 60px;
   background: #f7f7f7;
   /*must set this*/
   overflow: hidden;
   width: 100%;
+  padding-left: 15px;
 }
 
 .pagetitle {
@@ -48,8 +51,34 @@ select {
 }
 
 /*element ui*/
+.el-header {
+  width: 100%;
+  position: absolute;
+}
+
 .el-main{
+  position: absolute;
+  top: 100px;
+  height: 90%;
+  bottom: 0;
+  left: 240px;
+  width: 84%;
 	background: #ffffff;
+}
+
+.el-aside {
+  position: absolute;
+  top: 100px;
+  height: 90%;
+  overflow: hidden;
+}
+
+.el-container {
+  position: absolute;
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
 .el-input__inner{
