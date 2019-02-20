@@ -100,7 +100,6 @@
 		      	this.ufile = event.target.files[0];
 		      	document.querySelector('#image').setAttribute('src', URL.createObjectURL(this.ufile));
 		    }
-
 		},
 
 		mounted(){

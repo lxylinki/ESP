@@ -31,8 +31,9 @@ const ManagerEdit = ()=> import('../components/accountmanage/managermanage/Manag
 
 //Experiment Manage
 const ExpManage = ()=> import('../components/expmanage/ExpManage.vue');
-const ExpAdd = ()=> import('../components/expmanage/ExpAdd.vue');
-const ExpEdit = ()=> import('../components/expmanage/ExpEdit.vue');
+const ExpConfig = ()=> import('../components/expmanage/ExpConfig.vue');
+//const ExpAdd = ()=> import('../components/expmanage/ExpAdd.vue');
+//const ExpEdit = ()=> import('../components/expmanage/ExpEdit.vue');
 
 //Exam Manage
 const ExamManage = ()=> import('../components/exammanage/ExamManage.vue');
@@ -85,8 +86,9 @@ const myRoutes = [
 		
 
 		{path: '/expmanage', meta: {title:'实验管理'}, component: ExpManage},
-		{path: '/expadd', meta: {title:'实验管理'}, component: ExpAdd},
-		{path: '/expedit',  meta: {title:'实验管理'}, component: ExpEdit},
+		{path: '/expconfig', meta: {title:'实验管理'}, component: ExpConfig},
+		//{path: '/expadd', meta: {title:'实验管理'}, component: ExpAdd},
+		//{path: '/expedit',  meta: {title:'实验管理'}, component: ExpEdit},
 
 
 		{path: '/exammanage', meta: {title:'考核管理'}, component: ExamManage},

@@ -8,12 +8,14 @@ function lalert(text) {
 
 function err_process(err, text){
 	console.log(err);
-	if(text) {
-		lalert(text);
-	}
-
 	if (err.body.error == -403 || err.status == 403 || err.status == 401) {
+		if(this.loading) {
+			layer.close(this.loading);
+		}		
 		this.$router.push('/login');
+		
+	} else if(text) {
+		lalert(text);
 	}
 }
 
@@ -112,12 +114,12 @@ function reqExpList(keyword, page){
 	    		resolve(resp);
 
 	    	},(err)=>{
-				layer.close(this.loading);
+				//layer.close(this.loading);
 				err_process.call(this, err, '请求实验列表失败');    		
 	    	});
 
 	    }, (err)=>{
-			layer.close(this.loading);
+			//layer.close(this.loading);
 			err_process.call(this, err, '请求实验列表失败'); 
 	    });  	
 	});

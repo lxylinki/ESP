@@ -5,11 +5,7 @@
 			<span class="pagetitle">实验管理</span>
 		</div>
 
-		<!--<button @click="fn">弹出</button>-->
-
 		<div style="height: 20px;"></div>
-
-
 		<div class="selectclass">
 			<div class="statustitle">分类：</div>
 			
@@ -25,19 +21,6 @@
 				</el-select>
 			</div>
 
-			<!--
-		    <div class="allcatags" style="display: inline-block;">
-		    	<div class="select-header select-header-normal">
-			    	<input type="text" class="select-header-text" placeholder="请搜索实验分类名称"  v-on:focus="showToggle=true" v-model="catag_search_state"></input>
-					<i class="iconfont togglesign" v-on:click="toggleList()" v-show="!showToggle">&#xe607;</i>
-					<i class="iconfont togglesign" v-on:click="toggleList()" v-show="showToggle">&#xe608;</i>
-		    	</div>
-
-				<div class="select-list" v-show="showToggle" style="overflow-y: scroll; height: 190px;">
-					<li class="select-item" v-bind:class="{leafcatag: item.isleaf, rootcatag: item.isroot, midcatag: item.ismid}" v-for="item in filtered_catags" v-on:click="makeChoice(item)">{{item.name}}</li>	
-				</div>
-		    </div> -->
-
 			<div class="searchwindow exp-searchwindow">
 				<el-input class="exp-searchinput" 
 						  v-model="search_state"
@@ -48,7 +31,6 @@
 					<i style="color: white;" class="el-icon-search"></i>
 				</button>
 			</div>
-
 
 		</div>
 
@@ -82,9 +64,12 @@
 		    </el-table-column>
 		    
 		     <el-table-column
-		      prop="teachers"
 		      label="老师"
-		       min-width="100">
+		       min-width="100"
+		       :show-overflow-tooltip="true">
+		       <template slot-scope="scope">
+		       	<span v-for="teacher in scope.row.teachers">{{teacher.realname}}&nbsp;</span>
+		       </template>
 		    </el-table-column>
 
 		     <el-table-column
@@ -106,7 +91,7 @@
 		      min-width="100">
 
 		      <template slot-scope="scope">
-		      	<el-button  class="op" type="text" @click="">
+		      	<el-button  class="op" type="text" @click="grantTeachers(scope.row)">
 		      		授权老师
 		      	</el-button>
 		      </template>
@@ -121,6 +106,75 @@
    	           	  v-bind:pages='totalPage'
    		          @setPage='loadPage'
    		       ></NewPager>
+
+
+<!--------------------------------------------------------------------------------------------------------------------------------------------------------->
+		<div id="show-all-teachers" v-show="false">
+			
+			<div class="selectclass">
+				<div class="exp-name"><span>{{exp_name}}</span></div>
+				<div class="searchwindow">
+					<el-input class="searchinput" v-model="t_search_state" placeholder="请搜索真实姓名" v-on:keydown.native="t_invokeSearch($event)"></el-input>
+					<button class="searchbtn" v-on:click="t_searchReq()"><i style="color: white;" class="el-icon-search"></i></button>
+				</div>
+			</div>
+
+			<template>
+			  <el-table
+			    :data="tlist"
+			    style="width: 100%;">
+			    <el-table-column
+			      prop="realname"
+			      label="真实姓名"
+			      min-width="200">
+			    </el-table-column>
+
+			    <el-table-column
+			      prop="username"
+			      label="用户名"
+			      min-width="200">
+			    </el-table-column>
+
+			    <el-table-column
+			      prop="operation"
+			      label="操作"
+			      min-width="200">
+			      <template slot-scope="scope">
+			      	<el-button v-show="!focus_tids.includes(scope.row.user_id)" class="op selectbtn" type="text" @click="selectRow(scope.row)">
+			      		+添加
+			      	</el-button>
+			      	<el-button v-show="focus_tids.includes(scope.row.user_id)" class="op removebtn" type="text" @click="removeRow(scope.row)">
+			      		-移除
+			      	</el-button>
+			      </template>
+			    </el-table-column>
+
+			    <el-table-column
+			      prop="operation"
+			      label="操作"
+			      min-width="200">
+			      <template slot-scope="scope">
+			      	<i class="iconfont unchecked-box" v-show="!focus_tids.includes(scope.row.user_id)" @click="selectRow(scope.row)">&#xe63c;</i>
+			      	<i class="iconfont checked-box" v-show="focus_tids.includes(scope.row.user_id)" @click="removeRow(scope.row)">&#xe63e;</i>
+			      </template>
+			    </el-table-column>
+
+			  </el-table>
+			</template>				
+
+			<div style="height: 40px;"></div>
+	   		<NewPager v-bind:current_page='t_curPage' 
+	   	           	  v-bind:pages='t_totalPage'
+	   		          @setPage='t_loadPage'
+	   		       ></NewPager>
+
+			<div style="height: 30px;"></div>
+			<div class="btn-group">
+				<el-button class="confirm" v-on:click="addTeachers()">确定</el-button>
+				<el-button class="goback" v-on:click="cancel()">取消</el-button>
+			</div>
+
+		</div><!--end show all teachers-->
 
 	</div>
 </template>
@@ -187,7 +241,15 @@
 
 				],
 				tableData: [],
-				loading: null																			
+				loading: null,
+				exp_name: '',
+				layeridx: null,
+				tlist:[],
+				t_totalPage: 0,
+				t_curPage: 1,
+				t_search_state: '',
+				focus_tids: [],
+				t_rowsPerPage: 10																		
 			}
 		},
 
@@ -196,6 +258,7 @@
 				this.$router.push('/expadd');
 			},
 
+			/*
 			editRow(row){
 				//console.log(row);
 				//VueEvent.$emit('to-edit', row);
@@ -207,10 +270,36 @@
 				this.$store.commit('setCurSearch', this.search_state);
 				this.$router.push('/expedit');
 
+			},*/
+
+			grantTeachers(row){
+				/*
+				this.$store.commit('sign', this.mod_name);
+				this.$store.commit('setEdit', true);
+				this.$store.commit('pickRow', row);
+				this.$store.commit('setCurPage', this.curPage);
+				this.$store.commit('setCurSearch', this.search_state);
+				this.$router.push('/expconfig');*/
+				this.exp_name = row.name;
+				this.exp_id = row.eid;
+				this.focus_tids = [];
+
+				if(row.teachers.length > 0) {
+					for(let teacher of row.teachers) {
+						this.focus_tids.push(teacher.id);
+					}					
+				}
+
+				console.log(row);
+				this.layeridx = layer.open({
+					type: 1,
+					area: ['700px', '765px'],
+					title: '',
+					content: $('#show-all-teachers')
+				});	
 			},
 
 			filterData(page) {
-				//this.list = this.tableData.slice(this.rowsPerPage*(page-1), this.rowsPerPage*page);
 				this.list = this.tableData;
 				this.curPage = page;
 			},
@@ -218,37 +307,12 @@
 			pageSizeChange(){
 				//reload data
 				//this.filterData(this.curPage);
-				this.reqData(this.search_state, 1);
+				this.reqList(this.catag_value, this.search_state, this.curPage);
 			},
 
 			loadPage(page){
 				//console.log('load page ' + page);
 				this.reqData(this.search_state, page);
-			},
-
-			deleteRow(row){
-				var _this = this;
-				var sure = layer.confirm("确定删除实验？",
-					{title:'提示', area:['280px','190px']},
-					function(){_this.delExp(row)});
-			},
-
-			delExp(row){
-				//console.log(row.id);
-				var api = global_.exp_delete;
-				let data = {
-					'id': row.id
-				};
-
-				this.$http.post(api, data).then((resp)=>{
-					//console.log(resp);
-					layer.alert('删除成功', {title:'提示', area:['280px','190px']});
-					this.reqData(this.search_state, this.curPage);
-
-				}, (err)=>{
-					layer.alert('实验有考核，删除失败');
-					console.log(err);
-				});	
 			},
 		    
 		    // request one page
@@ -294,7 +358,7 @@
 			    	this.tableData = resp.body._list;
 
 			    	for(let item of this.tableData) {
-			    		console.log(item);
+			    		console.log(item.teachers);
 			    		item.create_time = Utils.convTime(item.created_at);
 			    		item.update_time = Utils.convTime(item.updated_at);
 
@@ -302,14 +366,11 @@
 			    			item.catag_belong = resp.body.categories[item.cid].name;
 			    		}			    		
 			    	}
-
 			    	this.filterData(page);
 			    	layer.close(this.loading);
 
 			    }, (err)=>{
-			    	Utils.lalert('数据请求失败');
-			      	console.log(err);
-			      	layer.close(this.loading);
+			    	Utils.err_process.call(this, err, '请求实验列表失败'); 
 			    });  	
 		     },
 
@@ -317,6 +378,7 @@
 		     	this.reqList(this.catag_value, null, 1);
 		     },
 
+		     //req exp list
 		     reqList(cid, keyword, page){
 				asyncReq.call(this);
 				async function asyncReq(){
@@ -370,6 +432,73 @@
 					}
 				}
 			},
+
+/*-----------------------------------------------------------------------------------------------*/
+			reqTeacherData(keyword, page){
+				//list request
+				var list_api = global_.teacher_list
+							 + '?page=' 
+							 + page 
+							 + '&pagesize=' 
+							 + this.t_rowsPerPage;
+
+				let req_data = {
+					'status': this.status_value,
+				  	'search': {
+				  		'username': '',
+				  		'realname': keyword
+				  	}
+				}
+
+				this.$http.post(list_api, req_data).then((resp)=>{
+					//console.log(resp);
+					this.t_totalPage = resp.body.total_page;
+					this.tlist = resp.body._list;
+					this.t_curPage = page;
+
+				},(err)=>{
+					Utils.err_process.call(this, err, '请求教师列表失败'); 
+				});
+			},
+
+			t_loadPage(page) {
+				this.reqTeacherData(this.t_search_state, page);
+			},
+
+			t_invokeSearch(e){
+				if(e.keyCode == 13) {
+					this.t_searchReq();
+				}
+			},
+
+			t_searchReq(){
+				this.reqTeacherData(this.t_search_state, 1);
+			},
+
+			selectRow(trow){
+				//console.log(row);
+				this.focus_tids.push(trow.user_id);
+				/*
+				let api = global_.exp_teacher_add;
+				let data = {
+					"eid": this.exp_id,
+					"user_ids":[trow.user_id]
+				}
+				this.$http.post(api, data).then((resp)=>{
+					console.log(resp);
+				}, (err)=>{
+					console.log(err);
+				});*/
+			},
+
+			removeRow(trow){
+				let idx = this.focus_tids.indexOf(trow.user_id);
+				this.focus_tids.splice(idx, 1);
+			},
+
+			cancel(){
+				layer.close(this.layeridx);
+			}
 		},
 		
 		beforeMount(){
@@ -378,7 +507,6 @@
 
 		mounted(){
 			Utils.page_check_status.call(this);
-
 			let name = this.$store.state.last_author;
 			//will disappear after page refresh...
 			//this.user_group = this.$store.state.user_group;
@@ -410,6 +538,7 @@
 
 			this.reqCatagList();
 			this.reqList(null, this.search_state, this.curPage);
+			this.reqTeacherData(null, 1);
 		}
 	}
 </script>
@@ -434,5 +563,26 @@
 .midcatag {
 	padding-left: 25px;
 	color: #757575;
+}
+
+.exp-name {
+	display: inline-block;
+	margin: 20px;
+}
+
+#show-all-teachers {
+	padding: 20px;
+	overflow: hidden;
+}
+
+.btn-group {
+	float: right;
+	margin-right: 103px;
+}
+
+.unchecked-box, .checked-box {
+	color: yellowgreen;
+	cursor: pointer;
+	font-size: 150%;
 }
 </style>

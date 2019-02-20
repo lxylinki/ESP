@@ -20,6 +20,7 @@
 
 	          <span :class="{disabled:pend}" class="jump" @click="goToNextPage()">下一页</span>
 
+	          <!--
 	          <span class="jumppointleft">第</span>
 	          
 						<span class="jumpinp"><input type="text" v-model="changePage" v-on:keydown="invokeJump($event, changePage)"></span>
@@ -27,6 +28,7 @@
 						<span class="jumppointright">页</span>
 
 	          <span class="jump gobtn" @click="jumpPage(changePage)">跳转</span>
+	      	  -->
 
 	        </div>
 	      </div>
@@ -208,7 +210,7 @@
       border-color: #337ab7;
     }*/
     .pagelist .jump.disabled{
-      /*pointer-events: none;*/
-      background: #d7d7d7;
+      color: #d7d7d7;
+      cursor: auto;
     }
 </style>
