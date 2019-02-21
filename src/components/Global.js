@@ -105,6 +105,7 @@
 		//exp_delete,
 		exp_teacher_add,
 		exp_teacher_list,
+		exp_teacher_delete,
 
 		expcatag_list,
 

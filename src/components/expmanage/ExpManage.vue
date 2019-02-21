@@ -122,6 +122,7 @@
 			<template>
 			  <el-table
 			    :data="tlist"
+			    :highlight-current-row="true"
 			    style="width: 100%;">
 			    <el-table-column
 			      prop="realname"
@@ -135,6 +136,7 @@
 			      min-width="200">
 			    </el-table-column>
 
+			    <!--
 			    <el-table-column
 			      prop="operation"
 			      label="操作"
@@ -147,7 +149,7 @@
 			      		-移除
 			      	</el-button>
 			      </template>
-			    </el-table-column>
+			    </el-table-column> -->
 
 			    <el-table-column
 			      prop="operation"
@@ -170,7 +172,7 @@
 
 			<div style="height: 30px;"></div>
 			<div class="btn-group">
-				<el-button class="confirm" v-on:click="addTeachers()">确定</el-button>
+				<el-button class="confirm" v-on:click="updateTeachers()">确定</el-button>
 				<el-button class="goback" v-on:click="cancel()">取消</el-button>
 			</div>
 
@@ -249,6 +251,7 @@
 				t_curPage: 1,
 				t_search_state: '',
 				focus_tids: [],
+				orig_tids: [],
 				t_rowsPerPage: 10																		
 			}
 		},
@@ -283,14 +286,15 @@
 				this.exp_name = row.name;
 				this.exp_id = row.eid;
 				this.focus_tids = [];
-
+				//existing teachers
 				if(row.teachers.length > 0) {
 					for(let teacher of row.teachers) {
 						this.focus_tids.push(teacher.id);
+						this.orig_tids.push(teacher.id);
 					}					
 				}
 
-				console.log(row);
+				//console.log(row);
 				this.layeridx = layer.open({
 					type: 1,
 					area: ['700px', '765px'],
@@ -312,7 +316,7 @@
 
 			loadPage(page){
 				//console.log('load page ' + page);
-				this.reqData(this.search_state, page);
+				this.reqList(this.catag_value, this.search_state, page);
 			},
 		    
 		    // request one page
@@ -358,7 +362,7 @@
 			    	this.tableData = resp.body._list;
 
 			    	for(let item of this.tableData) {
-			    		console.log(item.teachers);
+			    		//console.log(item.teachers);
 			    		item.create_time = Utils.convTime(item.created_at);
 			    		item.update_time = Utils.convTime(item.updated_at);
 
@@ -375,7 +379,7 @@
 		     },
 
 		     filterExp(){
-		     	this.reqList(this.catag_value, null, 1);
+		     	this.reqList(this.catag_value, this.search_state, 1);
 		     },
 
 		     //req exp list
@@ -493,7 +497,62 @@
 
 			removeRow(trow){
 				let idx = this.focus_tids.indexOf(trow.user_id);
-				this.focus_tids.splice(idx, 1);
+				if(idx != -1) {
+					this.focus_tids.splice(idx, 1);
+				}
+			},
+
+			rmTeachers(eid, user_ids){
+				return new Promise((resolve, reject)=>{
+					let del_api = global_.exp_teacher_delete;
+					let data = {
+						"eid": eid,
+						"user_ids": user_ids
+					}
+					this.$http.post(del_api, data).then((resp)=>{
+						resolve(resp);
+					}, (err)=>{
+						Utils.err_process.call(this, err, '移除教师失败');
+					});
+				});
+			},
+
+			addTeachers(eid, user_ids) {
+				return new Promise((resolve, reject)=>{
+					let add_api = global_.exp_teacher_add;
+					let data = {
+						"eid": eid,
+						"user_ids": user_ids
+					}
+					this.$http.post(add_api, data).then((resp)=>{
+						resolve(resp);
+					}, (err)=>{
+						Utils.err_process.call(this, err, '添加教师失败');
+					});
+				});
+			},
+
+			//from orig tids to current tids:
+			//remove if any then add if any
+			updateTeachers(){
+				let toRemove = this.orig_tids.filter(item => !this.focus_tids.includes(item)),
+				    toAdd = this.focus_tids.filter(item => !this.orig_tids.includes(item)),
+				    del_api = global_.exp_teacher_delete,
+					add_api = global_.exp_teacher_add;
+
+				if(toRemove.length > 0 && toAdd.length > 0) {
+					this.rmTeachers(this.exp_id, toRemove).then(this.addTeachers(this.exp_id, toAdd));
+
+				} else if(toRemove.length > 0) {
+					this.rmTeachers(this.exp_id, toRemove);
+
+				} else if(toAdd.length > 0) {
+					this.addTeachers(this.exp_id, toAdd);
+				}
+
+				//refresh page
+				this.reqList(this.catag_value, this.search_state, this.curPage);
+				layer.close(this.layeridx);
 			},
 
 			cancel(){
@@ -528,16 +587,18 @@
 
 				//item added: default append to list end
 				// or start?
+				/*
 				if(after > before) {
 					this.curPage = Math.ceil(after / this.rowsPerPage);	
 
 				} else if(curpage > 0) {
 					this.curPage = curpage;
-				} 				
+				} */
+				this.curPage = 1;				
 			}
 
 			this.reqCatagList();
-			this.reqList(null, this.search_state, this.curPage);
+			this.reqList(null, '', this.curPage);
 			this.reqTeacherData(null, 1);
 		}
 	}
@@ -581,8 +642,9 @@
 }
 
 .unchecked-box, .checked-box {
-	color: yellowgreen;
+	color: #5c9cec;
 	cursor: pointer;
-	font-size: 150%;
+	font-size: 180%;
 }
+
 </style>
