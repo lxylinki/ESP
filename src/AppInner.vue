@@ -27,7 +27,7 @@
 
 
 				<el-container>
-        			<el-aside width="240px">
+        			<el-aside width="230px">
         				<!--<div style="height: 110px; background: #31313c"></div>-->
         				<Nav v-bind:menuList='menuList'
         				     v-bind:curGroup='current_group'></Nav>
@@ -330,7 +330,7 @@
 .navbg {
 	position: absolute;
 	height: 100%;
-	width: 240px;
-	background: #31313c;
+	width: 230px;
+	background: #ffffff;
 }
 </style>

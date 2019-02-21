@@ -52,8 +52,8 @@ const StudentStat = ()=> import('../components/scorestats/StudentView.vue');
 const ReportManage = ()=> import('../components/reportmanage/ReportManage.vue');
 
 //Version Update
-const UpdateNote = ()=> import('../components/versionupdate/UpdateNote.vue');
-const DownloadUpdate = ()=> import('../components/versionupdate/DownloadUpdate.vue');
+//const UpdateNote = ()=> import('../components/versionupdate/UpdateNote.vue');
+//const DownloadUpdate = ()=> import('../components/versionupdate/DownloadUpdate.vue');
 
 //const TestGround = ()=> import('../components/versionupdate/TestGround.vue');
 
@@ -102,8 +102,8 @@ const myRoutes = [
 		{path: '/teacherstats', meta: {title:'成绩统计'}, component: TeacherStat},
 		{path: '/studentstats', meta: {title:'成绩统计'}, component: StudentStat},
 
-		{path: '/updatenote', meta: {title: '版本更新'}, component: UpdateNote},
-		{path: '/downloadupdate', meta: {title: '版本更新'}, component: DownloadUpdate},
+		//{path: '/updatenote', meta: {title: '版本更新'}, component: UpdateNote},
+		//{path: '/downloadupdate', meta: {title: '版本更新'}, component: DownloadUpdate},
 
 		{path: '/reportmanage', meta: {title: '实验报告管理'}, component: ReportManage}
 		//{path: '/testpage', meta: {title: 'Test'}, component: TestGround}

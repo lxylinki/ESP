@@ -2,7 +2,7 @@
 	<div class="nav">
 		<ul class="asideMenu">
           	<li v-for="(item,index) in menuList" v-show="item.userGroup.includes(curGroup)">
-				<div class="oneMenu" v-on:click="showToggle(item)">
+				<div class="oneMenu" v-on:click="showToggle(item, index)">
 
 	                <a class="oneMenuText" 
 	                   style="display: inline-block; 
@@ -10,8 +10,8 @@
 	                   v-bind:href='item.url'
 	                   v-on:click.self.prevent='showPage(item.url)'>
 
-	                	<img class="start-icon" :src=item.icon_highlight v-show="true">
-	                	<img class="start-icon" :src=item.icon v-show="false"><span>{{item.name}}</span>
+	                	<img class="start-icon" :src=item.icon_highlight v-show="false">
+	                	<img class="start-icon" :src=item.icon v-show="true"><span>{{item.name}}</span>
 
 	                </a> 
 
@@ -43,12 +43,19 @@
 		props:['menuList','curGroup'],
 
 		data(){
-			return {			
+			return {
+						
 			}
 		},
 		methods:{
-	      showToggle:function(item){
+	      showToggle(item, idx){
 	        item.isSubShow = !item.isSubShow;
+	        //close others
+	        for(let i in this.menuList) {
+	        	if(i != idx) {
+	        		this.menuList[i].isSubShow = false;
+	        	}
+	        }
 	      },
 
 	      showPage(url){
@@ -97,16 +104,20 @@
 .asideMenu {
     margin: 0;
     padding: 0;
-    width: 240px;
-    background: #31313c;
+    width: 230px;
+    background: #ffffff;
     height: 100%;
     overflow: hidden;
 }
 
+.highlight {
+	background: #5c9cec;
+}
+
 .oneMenu {
 	text-align: left;
-	line-height: 45px;
-	border-top: 1px solid rgba(161, 161, 161, 0.5);
+	line-height: 30px;
+	/*border-top: 1px solid rgba(161, 161, 161, 0.5);*/
 }
 
 /*outmost main menu*/
@@ -115,9 +126,10 @@
 }
 
 /*only the last in main menu has bottom border*/
+/*
 li:last-child .oneMenu{
 	border-bottom: 1px solid rgba(161, 161, 161, 0.5);
-}
+}*/
 
 .oneMenuText {
 	font-family: STXihei, "Microsoft YaHei";
@@ -178,7 +190,7 @@ li a:before {
 }
 
 .iconfont {
-	color: #a1a1a1;
+	color: #ffffff;
 	text-align: right;
 }
 
