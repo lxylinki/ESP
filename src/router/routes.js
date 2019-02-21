@@ -5,64 +5,64 @@ Vue.use(VueRouter);
 
 
 //0. log in page
-const Login = ()=> import('../components/accountmanage/Login.vue');
-//const MobileLogin = ()=> import('../components/accountmanage/MobileLogin.vue');
-const AppInner = ()=> import('../AppInner.vue');
+const Login = ()=> import('@/components/accountmanage/Login.vue');
+//const MobileLogin = ()=> import('@/components/accountmanage/MobileLogin.vue');
+const AppInner = ()=> import('@/AppInner.vue');
 
 //1. create components
 //Account Manage
-const AccountManage = ()=> import('../components/accountmanage/AccountManage.vue');
+const AccountManage = ()=> import('@/components/accountmanage/AccountManage.vue');
 
-const ClassManage = ()=> import('../components/accountmanage/classmanage/ClassManage.vue');
-const ClassAdd = ()=> import('../components/accountmanage/classmanage/ClassAdd.vue');
-const ClassEdit = ()=> import('../components/accountmanage/classmanage/ClassEdit.vue');
+const ClassManage = ()=> import('@/components/accountmanage/classmanage/ClassManage.vue');
+const ClassAdd = ()=> import('@/components/accountmanage/classmanage/ClassAdd.vue');
+const ClassEdit = ()=> import('@/components/accountmanage/classmanage/ClassEdit.vue');
 
-const StudentAdd = ()=> import('../components/accountmanage/studentmanage/StudentAdd.vue');
-const StudentManage = ()=> import('../components/accountmanage/studentmanage/StudentManage.vue');
-const StudentEdit = ()=> import('../components/accountmanage/studentmanage/StudentEdit.vue');
+const StudentAdd = ()=> import('@/components/accountmanage/studentmanage/StudentAdd.vue');
+const StudentManage = ()=> import('@/components/accountmanage/studentmanage/StudentManage.vue');
+const StudentEdit = ()=> import('@/components/accountmanage/studentmanage/StudentEdit.vue');
 
-const TeacherAdd = ()=> import('../components/accountmanage/teachermanage/TeacherAdd.vue');
-const TeacherManage = ()=> import('../components/accountmanage/teachermanage/TeacherManage.vue');
-const TeacherEdit = ()=> import('../components/accountmanage/teachermanage/TeacherEdit.vue');
+const TeacherAdd = ()=> import('@/components/accountmanage/teachermanage/TeacherAdd.vue');
+const TeacherManage = ()=> import('@/components/accountmanage/teachermanage/TeacherManage.vue');
+const TeacherEdit = ()=> import('@/components/accountmanage/teachermanage/TeacherEdit.vue');
 
-const ManagerAdd = ()=> import('../components/accountmanage/managermanage/ManagerAdd.vue');
-const ManagerManage = ()=> import('../components/accountmanage/managermanage/ManagerManage.vue');
-const ManagerEdit = ()=> import('../components/accountmanage/managermanage/ManagerEdit.vue');
+const ManagerAdd = ()=> import('@/components/accountmanage/managermanage/ManagerAdd.vue');
+const ManagerManage = ()=> import('@/components/accountmanage/managermanage/ManagerManage.vue');
+const ManagerEdit = ()=> import('@/components/accountmanage/managermanage/ManagerEdit.vue');
 
 //Experiment Manage
-const ExpManage = ()=> import('../components/expmanage/ExpManage.vue');
-const ExpConfig = ()=> import('../components/expmanage/ExpConfig.vue');
-//const ExpAdd = ()=> import('../components/expmanage/ExpAdd.vue');
-//const ExpEdit = ()=> import('../components/expmanage/ExpEdit.vue');
+const ExpManage = ()=> import('@/components/expmanage/ExpManage.vue');
+const ExpConfig = ()=> import('@/components/expmanage/ExpConfig.vue');
+//const ExpAdd = ()=> import('@/components/expmanage/ExpAdd.vue');
+//const ExpEdit = ()=> import('@/components/expmanage/ExpEdit.vue');
 
 //Exam Manage
-const ExamManage = ()=> import('../components/exammanage/ExamManage.vue');
-const ExamAdd = ()=> import('../components/exammanage/ExamAdd.vue');
-const ExamEdit = ()=> import('../components/exammanage/ExamEdit.vue');
+const ExamManage = ()=> import('@/components/exammanage/ExamManage.vue');
+const ExamAdd = ()=> import('@/components/exammanage/ExamAdd.vue');
+const ExamEdit = ()=> import('@/components/exammanage/ExamEdit.vue');
 
 //Question Manage
-const QuestionManage = ()=> import('../components/questionmanage/QuestionManage.vue');
-const QuestionAdd = ()=> import('../components/questionmanage/QuestionAdd.vue');
+const QuestionManage = ()=> import('@/components/questionmanage/QuestionManage.vue');
+const QuestionAdd = ()=> import('@/components/questionmanage/QuestionAdd.vue');
 
 //Score Statistics
-const TeacherStat = ()=> import('../components/scorestats/TeacherView.vue');
-const StudentStat = ()=> import('../components/scorestats/StudentView.vue');
+const TeacherStat = ()=> import('@/components/scorestats/TeacherView.vue');
+const StudentStat = ()=> import('@/components/scorestats/StudentView.vue');
 
 //Experiment Report
-const ReportManage = ()=> import('../components/reportmanage/ReportManage.vue');
+const ReportManage = ()=> import('@/components/reportmanage/ReportManage.vue');
 
 //Version Update
-//const UpdateNote = ()=> import('../components/versionupdate/UpdateNote.vue');
-//const DownloadUpdate = ()=> import('../components/versionupdate/DownloadUpdate.vue');
+//const UpdateNote = ()=> import('@/components/versionupdate/UpdateNote.vue');
+//const DownloadUpdate = ()=> import('@/components/versionupdate/DownloadUpdate.vue');
 
-//const TestGround = ()=> import('../components/versionupdate/TestGround.vue');
+//const TestGround = ()=> import('@/components/versionupdate/TestGround.vue');
 
 //2. set route paths
 const myRoutes = [
 	{path: '/login', meta: {title: '登陆'}, component: Login},
 	//{path: '/mlogin', meta: {title: '登陆'}, component: MobileLogin},
 	/*Dummy page, not for visiting*/
-	{path: '  ', 
+	{path: '   ', 
 	 meta: {title: 'ESP'}, 
 	 component: AppInner,
 	 children:[

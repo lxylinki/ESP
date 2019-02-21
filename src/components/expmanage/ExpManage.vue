@@ -622,7 +622,7 @@
 
 #show-all-teachers {
 	padding: 20px;
-	overflow: hidden;
+	overflow: auto;
 }
 
 .btn-group {
