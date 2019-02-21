@@ -6,28 +6,28 @@
 
 	        <div class="pagelist">
 
-	          <span class="jump" :class="{disabled:pstart}" @click="goToPrevPage()">上一页</span>
+	          <div class="jump pageturner" :class="{disabled:pstart}" @click="goToPrevPage()">上一页</div>
 
-	          <span class="jump" @click="jumpPage(1)" :class="{bgprimary:current_page==1}">1</span>
+	          <div class="jump" @click="jumpPage(1)" :class="{bgprimary:current_page==1}">1</div>
 	          
-	          <span class="ellipsis"  v-show="efront">...</span>
+	          <div class="ellipsis"  v-show="efront">...</div>
 
-	          <span class="jump" v-for="num in indexs" :class="{bgprimary:current_page==num, ends:num==1 || num==pages}" @click="jumpPage(num)">{{num}}</span>
+	          <div class="jump num" v-for="num in indexs" :class="{bgprimary:current_page==num, ends:num==1 || num==pages}" @click="jumpPage(num)">{{num}}</div>
 
-	          <span class="ellipsis"  v-show="ebehind">...</span>
+	          <div class="ellipsis"  v-show="ebehind">...</div>
 	          <!--Duplicate when only 1 page-->
-	          <span v-show="pages>1" class="jump" @click="jumpPage(pages)" :class="{bgprimary:current_page==pages}">{{pages}}</span>
+	          <div v-show="pages>1" class="jump" @click="jumpPage(pages)" :class="{bgprimary:current_page==pages}">{{pages}}</div>
 
-	          <span :class="{disabled:pend}" class="jump" @click="goToNextPage()">下一页</span>
+	          <div :class="{disabled:pend}" class="jump pageturner" @click="goToNextPage()">下一页</div>
 
 	          <!--
-	          <span class="jumppointleft">第</span>
+	          <div class="jumppointleft">第</div>
 	          
-						<span class="jumpinp"><input type="text" v-model="changePage" v-on:keydown="invokeJump($event, changePage)"></span>
+						<div class="jumpinp"><input type="text" v-model="changePage" v-on:keydown="invokeJump($event, changePage)"></div>
 	          
-						<span class="jumppointright">页</span>
+						<div class="jumppointright">页</div>
 
-	          <span class="jump gobtn" @click="jumpPage(changePage)">跳转</span>
+	          <div class="jump gobtn" @click="jumpPage(changePage)">跳转</div>
 	      	  -->
 
 	        </div>
@@ -146,18 +146,28 @@
       line-height: 50px;
     }
 
-    .pagelist span {
+    .pagelist div {
       font-size: 14px;
     }
 
     .pagelist .jump {
-      border: 1px solid #d7d7d7;
-      padding: 5px 8px;
-      -webkit-border-radius: 0px;
-      -moz-border-radius: 0px;
-      border-radius: 0px;
-      cursor: pointer;
-      margin-left: 5px;
+    	display: inline-block;
+    	height: 38px;
+		border: 1px solid #d7d7d7;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+		cursor: pointer;
+		margin-left: 5px;
+		line-height: 40px;
+    }
+
+    .pagelist .pageturner {
+    	width: 86px;
+    }
+
+    .pagelist .jump:not(.pageturner) {
+    	width: 38px;
     }
 
     .pagelist .bgprimary {
@@ -177,10 +187,6 @@
       height: 25px;
       font-size: 13px;
       border: 1px solid #ccc;
-      /*
-      -webkit-border-radius: 4px;
-      -moz-border-radius: 4px;
-      border-radius: 4px;*/
       text-align: center;
     }
 
@@ -202,13 +208,6 @@
       margin-left: 10px;
     }
 
-    /*
-    .bgprimary {
-      cursor: default;
-      color: #fff;
-      background: #337ab7;
-      border-color: #337ab7;
-    }*/
     .pagelist .jump.disabled{
       color: #d7d7d7;
       cursor: auto;

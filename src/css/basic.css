@@ -82,9 +82,9 @@ select {
 }
 
 .el-input__inner{
-  height: 30px;
-  width: 190px;
-  border-radius: 0;
+  width:200px;
+  height:36px;
+  border-radius:4px;
 }
 
 .el-table td {
@@ -106,7 +106,7 @@ select {
 
 /* Table Head */
 .el-table th{
-  background:#f0f7ff;
+  background: #f0f7ff;
   font-size: 14px;
   color: black;
   line-height: 0px;
@@ -122,6 +122,7 @@ select {
 .el-table__body tr.current-row>td {
   background: #f7f8fc !important;
 }
+
 
 /*添加按钮颜色*/
 .addbtn, .addbtn:hover, .addbtn:active, .addbtn:focus {
@@ -146,13 +147,15 @@ select {
 }
 
 .searchbtn {
-  width: 30px; 
-  height: 30px; 
-  background: #31313c; 
-  border: solid #31313c;
+  width:40px;
+  height:36px;
+  background:rgba(92,156,236,1);
+  border: rgba(92,156,236,1);
+  border-radius:0px 4px 4px 0px;
   /*position: absolute;*/
-  top: 218px;
-  right: 40px;
+  position: relative;
+  top: 0px;
+  right: 4px;
 }
 
 .longinput {

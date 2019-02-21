@@ -22,7 +22,7 @@
 			</div>
 
 			<div class="searchwindow exp-searchwindow">
-				<el-input class="exp-searchinput" 
+				<el-input class="searchinput exp-searchinput" 
 						  v-model="search_state"
 						  v-on:keydown.native="invokeSearch($event)"
 						  placeholder="请搜索实验名称">		  
@@ -114,13 +114,14 @@
 			<div class="selectclass">
 				<div class="exp-name"><span>{{exp_name}}</span></div>
 				<div class="searchwindow">
-					<el-input class="searchinput" v-model="t_search_state" placeholder="请搜索真实姓名" v-on:keydown.native="t_invokeSearch($event)"></el-input>
+					<el-input class="searchinput tchr-searchinput" v-model="t_search_state" placeholder="请搜索真实姓名" v-on:keydown.native="t_invokeSearch($event)"></el-input>
 					<button class="searchbtn" v-on:click="t_searchReq()"><i style="color: white;" class="el-icon-search"></i></button>
 				</div>
 			</div>
 
 			<template>
 			  <el-table
+			    class="tchr-list"
 			    :data="tlist"
 			    :highlight-current-row="true"
 			    style="width: 100%;">
@@ -135,6 +136,12 @@
 			      label="用户名"
 			      min-width="200">
 			    </el-table-column>
+
+			    <!--<el-table-column
+			      prop="user_id"
+			      label="ID"
+			      min-width="100">
+			    </el-table-column>-->
 
 			    <!--
 			    <el-table-column
@@ -164,7 +171,6 @@
 			  </el-table>
 			</template>				
 
-			<div style="height: 40px;"></div>
 	   		<NewPager v-bind:current_page='t_curPage' 
 	   	           	  v-bind:pages='t_totalPage'
 	   		          @setPage='t_loadPage'
@@ -261,20 +267,6 @@
 				this.$router.push('/expadd');
 			},
 
-			/*
-			editRow(row){
-				//console.log(row);
-				//VueEvent.$emit('to-edit', row);
-				//storage.set('row', row);
-				this.$store.commit('sign', this.mod_name);
-				this.$store.commit('setEdit', true);
-				this.$store.commit('pickRow', row);
-				this.$store.commit('setCurPage', this.curPage);
-				this.$store.commit('setCurSearch', this.search_state);
-				this.$router.push('/expedit');
-
-			},*/
-
 			grantTeachers(row){
 				/*
 				this.$store.commit('sign', this.mod_name);
@@ -286,6 +278,7 @@
 				this.exp_name = row.name;
 				this.exp_id = row.eid;
 				this.focus_tids = [];
+				this.orig_tids = [];
 				//existing teachers
 				if(row.teachers.length > 0) {
 					for(let teacher of row.teachers) {
@@ -294,6 +287,7 @@
 					}					
 				}
 
+				this.t_loadPage(1);
 				//console.log(row);
 				this.layeridx = layer.open({
 					type: 1,
@@ -480,19 +474,9 @@
 			},
 
 			selectRow(trow){
-				//console.log(row);
-				this.focus_tids.push(trow.user_id);
-				/*
-				let api = global_.exp_teacher_add;
-				let data = {
-					"eid": this.exp_id,
-					"user_ids":[trow.user_id]
+				if(!this.focus_tids.includes(trow.user_id)) {
+					this.focus_tids.push(trow.user_id);
 				}
-				this.$http.post(api, data).then((resp)=>{
-					console.log(resp);
-				}, (err)=>{
-					console.log(err);
-				});*/
 			},
 
 			removeRow(trow){
@@ -606,6 +590,11 @@
 
 
 <style type="text/css" scoped>
+.selectclass {
+	background: #ffffff;
+	height: 100%;
+}
+
 .exp-searchwindow {
     position: relative;
     top: -4px;
@@ -627,8 +616,8 @@
 }
 
 .exp-name {
-	display: inline-block;
-	margin: 20px;
+	position: relative;
+	text-align: center;
 }
 
 #show-all-teachers {
@@ -637,8 +626,9 @@
 }
 
 .btn-group {
-	float: right;
-	margin-right: 103px;
+	position: absolute;
+	bottom: 30px;
+	right: 30px;
 }
 
 .unchecked-box, .checked-box {
@@ -647,4 +637,45 @@
 	font-size: 180%;
 }
 
+/*modify the style of current row*/
+#show-all-teachers .el-table >>> .el-table__body tr.current-row>td {
+	background: #f0f7ff !important;
+	color: #5c9cec;
+}
+
+/*hide hover effect*/
+#show-all-teachers .el-table--enable-row-hover >>> .el-table__body tr:not(.current-row):hover>td{
+	background-color: transparent !important;
+}
+
+.goback, .goback:hover, .goback:active, .goback:focus{
+	width:86px;
+	height:38px;
+	background:rgba(255,255,255,1);
+	border:1px solid rgba(204,204,204,1);
+	border-radius:4px;
+}
+
+.confirm, .confirm:hover, .confirm:active, .confirm:focus{
+	color: #ffffff;
+	width:86px;
+	height:38px;
+	background:#5c9cec;
+	border:1px solid #5c9cec;
+	border-radius:4px;
+}
+
+.searchinput {
+	width:200px;
+	height:36px;
+	background:rgba(255,255,255,1);
+	border: none;
+	border-radius:4px;
+}
+
+/*
+.tchr-list {
+	border: 1px solid red;
+	top: 100px;
+}*/
 </style>
