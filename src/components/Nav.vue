@@ -8,7 +8,12 @@
 	                   style="display: inline-block; 
 	                   		  width: 160px;" 
 	                   v-bind:href='item.url'
-	                   v-on:click.self.prevent='showPage(item.url)'>{{item.name}}</a> 
+	                   v-on:click.self.prevent='showPage(item.url)'>
+
+	                	<img class="start-icon" :src=item.icon_highlight v-show="true">
+	                	<img class="start-icon" :src=item.icon v-show="false"><span>{{item.name}}</span>
+
+	                </a> 
 
                 	<div class="navbtn" 
                 		   style="display: inline-block; 
@@ -19,6 +24,7 @@
                 		<i v-show="!item.isSubShow" class="iconfont">&#xe601;</i>
                 		<i v-show="item.isSubShow" class="iconfont">&#xe600;</i>
 					</div>
+
 				</div>
 
 				<Nav v-if="item.subItems.length>0 && item.isSubShow" 
@@ -37,8 +43,7 @@
 		props:['menuList','curGroup'],
 
 		data(){
-			return {
-				len:this.menuList.length			
+			return {			
 			}
 		},
 		methods:{
@@ -81,6 +86,12 @@
 * {
 	font-family: STXihei;
 	font-size: 16px;
+}
+
+.start-icon {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 10px;
 }
 
 .asideMenu {
@@ -152,6 +163,12 @@ li a:link, li a:hover, li a:active, li a:visited {
     display: block;
     padding: 8px 16px;
 }
+
+/*
+li a:before {
+	font-family: "iconfont";
+	content: '\e62b';
+}*/
 
 .navbtn {
 	float: right;

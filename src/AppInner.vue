@@ -112,18 +112,23 @@
 			            		isSubShow:false,
 			            		subItems:[]          			
 		            		}
-	            		]
+	            		],
+	            		//as Nav
+	            		icon_highlight:require('@/assets/account.png'),
+	            		icon: require('@/assets/account_dark.png')
             		}, 
 
             		{
-	            		name:'实验管理',
+	            		name:'实验项目管理',
 	            		url: "/expmanage",
 	            		userGroup: [
 	            			global_.school_admin_group, 
 	            			global_.teacher_group
 	            		],
 	            		isSubShow:false,
-	            		subItems:[]            		            			
+	            		subItems:[] ,
+	            		icon_highlight:require('@/assets/exp.png'),
+	            		icon: require('@/assets/exp_dark.png')          		            			
             		},
             		{
 	            		name:'考核管理',
@@ -133,18 +138,22 @@
 	            			global_.teacher_group
 	            		],
 	            		isSubShow:false,
-	            		subItems:[]            		            			
+	            		subItems:[],
+	            		icon_highlight:require('@/assets/exam.png'),
+	            		icon: require('@/assets/exam_dark.png')              		            			
             		},
 
             		{
-	            		name:'试题管理',
+	            		name:'公共题库管理',
 	            		url: "/questionmanage",
 	            		userGroup: [
 	            			global_.school_admin_group, 
 	            			global_.teacher_group
 	            		],
 	            		isSubShow:false,
-	            		subItems:[]            		            			
+	            		subItems:[],
+	            		icon_highlight:require('@/assets/ques.png'),
+	            		icon: require('@/assets/ques_dark.png') 	                  		            			
             		},
              		{
 	            		name:'成绩统计',
@@ -155,7 +164,9 @@
 	            			global_.student_group
 	            		],
 	            		isSubShow:false,
-	            		subItems:[]            		            			
+	            		subItems:[],
+	            		icon_highlight:require('@/assets/stats.png'),
+	            		icon: require('@/assets/stats_dark.png') 	                        		            			
             		},
              		{
 	            		name:'实验报告',
@@ -166,8 +177,11 @@
 	            			global_.student_group
 	            		],
 	            		isSubShow:false,
-	            		subItems:[]            		            			
+	            		subItems:[],
+	            		icon_highlight:require('@/assets/report.png'),
+	            		icon: require('@/assets/report_dark.png') 	                        		            			
             		},
+            		/*
              		{
 	            		name:'版本更新',
 	            		url: "/updatenote",
@@ -178,7 +192,7 @@
 	            		],
 	            		isSubShow:false,
 	            		subItems:[]            		            			
-            		}        		           		      
+            		} */       		           		      
 				],
 				current_group: '',
 				isAdmin: false,

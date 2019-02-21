@@ -12,7 +12,7 @@
 	          
 	          <div class="ellipsis"  v-show="efront">...</div>
 
-	          <div class="jump num" v-for="num in indexs" :class="{bgprimary:current_page==num, ends:num==1 || num==pages}" @click="jumpPage(num)">{{num}}</div>
+	          <div class="jump" v-for="num in indexs" :class="{bgprimary:current_page==num, ends:num==1 || num==pages}" @click="jumpPage(num)">{{num}}</div>
 
 	          <div class="ellipsis"  v-show="ebehind">...</div>
 	          <!--Duplicate when only 1 page-->
@@ -148,6 +148,7 @@
 
     .pagelist div {
       font-size: 14px;
+      display: inline-block;
     }
 
     .pagelist .jump {
@@ -178,7 +179,7 @@
     }
 
     /*hide original 1st and last page*/
-    .ends {
+    .jump.bgprimary.ends {
     	display: none;
     }
 
