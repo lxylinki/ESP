@@ -235,7 +235,7 @@
 		},
 
 		beforeMount(){
-			this.loading = layer.load(0, {shade: false});
+			this.loading = layer.load(1, {shade: false});
 		},
 
 		mounted(){

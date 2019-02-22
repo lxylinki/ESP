@@ -92,7 +92,6 @@
 </script>
 
 <style type="text/css" scoped>
-
 * {
 	font-family: STXihei, "Microsoft YaHei";
 	font-size: 16px;
@@ -101,7 +100,10 @@
 .start-icon {
 	display: inline-block;
 	vertical-align: middle;
-	margin: 10px;
+	margin-right: 18px;
+	margin-left: 30px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 .asideMenu {
@@ -126,8 +128,10 @@
 	display: flex;
 	align-items: center;
 	cursor: pointer;
+	text-align: left;
 	/*border-top: 1px solid rgba(161, 161, 161, 0.5);*/
 }
+
 /*subitems style*/
 .asideMenu .asideMenu .oneMenu {
 	box-sizing: border-box;

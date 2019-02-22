@@ -47,10 +47,10 @@
 	const exam_ques_create = url_prefix + 'esp_admin/examine-questions/create';
 	const exam_ques_delete = url_prefix + 'esp_admin/examine-questions/delete';
 
-	const question_list = url_prefix + 'esp_admin/questions-bank/list';
-	const question_update = url_prefix + 'esp_admin/questions-bank/update';
-	const question_delete = url_prefix + 'esp_admin/questions-bank/delete';
-	const question_create = url_prefix + 'esp_admin/questions-bank/create';
+	const ques_list = url_prefix + 'esp_admin/questions-bank/list';
+	const ques_create = url_prefix + 'esp_admin/questions-bank/create';
+	const ques_update = url_prefix + 'esp_admin/questions-bank/update';
+	const ques_delete = url_prefix + 'esp_admin/questions-bank/delete';
 
 	const class_create = url_prefix + 'user/school-class/create';
 	const class_addteacher = url_prefix + 'user/school-class/add-teacher';
@@ -120,10 +120,10 @@
 		exam_ques_create,
 		exam_ques_delete,
 
-		question_list,
-		question_update,
-		question_delete,
-		question_create,
+		ques_list,
+		ques_update,
+		ques_delete,
+		ques_create,
 
 		class_create,
 		class_addteacher,

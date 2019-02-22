@@ -40,12 +40,13 @@ const ExpConfig = ()=> import('@/components/expmanage/ExpConfig.vue');
 //const ExamAdd = ()=> import('@/components/exammanage/ExamAdd.vue');
 //const ExamEdit = ()=> import('@/components/exammanage/ExamEdit.vue');
 
-const Exam = ()=> import('@/components/exammanage/Exam.vue');
+const ExamManage = ()=> import('@/components/exammanage/ExamManage.vue');
 const ExamQuesConfig = ()=> import('@/components/exammanage/ExamQuesConfig.vue');
 
 //Question Manage
-const QuestionManage = ()=> import('@/components/questionmanage/QuestionManage.vue');
-const QuestionAdd = ()=> import('@/components/questionmanage/QuestionAdd.vue');
+const QuesManage = ()=> import('@/components/questionmanage/QuesManage.vue');
+const QuesAdd = ()=> import('@/components/questionmanage/QuesAdd.vue');
+const QuesEdit = ()=> import('@/components/questionmanage/QuesEdit.vue');
 
 //Score Statistics
 const TeacherStat = ()=> import('@/components/scorestats/TeacherView.vue');
@@ -93,14 +94,15 @@ const myRoutes = [
 		//{path: '/expedit',  meta: {title:'实验管理'}, component: ExpEdit},
 
 
-		{path: '/exammanage', meta: {title:'考核管理'}, component: Exam},
+		{path: '/exammanage', meta: {title:'考核管理'}, component: ExamManage},
 		{path: '/examquesconfig', meta: {title: '考核管理'}, component: ExamQuesConfig},
 		//{path: '/examadd', meta:{title:'考核管理'}, component: ExamAdd},
 		//{path: '/examedit', meta: {title:'考核管理'}, component: ExamEdit},
 
 
-		{path: '/questionmanage', meta: {title:'试卷管理'}, component: QuestionManage},
-		{path: '/questionadd', meta: {title:'试卷管理'}, component: QuestionAdd},
+		{path: '/questionmanage', meta: {title:'试题管理'}, component: QuesManage},
+		{path: '/questionadd', meta: {title:'试题管理'}, component: QuesAdd},
+		{path: '/questionedit', meta: {title: '试题管理'}, component: QuesEdit},
 
 		{path: '/teacherstats', meta: {title:'成绩统计'}, component: TeacherStat},
 		{path: '/studentstats', meta: {title:'成绩统计'}, component: StudentStat},

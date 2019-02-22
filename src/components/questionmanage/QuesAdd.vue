@@ -1,8 +1,8 @@
 <template>
-	<div id="questionadd">
-		<div style="width: 100%; height: 35px; border-bottom: 2px solid #eee">
-			<span style="color: #1281b2; font-weight: bold; font-size: 20px;">|</span> 
-			<span class="pagetitle">试题管理</span>
+	<div id="quesadd">
+		<div style="width: 100%; height: 35px;">
+			<span style="color: #1890ff; font-weight: bold">|</span> 
+			试题管理
 		</div>
 		
 		<div style="height: 30px;"></div>
@@ -13,14 +13,35 @@
 			</div>
 
 			<div class="schoice">
-				<input type="radio" name="qtype" value='1' v-model="type">
-				<span>单选</span>
+				<input type="radio" id="single" name="qtype" value='1' v-model="type">
+				<label for="single">单选</label>
 			</div>
 			
 			<div class="mchoice">
-				<input type="radio" name="qtype" value='2' v-model="type">
-				<span>多选</span>
+				<input type="radio" id="multi" name="qtype" value='2' v-model="type">
+				<label for="multi">多选</label>
 			</div>
+		</div>
+
+		<div style="height: 40px;"></div>
+
+		<div class="expbelong">所属实验： 
+			<template>
+			  <el-select class="longselect exp-belong-input"
+			  			 v-model="exp_value" 
+			  			 placeholder="请搜索实验名称"
+			  			 v-on:change="">
+			    <el-option
+			      v-for="item in exp_options"
+			      :key="item.id"
+			      :label="item.name"
+			      :value="item.id">
+			    </el-option>
+			  </el-select>
+			</template>
+				
+			<span class="redalert" v-show="!exp_value">*</span>
+			<span class="whitedefault" v-show="exp_value">*</span>
 		</div>
 
 		<div style="height: 40px;"></div>
@@ -33,7 +54,8 @@
 			<div id="quesbody">
 				<el-input type="textarea" 
 						  class="questionbody" 
-						  v-model="question"></el-input>
+						  v-model="question"
+						  placeholder="必填"></el-input>
 			</div>
 		</div>
 
@@ -50,17 +72,18 @@
 
 
 		<div class="opts">
+			<div class="opts-div">
 <!------------------------------------------------------------------------------------------------------------------------>
 			<div class="answera" v-show="showA">
-				<div style="display: inline-block; margin-left: 30px; margin-right: 20px;">选项A</div>
+				<div style="display: inline-block; margin-left: 0px; margin-right: 20px;" class="opt-label">选项A</div>
 
 				<!--input-->
-				<div style="display: inline-block; margin-right: 20px;">
-					<input class="longinput" type="text" v-model="aval">
+				<div style="display: inline-block; margin-right: 20px;" class="opt-input">
+					<input class="longinput" type="text" v-model="aval" placeholder="必填">
 				</div>
 				
 				<!--add-->
-				<div style="display: inline-block;">
+				<div style="display: inline-block;" class="opt-add">
 					<i style="color: #333333; font-size: 150%;" 
 					   class="iconfont" 
 					   v-on:click="aAddNewOpt()"
@@ -71,7 +94,7 @@
 				</div>
 				
 				<!--del-->
-				<div style="display: inline-block;">
+				<div style="display: inline-block;" class="opt-del">
 					<i style="color: #333333; font-size: 150%; margin-right: 20px;" 
 					   class="iconfont" 
 					   v-on:click="delA()"
@@ -82,21 +105,22 @@
 				</div>
 				
 				<!--correct one-->
-				<div style="display: inline-block;">
+				<div class="checkicon opt-correct" style="display: inline-block;">
 					<input style="height: 24px; width: 24px; margin-right: 20px; margin-left: 30px;" 
 						   class="checkbox"
 						   id="aCheck"
 						   v-on:change="checkA()" 
-						   type="checkbox">
+						   v-model="aCorrect"
+						   type="checkbox"><label for="aCheck"></label>
 				</div>
 				
 				<!--move up-->
-				<div style="display: inline-block;">
+				<div style="display: inline-block;" class="opt-mvup">
 					<i style="color: #333333; font-size: 170%; margin-left: 20px;" class="iconfont">&#xe7c6;</i>
 				</div>
 
 				<!--move down-->
-				<div style="display: inline-block;">
+				<div style="display: inline-block;" class="opt-mvdown">
 					<i style="color: #333333; font-size: 170%;" class="iconfont" v-on:click="mvDownA()">&#xe8ed;</i>
 				</div>
 				<div style="height: 20px;"></div>
@@ -104,11 +128,11 @@
 <!----------------------------------------------------------------------------------------------------------------------->
 			<div class="answerb" v-show="showB">
 				<!--title-->
-				<div style="display: inline-block; margin-left: 30px; margin-right: 20px;">选项B</div>
+				<div style="display: inline-block; margin-left: 0px; margin-right: 20px;">选项B</div>
 
 				<!--input-->
 				<div style="display: inline-block; margin-right: 20px;">
-					<input class="longinput" type="text" v-model="bval">
+					<input class="longinput" type="text" v-model="bval" placeholder="必填">
 				</div>
 				<!--add-->
 				<div style="display: inline-block;">
@@ -120,6 +144,7 @@
 					</i>
 					<i style="color: #ffffff; font-size: 150%;" class="iconfont" v-show="showE">&#xe62d;</i>
 				</div>
+
 				<!--del-->
 				<div style="display: inline-block;" >
 					<i style="color: #333333; font-size: 150%; margin-right: 20px;" 
@@ -132,12 +157,13 @@
 				</div>
 				
 				<!--correct-->
-				<div style="display: inline-block;">
+				<div class="checkicon" style="display: inline-block;">
 					<input style="height: 24px; width: 24px; margin-right: 20px; margin-left: 30px;" 
 						   class="checkbox" 
 						   type="checkbox"
 						   id="bCheck"
-						   v-on:change="checkB()">
+						   v-on:change="checkB()"
+						   v-model="bCorrect"><label for="bCheck"></label>
 				</div>
 				<!--move up-->
 				<div style="display: inline-block;">
@@ -153,7 +179,7 @@
 <!-------------------------------------------------------------------------------------------------------------------------->
 			<div class="answerc" v-show="showC">
 				<!--title-->
-				<div style="display: inline-block; margin-left: 30px; margin-right: 20px;">选项C</div>
+				<div style="display: inline-block; margin-left: 0px; margin-right: 20px;">选项C</div>
 
 				<!--input-->
 				<div style="display: inline-block; margin-right: 20px;">
@@ -176,12 +202,13 @@
 					   v-on:click="delC()">&#xe6a9;</i>
 				</div>
 				<!--correct-->
-				<div style="display: inline-block;">
+				<div class="checkicon" style="display: inline-block;">
 					<input style="height: 24px; width: 24px; margin-right: 20px; margin-left: 30px;" 
 						   class="checkbox" 
 						   type="checkbox"
 						   id="cCheck"
-						   v-on:change="checkC()">
+						   v-on:change="checkC()"
+						   v-model="cCorrect"><label for="cCheck"></label>
 				</div>
 				<!--move up-->
 				<div style="display: inline-block;">
@@ -198,7 +225,7 @@
 <!-------------------------------------------------------------------------------------------------------------------------->
 			<div class="answerd" v-show="showD">
 				<!--title-->
-				<div style="display: inline-block; margin-left: 30px; margin-right: 20px;">选项D</div>
+				<div style="display: inline-block; margin-left: 0px; margin-right: 20px;">选项D</div>
 
 				<!--input-->
 				<div style="display: inline-block; margin-right: 20px;">
@@ -222,12 +249,13 @@
 				</div>
 				
 				<!--correct one-->
-				<div style="display: inline-block;">
+				<div class="checkicon" style="display: inline-block;">
 					<input style="height: 24px; width: 24px; margin-right: 20px; margin-left: 30px;" 
 						   class="checkbox" 
 						   type="checkbox"
 						   id="dCheck" 
-						   v-on:change="checkD()">
+						   v-on:change="checkD()"
+						   v-model="dCorrect"><label for="dCheck"></label>
 				</div>
 				
 				<!--move up-->
@@ -247,7 +275,7 @@
 <!----------------------------------------------------------------------------------------------------------------------------->
 			<div class="answere" v-show="showE">
 				<!--title-->
-				<div style="display: inline-block; margin-left: 30px; margin-right: 20px;">选项E</div>
+				<div style="display: inline-block; margin-left: 0px; margin-right: 20px;">选项E</div>
 				<!--input-->
 				<div style="display: inline-block; margin-right: 20px;">
 					<input class="longinput" type="text" v-model="eval">
@@ -267,12 +295,13 @@
 					<i style="color: #333333; font-size: 150%; margin-right: 20px;" class="iconfont" v-on:click="delE()">&#xe6a9;</i>
 				</div>
 				<!--correct one-->
-				<div style="display: inline-block;">
+				<div class="checkicon" style="display: inline-block;">
 					<input style="height: 24px; width: 24px; margin-right: 20px; margin-left: 30px;" 
 						   class="checkbox" 
 						   type="checkbox"
 						   id="eCheck"
-						   v-on:change="checkE()">
+						   v-on:change="checkE()"
+						   v-model="eCorrect"><label for="eCheck"></label>
 				</div>
 				<!--move up-->
 				<div style="display: inline-block;">
@@ -284,6 +313,7 @@
 				</div>
 				<div style="height: 20px;"></div>
 			</div>
+		</div>
 
 			
 
@@ -299,7 +329,7 @@
 		
 		
 		<div class="btn-group">
-			<el-button class="confirm" v-on:click="addCreate()">确定</el-button>
+			<el-button class="confirm" v-on:click="preCheck()">确定</el-button>
 			<el-button class="goback" v-on:click="goBack()">返回</el-button>
 			<div style="height: 40px;"></div>
 		</div>
@@ -314,6 +344,7 @@
 <script type="text/javascript">
 	import global_ from '../Global.js';
 	import store from '../../vuex/store.js';
+	import Utils from '@/components/Utils.js';
 
 	export default {
 		store:store,
@@ -338,117 +369,154 @@
 				dCorrect:false,
 				eCorrect:false,
 
-				mchoice:false,
-
 				//1 单选 2 多选
 				type:'',
 				question:'',
 				exam_id:'',
 				answer:'',
-				answers:[],
-				analyze:''
+				//answers:[],
+				analyze:'',
+
+				exp_options:[],
+				exp_value: ''
 			}
 		},
 
 		methods: {
-			rmanswer( answers, ans){
-				var idx = answers.indexOf(ans);
-				answers.splice(idx, 1);
-				//console.log(this.answers);				
-			},
-
-			getAnswers(answers){
-				var ans = '';
-				for(var i in answers) {
-					ans += answers[i];
-				}
-				//console.log(ans);
-				return ans;
-			},
-
 			checkA(){
 				//when single choice and A is checked
 				var opta = document.querySelector('#aCheck');
+
+				if(!this.aval && opta.checked) {
+					this.aCorrect = false;
+					Utils.lalert('请输入选项');
+					return;
+				}
+
 				if(opta.checked && this.type == 1){
 
-					this.answer = 'a';
-					document.querySelector('#bCheck').checked = false;
-					document.querySelector('#cCheck').checked = false;
-					document.querySelector('#dCheck').checked = false;
-					document.querySelector('#eCheck').checked = false;
+					//this.answer = 'a';
+					this.aCorrect = true;
+					this.bCorrect = false;
+					this.cCorrect = false;
+					this.dCorrect = false;
+					this.eCorrect = false;
 					
 					// when multi-choice and A is checked
 				} else if(opta.checked && this.type == 2){
-					this.answers.push('a');
+					//this.answers.push('a');
+					this.aCorrect = true;
 
-					//when multi-choice and A is unchecked
-				} else if(!opta.checked && this.type == 2) {
-					this.rmanswer(this.answers, 'a');
+					//A is unchecked
+				} else {
+					//this.rmanswer(this.answers, 'a');
+					this.aCorrect = false;
 				}
 
 			},
 			checkB(){
 				var optb = document.querySelector('#bCheck');
+
+				if(!this.bval && optb.checked) {
+					this.bCorrect = false;
+					Utils.lalert('请输入选项');
+					return;
+				}
+
 				if(optb.checked && this.type == 1){
 
-					this.answer = 'b';
-					document.querySelector('#aCheck').checked = false;
-					document.querySelector('#cCheck').checked = false;
-					document.querySelector('#dCheck').checked = false;
-					document.querySelector('#eCheck').checked = false;
+					//this.answer = 'b';
+					this.bCorrect = true;
+					this.aCorrect = false;
+					this.cCorrect = false;
+					this.dCorrect = false;
+					this.eCorrect = false;
 
 				} else if(optb.checked && this.type == 2) {
-					this.answers.push('b');
+					//this.answers.push('b');
+					this.bCorrect = true;
 
-				} else if(!optb.checked && this.type == 2) {
-					this.rmanswer(this.answers, 'b');
+				} else {
+					//this.rmanswer(this.answers, 'b');
+					this.bCorrect = false;
 				}
 			},
 			checkC(){
 				var optc = document.querySelector('#cCheck');
+
+				if(!this.cval && optc.checked) {
+					this.cCorrect = false;
+					Utils.lalert('请输入选项');
+					return;
+				}
+
 				if(optc.checked && this.type == 1) {
-					this.answer = 'c';
-					document.querySelector('#aCheck').checked = false;
-					document.querySelector('#bCheck').checked = false;
-					document.querySelector('#dCheck').checked = false;
-					document.querySelector('#eCheck').checked = false;
+					//this.answer = 'c';
+					this.cCorrect = true;
+					this.aCorrect = false;
+					this.bCorrect = false;
+					this.dCorrect = false;
+					this.eCorrect = false;
 
 				} else if(optc.checked && this.type == 2) {
-					this.answers.push('c');
+					//this.answers.push('c');
+					this.cCorrect = true;
 
-				} else if(!optc.checked && this.type == 2) {
-					this.rmanswer(this.answers, 'c');
+				} else {
+					//this.rmanswer(this.answers, 'c');
+					this.cCorrect = false;
 				}
 			},
 			checkD(){
 				var optd = document.querySelector('#dCheck');
+
+				if(!this.dval && optd.checked) {
+					this.dCorrect = false;
+					Utils.lalert('请输入选项');
+					return;
+				}
+
 				if(optd.checked && this.type == 1) {
-					this.answer = 'd';
-					document.querySelector('#aCheck').checked = false;
-					document.querySelector('#bCheck').checked = false;
-					document.querySelector('#cCheck').checked = false;
-					document.querySelector('#eCheck').checked = false;	
+					//this.answer = 'd';
+					this.dCorrect = true;
+					this.aCorrect = false;
+					this.bCorrect = false;
+					this.cCorrect = false;
+					this.eCorrect = false;
 
 				}else if(optd.checked && this.type == 2) {
-					this.answers.push('d');
+					//this.answers.push('d');
+					this.dCorrect = true;
 
-				}else if(!optd.checked && this.type == 2) {
-					this.rmanswer(this.answers, 'd');
+				}else {
+					//this.rmanswer(this.answers, 'd');
+					this.dCorrect = false;
 				}	
 			},
 			checkE(){
 				var opte = document.querySelector('#eCheck');
-				if(opte.checked && this.type == 1) {
 
-					document.querySelector('#aCheck').checked = false;
-					document.querySelector('#bCheck').checked = false;
-					document.querySelector('#cCheck').checked = false;
-					document.querySelector('#dCheck').checked = false;	
+				if(!this.eval && opte.checked) {
+					this.eCorrect = false;
+					Utils.lalert('请输入选项');
+					return;
+				}
+
+				if(opte.checked && this.type == 1) {
+					//this.answer = 'e';
+					this.eCorrect = true;
+					this.aCorrect = false;
+					this.bCorrect = false;
+					this.cCorrect = false;
+					this.dCorrect = false;
 
 				} else if (opte.checked && this.type == 2) {
-					this.answers.push('e');
-				} else if (!opte.checked && this.type == 2) {
-					this.rmanswer(this.answers, 'e');
+					//this.answers.push('e');
+					this.eCorrect = true;
+
+				} else {
+					//this.rmanswer(this.answers, 'e');
+					this.eCorrect = false;
 				}
 			},
 
@@ -514,14 +582,18 @@
 					//cannot delete when 1 opt left
 				}
 			},
+
 			mvDownA(){
 				if(this.showB) {
 					var a = this.aval;
 					this.aval = this.bval;
-					this.bval = a;					
+					this.bval = a;
+
+					let ifB = this.bCorrect;
+					this.bCorrect = this.aCorrect;
+					this.aCorrect = ifB;			
 				}
 			},
-
 
 			bAddNewOpt(){
 				if(this.showE) {
@@ -569,16 +641,27 @@
 					//this.showB = false;
 				}
 			},
+
 			mvUpB(){
 				var b = this.bval;
 				this.bval = this.aval;
 				this.aval = b;
+
+				let ifB = this.bCorrect;
+				this.bCorrect = this.aCorrect;
+				this.aCorrect = ifB;
 			},
+
 			mvDownB(){
+				//if option C is present
 				if(this.showC) {
 					var b = this.bval;
 					this.bval = this.cval;
-					this.cval = b;					
+					this.cval = b;
+
+					let ifB = this.bCorrect;
+					this.bCorrect = this.cCorrect;
+					this.cCorrect = ifB;					
 				}
 			},
 
@@ -619,12 +702,20 @@
 				var c = this.cval;
 				this.cval = this.bval;
 				this.bval = c;
+
+				let ifC = this.cCorrect;
+				this.cCorrect = this.bCorrect;
+				this.bCorrect = ifC;
 			},
 			mvDownC(){
 				if (this.showD){
 					var c = this.cval;
 					this.cval = this.dval;
-					this.dval = c;					
+					this.dval = c;	
+
+					let ifC = this.cCorrect;
+					this.cCorrect = this.dCorrect;
+					this.dCorrect = ifC;									
 				}
 			},
 
@@ -652,15 +743,22 @@
 				var d = this.dval;
 				this.dval = this.cval;
 				this.cval = d;
+
+				let ifD = this.dCorrect;
+				this.dCorrect = this.cCorrect;
+				this.cCorrect = ifD;
 			},
 			mvDownD(){
 				if (this.showE) {
 					var d = this.dval;
 					this.dval = this.eval;
-					this.eval = d;					
+					this.eval = d;	
+
+					let ifD = this.dCorrect;
+					this.dCorrect = this.eCorrect;
+					this.eCorrect = ifD;				
 				}
 			},
-
 
 			delE(){
 				this.eval = '';
@@ -670,26 +768,65 @@
 				var e = this.eval;
 				this.eval = this.dval;
 				this.dval = e;
+
+				let ifE = this.eCorrect;
+				this.eCorrect = this.dCorrect;
+				this.dCorrect = ifE;
+			},
+
+			composeFinalAns(){
+				let final_ans = {'A':this.aCorrect, 'B':this.bCorrect, 'C':this.cCorrect, 'D':this.dCorrect, 'E':this.eCorrect};
+				for(let opt in final_ans) {
+					if(final_ans[opt]) {
+						this.answer += opt;
+					}
+				}
+				//console.log(this.answer);
+			},
+
+			preCheck(){
+				//this.composeFinalAns();
+
+				if(!this.exp_value) {
+					Utils.lalert('请选择所属实验');
+					return;
+
+				} else if(!this.question) {
+					Utils.lalert('请输入题干');
+					return;
+
+				} else if((!this.aval) || (!this.bval)) {
+					Utils.lalert('请输入选项');
+					return;
+
+				} else if(!(this.aCorrect || this.bCorrect || this.cCorrect || this.dCorrect || this.eCorrect)) {
+					Utils.lalert('请选择正确选项');
+					return;
+				} else {
+					this.composeFinalAns();
+					this.addCreate();
+				}
 			},
 
 			addCreate(){
-				var api = global_.question_create;
-				var ans;
+				let api = global_.ques_create;
+				/*
+				let ans;
 				if (this.type == 1) {
 					ans = this.answer;
 
 				} else if (this.type == 2) {
 					ans = this.getAnswers(this.answers);
-				}
+				}*/
 
 				let data = {
-					exam_id: this.exam_id,
+					eid: this.exp_value,
 					type: this.type,
 					question: this.question,
-					answer: ans,
+					answer: this.answer,
 					option_a: this.aval,
 					option_b: this.bval,
-					display: 0,
+					//display: 0,
 					analysis: this.analyze
 				}
 
@@ -722,28 +859,76 @@
 
 			goBack(){
 				this.$router.go(-1);
+			},
+
+			fillExpSelect(){
+				asyncReq.call(this);
+				async function asyncReq(){
+					let resp = await Utils.reqExpList.call(this);
+					this.exp_options = resp.body._list;
+					this.exp_options.unshift({'name': '所有实验', 'id': null});
+				}				
 			}
 		},
-		mounted(){
-			//get exam_id from prev page
-			this.exam_id = this.$store.state.exam_id;
-			//console.log(this.exam_id);
+		mounted(){		
+			Utils.page_check_status.call(this);	
+			this.type = 1;
+			this.fillExpSelect();
 		}
 	}
 </script>
 
 <style type="text/css" scoped>
+.checkicon {
+	position: relative;
+}
+
+.checkicon input[type="checkbox"] {
+	opacity: 0;
+}
+
+.checkicon label {
+	width: 22px;
+	height: 22px;
+	border: 2px solid #cccccc;
+	position: absolute;
+	left: 30px;
+	top: 4px;
+}
+
+.checkicon input[type="checkbox"]:checked + label {
+	background: #0099ff;
+	border: 1px solid #0099ff;
+	background-image: url("../../assets/white-correct.png");
+	background-repeat: no-repeat;
+}
+
+.longselect /deep/ .el-input__inner {
+	height: 34px;
+	width: 300px;
+}
+
+.redalert {
+	color: red;
+}
+.whitedefault {
+	/*same with bg color*/
+	color: #ffffff;
+}
 
 .analysis {
-	margin: 20px;
+	margin-top: 15px;
+	margin-right: 15px;
 	position: relative;
-	left: 32px;
+}
+
+.analysisbody {
+	margin-left: 5px;
 }
 
 .btn-group {
 	position: relative;
-	left: -410px;
-	top: -60px;
+	margin-left: 95px;
 }
 
 .iconfont {
@@ -751,11 +936,11 @@
 }
 
 .opts {
-	position: absolute;
-	left: 140px;
+	background: #ffffff;
+	position: relative;
 	width: 800px;
 	margin-bottom: 30px;
-	text-align: right;
+	text-align: left;
 }
 
 .checkbox {
@@ -763,15 +948,16 @@
 }
 
 .answers {
+	position: relative;
 	height: 40px;
 	background: #f7f7f7;
 }
 
 .ansopt {
 	display: inline-block;
-	margin-right: 325px;
+	margin-right: 320px;
 	margin-top: 8px;
-	margin-left: 10px;
+	margin-left: 20px;
 }
 
 .adddel {
@@ -784,12 +970,6 @@
 }
 .mvupdown {
 	display: inline-block;
-}
-
-input .questionbody{
-	width: 300px;
-	height: 30px;
-	border: 1px solid #d7d7d7;
 }
 
 div>.schoice input {
@@ -813,28 +993,43 @@ div>.mchoice input {
 
 #tp {
 	display: inline-block;
+	margin-left: 38px;
+	margin-right: 5px;
 }
 
 #ques {
+	position: relative;
 	vertical-align: top;
 	display: inline-block;
+	margin-left: 36px;
+}
+
+#anls {
+	margin-left: 5px;
 }
 
 #quesbody {
 	display: inline-block;
+	position: relative;
+	left: 0px;
 }
 
-
-.goback, .goback:hover, .goback:active, .goback:focus{
-	color: white;
-	background: #d2d5d2;
-	border-color: #d2d5d2;
+.expbelong {
+	margin-left: 5px;
 }
 
-.confirm, .confirm:hover, .confirm:active, .confirm:focus{
-	background: #31313c;
-  	color: white;
-  	border-color: #31313c;
+.questionbody {
+	margin-left: 10px;
+}
+
+.exp-belong-input {
+	margin-left: 10px;
+}
+
+.opts-div {
+	text-align: right;
+	width: 650px;
+	padding-left: 5px;
 }
 
 </style>

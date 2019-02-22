@@ -27,11 +27,11 @@
 
 
 				<el-container>
-        			<el-aside width="230px">
+        			<el-aside>
         				<!--<div style="height: 110px; background: #31313c"></div>-->
         				<Nav v-bind:menuList='menuList'
         				     v-bind:curGroup='current_group'></Nav>
-        				<div class="navbg"></div>
+        				<!--<div class="navbg"></div>-->
         			</el-aside>
         
         			<el-main>
@@ -130,18 +130,6 @@
 	            		icon_highlight:require('@/assets/exp.png'),
 	            		icon: require('@/assets/exp_dark.png')          		            			
             		},
-            		{
-	            		name:'考核管理',
-	            		url: "/exammanage",
-	            		userGroup: [
-	            			global_.school_admin_group, 
-	            			global_.teacher_group
-	            		],
-	            		isSubShow:false,
-	            		subItems:[],
-	            		icon_highlight:require('@/assets/exam.png'),
-	            		icon: require('@/assets/exam_dark.png')              		            			
-            		},
 
             		{
 	            		name:'公共题库管理',
@@ -155,18 +143,18 @@
 	            		icon_highlight:require('@/assets/ques.png'),
 	            		icon: require('@/assets/ques_dark.png') 	                  		            			
             		},
-             		{
-	            		name:'成绩统计',
-	            		url: "/studentstats",
+
+            		{
+	            		name:'考核管理',
+	            		url: "/exammanage",
 	            		userGroup: [
 	            			global_.school_admin_group, 
-	            			global_.teacher_group,
-	            			global_.student_group
+	            			global_.teacher_group
 	            		],
 	            		isSubShow:false,
 	            		subItems:[],
-	            		icon_highlight:require('@/assets/stats.png'),
-	            		icon: require('@/assets/stats_dark.png') 	                        		            			
+	            		icon_highlight:require('@/assets/exam.png'),
+	            		icon: require('@/assets/exam_dark.png')              		            			
             		},
              		{
 	            		name:'实验报告',
@@ -180,6 +168,19 @@
 	            		subItems:[],
 	            		icon_highlight:require('@/assets/report.png'),
 	            		icon: require('@/assets/report_dark.png') 	                        		            			
+            		},
+             		{
+	            		name:'成绩统计',
+	            		url: "/studentstats",
+	            		userGroup: [
+	            			global_.school_admin_group, 
+	            			global_.teacher_group,
+	            			global_.student_group
+	            		],
+	            		isSubShow:false,
+	            		subItems:[],
+	            		icon_highlight:require('@/assets/stats.png'),
+	            		icon: require('@/assets/stats_dark.png') 	                        		            			
             		},
             		/*
              		{
@@ -213,14 +214,14 @@
 						this.current_group = global_.teacher_group;
 						this.isTeacher = true;
 
-						this.menuList[4].url = '/teacherstats';
+						this.menuList[5].url = '/teacherstats';
 					}
 
 					if(resp.body.group == global_.student_group) {
 						this.current_group = global_.student_group;
 						this.isStudent = true;
 
-						this.menuList[4].url = '/studentstats';
+						this.menuList[5].url = '/studentstats';
 					}
 
 					//for testing
@@ -228,7 +229,7 @@
 						this.current_group = global_.school_admin_group;
 						this.isAdmin = true;
 
-						this.menuList[4].url = '/teacherstats';
+						this.menuList[5].url = '/teacherstats';
 					}
 
 					//console.log(this.current_group);					
@@ -327,10 +328,4 @@
 	/*background: grey;*/
 }
 
-.navbg {
-	position: absolute;
-	height: 100%;
-	width: 230px;
-	background: #ffffff;
-}
 </style>

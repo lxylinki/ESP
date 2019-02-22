@@ -333,7 +333,7 @@
 					}*/
 					this.exp_options.unshift({'name': '所有实验', 'id': null});
 
-					let api = global_.question_list
+					let api = global_.ques_list
 							+ '?page=' 
 							+ page 
 							+ '&pagesize=' 
