@@ -45,6 +45,7 @@
 	//const exam_delete = url_prefix + 'esp_admin/exam/delete';
 	const exam_ques_list = url_prefix + 'esp_admin/examine-questions/list';
 	const exam_ques_create = url_prefix + 'esp_admin/examine-questions/create';
+	const exam_ques_delete = url_prefix + 'esp_admin/examine-questions/delete';
 
 	const question_list = url_prefix + 'esp_admin/questions-bank/list';
 	const question_update = url_prefix + 'esp_admin/questions-bank/update';
@@ -117,6 +118,7 @@
 		//exam_delete,
 		exam_ques_list,
 		exam_ques_create,
+		exam_ques_delete,
 
 		question_list,
 		question_update,

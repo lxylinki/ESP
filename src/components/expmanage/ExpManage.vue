@@ -590,14 +590,9 @@
 
 
 <style type="text/css" scoped>
-.selectclass {
-	background: #ffffff;
-	height: 100%;
-}
-
 .exp-searchwindow {
     position: relative;
-    top: -4px;
+    top: -7px;
 }
 
 .statustitle {

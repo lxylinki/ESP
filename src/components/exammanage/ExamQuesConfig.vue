@@ -17,7 +17,7 @@
 				      v-for="item in exp_options"
 				      :key="item.id"
 				      :label="item.name"
-				      :value="item.id">
+				      :value="item.eid">
 				    </el-option>
 				  </el-select>	
 				  <el-select v-else v-model="exp_value" filterable placeholder="请搜索实验名称" v-on:change="filterExamQs()">
@@ -25,7 +25,7 @@
 				      v-for="item in exp_options"
 				      :key="item.id"
 				      :label="item.name"
-				      :value="item.id">
+				      :value="item.eid">
 				    </el-option>
 				  </el-select>	
 			</div>
@@ -56,14 +56,14 @@
 				<el-input class="searchinput"
 						  v-if="showQbank" 
 						  v-model="search_state"
-						  v-on:keydown="invokeQSearch($event)"
+						  v-on:keydown.native="invokeQSearch($event)"
 						  placeholder="请搜索试题名称">
 				</el-input>
 
 				<el-input class="searchinput"
 						  v-else 
 						  v-model="search_state"
-						  v-on:keydown="invokeSearch($event)"
+						  v-on:keydown.native="invokeSearch($event)"
 						  placeholder="请搜索试题名称">
 				</el-input>
 				<!--
@@ -327,6 +327,10 @@
 				async function asyncReq(){
 					let resp = await Utils.reqExpList.call(this);
 					this.exp_options = resp.body._list;
+					/*
+					for(let item of this.exp_options) {
+						console.log(item.eid);
+					}*/
 					this.exp_options.unshift({'name': '所有实验', 'id': null});
 
 					let api = global_.question_list
@@ -345,9 +349,11 @@
 					}
 
 					this.$http.post(api, data).then((resp)=>{
+
 						this.tableQData = resp.body._list;
 						this.totalPage = resp.body.total_page;
 						for(let item of this.tableQData) {
+							//console.log('Queslist:', item.eid);
 							if(!this.findExp(this.exp_options, item.eid)) {
 								item.exp_belong = null;
 							} else {
@@ -417,7 +423,7 @@
 
 			findExp(exp_list, eid){
 				for (let exp of exp_list) {
-					if(exp.id === eid) {
+					if(exp.eid === eid) {
 						return exp;
 					}
 				}

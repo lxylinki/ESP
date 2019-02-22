@@ -15,7 +15,7 @@
 				      v-for="item in exp_options"
 				      :key="item.id"
 				      :label="item.name"
-				      :value="item.id">
+				      :value="item.eid">
 				    </el-option>
 				  </el-select>		
 			</div>
@@ -32,7 +32,7 @@
 				  </el-select>					
 			</div>
 
-			<div class="searchwindow quesmng-searchwindow">
+			<div class="searchwindow exam-searchwindow">
 
 				<el-input class="searchinput" 
 						  v-model="search_state"
@@ -47,13 +47,13 @@
 			</div>
 		</div><!--selectclass-->
 
-		<div style="display: flex; justify-content: space-between; align-items: baseline;">
+		<div style="display: flex; justify-content: flex-end; align-items: baseline;">
 			<!--
 			<div class="addbtndiv">
 				<el-button class="addbtn" v-on:click="addExam()">添加</el-button>
 			</div> -->
 
-			<div style="display: inline-block; float: right; margin: 10px;">
+			<div style="margin-top: 20px;">
 				<span>显示 </span>
 					<select v-model="rowsPerPage" v-on:change="pageSizeChange()" style="width: 60px; height: 25px;">
 						<option v-for="item in row_nums" v-bind:value="item.value">
@@ -73,14 +73,14 @@
 		    <el-table-column
 		      prop="name"
 		      label="考核名称"
-		      min-width="100"
+		      min-width="150"
 		      :show-overflow-tooltip="true">
 		    </el-table-column>
 		    
 		    <el-table-column
 		      prop="experiment_name"
 		      label="所属实验"
-		      min-width="100">
+		      min-width="150">
 		    </el-table-column>
 		    
 		    <!--		    
@@ -125,7 +125,7 @@
 		    <el-table-column
 		      prop="operation"
 		      label="操作"
-		      min-width="150">
+		      min-width="100">
 
 		      <template slot-scope="scope">
 		      	<!--
@@ -219,8 +219,12 @@
 			fillExpSelect(){
 				asyncReq.call(this);
 				async function asyncReq(){
-					let resp = await Utils.reqExpList.call(this);
+					let resp = await Utils.reqExpList.call(this, '', 1);
 					this.exp_options = resp.body._list;
+					/*
+					for(let item of this.exp_options) {
+						console.log(item);
+					}*/
 					this.exp_options.unshift({'name': '所有实验', 'id': null});
 				}
 			},
@@ -236,8 +240,13 @@
 				    	this.$store.commit('setRowNumBefore', resp.body.total);
 				    	this.$store.commit('setRowNumAfter', resp.body.total);
 						this.tableData = resp.body._list;
-						for(let i in this.tableData) {
-							let item = this.tableData[i];
+
+						let ekeys = Object.keys(resp.body.experiments);
+
+						for(let item of this.tableData) {
+							if(ekeys.includes(item.eid)) {
+								item.experiment_name = resp.body.experiments[item.eid].name;
+							}
 							item.create_time = Utils.convTime(item.created_at);
 							item.update_time = Utils.convTime(item.updated_at);
 						}
@@ -297,6 +306,7 @@
 					this.list = search_res.slice(this.rowsPerPage*(page-1), this.rowsPerPage*page);
 
 				} else {
+					console.log(this.exp_value);
 					var	search_exp_res = search_res.filter(item => item.eid == this.exp_value);
 					this.list = search_exp_res.slice(this.rowsPerPage*(page-1), this.rowsPerPage*page);
 					this.totalRow = search_exp_res.length;
@@ -411,10 +421,15 @@
 
 .pickexptitle {
 	display: inline-block; 
-	line-height: 70px;
+	line-height: 60px;
 }
 
 .pickquestype {
 	display: inline-block;
+}
+
+.exam-searchwindow {
+    position: relative;
+    top: -7px;	
 }
 </style>

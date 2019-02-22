@@ -122,6 +122,7 @@
 .oneMenu{
 	/*border: 1px solid red;*/
 	height: 45px;
+	width: 100%;
 	display: flex;
 	align-items: center;
 	cursor: pointer;
