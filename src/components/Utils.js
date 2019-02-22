@@ -12,7 +12,7 @@ function err_process(err, text){
 		if(this.loading) {
 			layer.close(this.loading);
 		}		
-		this.$router.push('/login');
+		this.$router.push('/login');//{"name" : "login"}
 		
 	} else if(text) {
 		lalert(text);
@@ -74,7 +74,7 @@ function login_check_status(){
 	var profile = global_.status_check;
 
 	this.$http.post(profile, {}).then((resp)=>{
-		this.$router.push('/expmanage');
+		this.$router.push('expmanage');
 
 	}, (err)=>{
 		//stay at login

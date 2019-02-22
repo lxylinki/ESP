@@ -40,9 +40,11 @@
 
 	//const exam_list = url_prefix + 'esp_admin/exam/search';
 	const exam_list = url_prefix + 'esp_admin/examine/list';
-	const exam_create = url_prefix + 'esp_admin/examine/create';
-	const exam_update = url_prefix + 'esp_admin/exam/update';
-	const exam_delete = url_prefix + 'esp_admin/exam/delete';
+	//const exam_create = url_prefix + 'esp_admin/examine/create';
+	//const exam_update = url_prefix + 'esp_admin/exam/update';
+	//const exam_delete = url_prefix + 'esp_admin/exam/delete';
+	const exam_ques_list = url_prefix + 'esp_admin/examine-questions/list';
+	const exam_ques_create = url_prefix + 'esp_admin/examine-questions/create';
 
 	const question_list = url_prefix + 'esp_admin/questions-bank/list';
 	const question_update = url_prefix + 'esp_admin/questions-bank/update';
@@ -110,9 +112,11 @@
 		expcatag_list,
 
 		exam_list,
-		exam_create,
-		exam_update,
-		exam_delete,
+		//exam_create,
+		//exam_update,
+		//exam_delete,
+		exam_ques_list,
+		exam_ques_create,
 
 		question_list,
 		question_update,

@@ -36,9 +36,12 @@ const ExpConfig = ()=> import('@/components/expmanage/ExpConfig.vue');
 //const ExpEdit = ()=> import('@/components/expmanage/ExpEdit.vue');
 
 //Exam Manage
-const ExamManage = ()=> import('@/components/exammanage/ExamManage.vue');
-const ExamAdd = ()=> import('@/components/exammanage/ExamAdd.vue');
-const ExamEdit = ()=> import('@/components/exammanage/ExamEdit.vue');
+//const ExamManage = ()=> import('@/components/exammanage/ExamManage.vue');
+//const ExamAdd = ()=> import('@/components/exammanage/ExamAdd.vue');
+//const ExamEdit = ()=> import('@/components/exammanage/ExamEdit.vue');
+
+const Exam = ()=> import('@/components/exammanage/Exam.vue');
+const ExamQuesConfig = ()=> import('@/components/exammanage/ExamQuesConfig.vue');
 
 //Question Manage
 const QuestionManage = ()=> import('@/components/questionmanage/QuestionManage.vue');
@@ -62,11 +65,10 @@ const myRoutes = [
 	{path: '/login', meta: {title: '登陆'}, component: Login},
 	//{path: '/mlogin', meta: {title: '登陆'}, component: MobileLogin},
 	/*Dummy page, not for visiting*/
-	{path: '   ', 
+	{path: '/esp', 
 	 meta: {title: 'ESP'}, 
 	 component: AppInner,
 	 children:[
-	 	
 	 	//{path: '/accmanage', meta: {title: '账号管理'}, component: AccountManage},
 		{path: '/classmanage',  meta: {title: '班级管理'}, component: ClassManage},
 		{path: '/classadd',  meta: {title: '班级创建'}, component: ClassAdd},
@@ -91,9 +93,10 @@ const myRoutes = [
 		//{path: '/expedit',  meta: {title:'实验管理'}, component: ExpEdit},
 
 
-		{path: '/exammanage', meta: {title:'考核管理'}, component: ExamManage},
-		{path: '/examadd', meta:{title:'考核管理'}, component: ExamAdd},
-		{path: '/examedit', meta: {title:'考核管理'}, component: ExamEdit},
+		{path: '/exammanage', meta: {title:'考核管理'}, component: Exam},
+		{path: '/examquesconfig', meta: {title: '考核管理'}, component: ExamQuesConfig},
+		//{path: '/examadd', meta:{title:'考核管理'}, component: ExamAdd},
+		//{path: '/examedit', meta: {title:'考核管理'}, component: ExamEdit},
 
 
 		{path: '/questionmanage', meta: {title:'试卷管理'}, component: QuestionManage},
@@ -105,11 +108,10 @@ const myRoutes = [
 		//{path: '/updatenote', meta: {title: '版本更新'}, component: UpdateNote},
 		//{path: '/downloadupdate', meta: {title: '版本更新'}, component: DownloadUpdate},
 
-		{path: '/reportmanage', meta: {title: '实验报告管理'}, component: ReportManage}
+		{path: '/reportmanage', meta: {title: '实验报告管理'}, component: ReportManage}  
 		//{path: '/testpage', meta: {title: 'Test'}, component: TestGround}
 	 ]
 	},
-
 	{path: '*', redirect: '/login'}	/*default when no match*/
 	
 ];
@@ -126,6 +128,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next)=>{
 	window.document.title = to.meta.title;
 	next();
+	//console.log(from,to);
 });
 
 export default router;
