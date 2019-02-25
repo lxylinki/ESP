@@ -34,9 +34,9 @@
 				<div class="genderdiv">
 					<div class="gendertitle">性别:</div>
 					<!--same v-model: same group-->
-					<input id="male" v-model="gender" type="radio" checked="checked" value=1>男
-					<input id="female" v-model="gender" type="radio" value=0 style="margin-left: 20px;">女
-					<input id="emale" v-model="gender" type="radio" value=2 style="margin-left: 20px;">不限			
+					<input id="male" v-model="gender" type="radio" checked="checked" value=1><label class="male" for="male">男</label>
+					<input id="female" v-model="gender" type="radio" value=0><label class="female" for="female">女</label>
+					<input id="emale" v-model="gender" type="radio" value=2><label class="emale" for="emale">不限</label>			
 				</div>
 				<div style="height: 30px;"></div>
 				<div class="statusdiv">
@@ -130,7 +130,9 @@
 
 
 <style type="text/css" scoped>
-
+.male, .female {
+	margin-right: 20px;
+} 
 
 .texts {
 	width: 420px;
