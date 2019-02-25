@@ -2,7 +2,7 @@
 	<div id="quesmanage">
 		<div style="width: 100%; height: 35px;">
 			<span style="color: #1890ff; font-weight: bold">|</span> 
-			试题管理
+			公共题库管理
 		</div>
 		<div style="height: 20px;"></div>
 
@@ -15,7 +15,7 @@
 				      v-for="item in exp_options"
 				      :key="item.id"
 				      :label="item.name"
-				      :value="item.id">
+				      :value="item.eid">
 				    </el-option>
 				  </el-select>		
 			</div>
@@ -63,7 +63,7 @@
 			</div>
 		</div>
 
-		<div style="height: 20px;"></div>
+		<div style="height: 10px;"></div>
 
 		<template>
 		  <el-table
@@ -273,7 +273,7 @@
 
 			findExp(exp_list, eid){
 				for (let i in exp_list) {
-					if(exp_list[i].id === eid) {
+					if(exp_list[i].eid === eid) {
 						return exp_list[i];
 					}
 				}
@@ -309,6 +309,7 @@
 					this.list = search_res.slice(this.rowsPerPage*(page-1), this.rowsPerPage*page);
 
 				} else {
+					//console.log(this.exp_value);
 					var	search_exp_res = search_res.filter(item => item.eid == this.exp_value);
 					this.list = search_exp_res.slice(this.rowsPerPage*(page-1), this.rowsPerPage*page);
 					this.totalRow = search_exp_res.length;
@@ -395,10 +396,15 @@
 <style type="text/css" scoped>
 .pickexptitle {
 	display: inline-block; 
-	line-height: 70px;
+	line-height: 60px;
 }
 
 .pickquestype {
 	display: inline-block;
+}
+
+.quesmng-searchwindow {
+    position: relative;
+    top: -7px;	
 }
 </style>

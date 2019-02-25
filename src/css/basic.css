@@ -41,6 +41,7 @@ select {
   overflow: hidden;
   width: 100%;
   padding-left: 15px;
+  margin-bottom: 10px;
 }
 
 .pagetitle {
@@ -136,6 +137,53 @@ select {
   height: 34px;
 }
 
+/*hide radio, checkbox*/
+input[type="radio"] {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+}
+
+input[type="radio"] + label::before {
+  content: '';
+  background: #ffffff;
+  border: 2px solid #c2c7cb;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  float: left;
+  margin-right: 6px;
+  margin-top: 2px;
+  box-sizing: border-box;
+}
+
+input[type="radio"]:checked + label::before {
+  /*
+  border: 1px solid #0099ff;
+  background-color: #0099ff;*/
+  border: 1px solid #5c9cec;
+  background-color: #5c9cec;
+  background-clip: content-box;
+  box-sizing: border-box;
+  padding: 4px;
+}
+
+.goback, .goback:hover, .goback:active, .goback:focus{
+  color: white;
+  background: #999999;
+  border-color: #999999;
+  width: 70px;
+  height: 35px;
+}
+
+.confirm, .confirm:hover, .confirm:active, .confirm:focus{
+  /*background: #0099ff;*/
+    background: #5c9cec;
+    color: white;
+    border-color: #0099ff;
+    width: 70px;
+    height: 35px;
+}
+
 /*搜索框样式*/
 .searchwindow {
    display: flex;
@@ -182,8 +230,14 @@ select {
 }
 
 .el-textarea__inner {
+  /*
   width: 576px;
-  height: 140px;
+  height: 140px;*/
+  width:1000px;
+  height:160px;
+  background:rgba(255,255,255,1);
+  border:1px solid rgba(153,153,153,1);
+  border-radius:4px;
 }
 
 

@@ -590,6 +590,11 @@
 
 
 <style type="text/css" scoped>
+#show-all-teachers .selectclass {
+	background: white;
+	height: 100px;
+}
+
 .exp-searchwindow {
     position: relative;
     top: -7px;
@@ -643,6 +648,7 @@
 	background-color: transparent !important;
 }
 
+/*
 .goback, .goback:hover, .goback:active, .goback:focus{
 	width:86px;
 	height:38px;
@@ -658,7 +664,7 @@
 	background:#5c9cec;
 	border:1px solid #5c9cec;
 	border-radius:4px;
-}
+}*/
 
 .searchinput {
 	width:200px;

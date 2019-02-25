@@ -35,7 +35,7 @@
 			      v-for="item in exp_options"
 			      :key="item.id"
 			      :label="item.name"
-			      :value="item.id">
+			      :value="item.eid">
 			    </el-option>
 			  </el-select>
 			</template>
@@ -60,6 +60,10 @@
 
 		<div style="height: 40px;"></div>
 
+
+		<div class="opts">
+			
+
 		<div class="answers">
 			<div class="ansopt">答案选项</div>
 			<div class="adddel">增加/删除</div>
@@ -68,58 +72,57 @@
 		</div>
 
 		<div style="height: 30px;"></div>
-
-
-		<div class="opts">
-			<div class="opts-div">
+		
+		<div class="opts-div">
 <!------------------------------------------------------------------------------------------------------------------------>
 			<div class="answera" v-show="showA">
-				<div style="display: inline-block; margin-left: 0px; margin-right: 20px;">选项A</div>
+				<div class="opt-label">选项A</div>
 
 				<!--input-->
-				<div style="display: inline-block; margin-right: 20px;">
-					<input class="longinput" type="text" v-model="aval">
+				<div class="opt-input">
+					<input class="longinput" type="text" v-model="aval" placeholder="必填">
 				</div>
 				
 				<!--add-->
-				<div style="display: inline-block;">
-					<i style="color: #333333; font-size: 150%;" 
-					   class="iconfont" 
+				<div class="opt-add">
+					<i class="iconfont"
+					   style="color: #333333; font-size: 150%;"  
 					   v-on:click="aAddNewOpt()"
 					   v-show="!showE">
 						&#xe62d;
 					</i>
-					<i style="color: #ffffff; font-size: 150%;" class="iconfont" v-show="showE">&#xe62d;</i>
+					<i class="iconfont" style="color: #ffffff; font-size: 150%;" v-show="showE">&#xe62d;</i>
 				</div>
 				
 				<!--del-->
-				<div style="display: inline-block;">
-					<i style="color: #333333; font-size: 150%; margin-right: 20px;" 
+				<div class="opt-del">
+					<i style="color: #333333; font-size: 150%;" 
 					   class="iconfont" 
 					   v-on:click="delA()"
 					   v-show="showC">&#xe6a9;</i>
-					<i style="color: #ffffff; font-size: 150%; margin-right: 20px;" 
+
+					<i style="color: #ffffff; font-size: 150%;" 
 					   class="iconfont" 
 					   v-show="!showC">&#xe6a9;</i>
 				</div>
 				
 				<!--correct one-->
-				<div class="checkicon" style="display: inline-block;">
-					<input style="height: 24px; width: 24px; margin-right: 20px; margin-left: 30px;" 
+				<div class="checkicon opt-correct">
+					<input 
 						   class="checkbox"
 						   id="aCheck"
 						   v-on:change="checkA()" 
-						   type="checkbox"
-						   v-model="aCorrect"><label for="aCheck"></label>
+						   v-model="aCorrect"
+						   type="checkbox"><label for="aCheck"></label>
 				</div>
 				
 				<!--move up-->
-				<div style="display: inline-block;">
-					<i style="color: #333333; font-size: 170%; margin-left: 20px;" class="iconfont">&#xe7c6;</i>
+				<div class="opt-mvup">
+					<i style="color: #333333; font-size: 170%;" class="iconfont">&#xe7c6;</i>
 				</div>
 
 				<!--move down-->
-				<div style="display: inline-block;">
+				<div class="opt-mvdown">
 					<i style="color: #333333; font-size: 170%;" class="iconfont" v-on:click="mvDownA()">&#xe8ed;</i>
 				</div>
 				<div style="height: 20px;"></div>
@@ -127,14 +130,14 @@
 <!----------------------------------------------------------------------------------------------------------------------->
 			<div class="answerb" v-show="showB">
 				<!--title-->
-				<div style="display: inline-block; margin-left: 0px; margin-right: 20px;">选项B</div>
+				<div class="opt-label">选项B</div>
 
 				<!--input-->
-				<div style="display: inline-block; margin-right: 20px;">
-					<input class="longinput" type="text" v-model="bval">
+				<div class="opt-input">
+					<input class="longinput" type="text" v-model="bval" placeholder="必填">
 				</div>
 				<!--add-->
-				<div style="display: inline-block;">
+				<div class="opt-add">
 					<i style="color: #333333; font-size: 150%;" 
 					   class="iconfont" 
 					   v-on:click="bAddNewOpt()"
@@ -143,32 +146,32 @@
 					</i>
 					<i style="color: #ffffff; font-size: 150%;" class="iconfont" v-show="showE">&#xe62d;</i>
 				</div>
+
 				<!--del-->
-				<div style="display: inline-block;" >
-					<i style="color: #333333; font-size: 150%; margin-right: 20px;" 
+				<div class="opt-del">
+					<i style="color: #333333; font-size: 150%;" 
 					   class="iconfont" 
 					   v-on:click="delB()"
 					   v-show="showC">&#xe6a9;</i>
-					<i style="color: #ffffff; font-size: 150%; margin-right: 20px;" 
+					<i style="color: #ffffff; font-size: 150%;" 
 					   class="iconfont" 
 					   v-show="!showC">&#xe6a9;</i>
 				</div>
 				
 				<!--correct-->
-				<div class="checkicon" style="display: inline-block;">
-					<input style="height: 24px; width: 24px; margin-right: 20px; margin-left: 30px;" 
-						   class="checkbox" 
+				<div class="checkicon opt-correct">
+					<input class="checkbox" 
 						   type="checkbox"
 						   id="bCheck"
 						   v-on:change="checkB()"
 						   v-model="bCorrect"><label for="bCheck"></label>
 				</div>
 				<!--move up-->
-				<div style="display: inline-block;">
-					<i style="color: #333333; font-size: 170%; margin-left: 20px;" class="iconfont" v-on:click="mvUpB()">&#xe7c6;</i>
+				<div style="display: inline-block;" class="opt-mvup">
+					<i style="color: #333333; font-size: 170%;" class="iconfont" v-on:click="mvUpB()">&#xe7c6;</i>
 				</div>
 				<!--move down-->
-				<div style="display: inline-block;">
+				<div style="display: inline-block;" class="opt-mvdown">
 					<i style="color: #333333; font-size: 170%;" class="iconfont" v-on:click="mvDownB()">&#xe8ed;</i>
 				</div>
 				<div style="height: 20px;"></div>
@@ -177,14 +180,14 @@
 <!-------------------------------------------------------------------------------------------------------------------------->
 			<div class="answerc" v-show="showC">
 				<!--title-->
-				<div style="display: inline-block; margin-left: 0px; margin-right: 20px;">选项C</div>
+				<div class="opt-label">选项C</div>
 
 				<!--input-->
-				<div style="display: inline-block; margin-right: 20px;">
+				<div class="opt-input">
 					<input class="longinput" type="text" v-model="cval">
 				</div>
 				<!--add-->
-				<div style="display: inline-block;">
+				<div class="opt-add">
 					<i style="color: #333333; font-size: 150%;" 
 					   class="iconfont" 
 					   v-on:click="cAddNewOpt()"
@@ -194,26 +197,25 @@
 					<i style="color: #ffffff; font-size: 150%;" class="iconfont" v-show="showE">&#xe62d;</i>
 				</div>
 				<!--del-->
-				<div style="display: inline-block;">
-					<i style="color: #333333; font-size: 150%; margin-right: 20px;" 
+				<div class="opt-del">
+					<i style="color: #333333; font-size: 150%;" 
 					   class="iconfont" 
 					   v-on:click="delC()">&#xe6a9;</i>
 				</div>
 				<!--correct-->
-				<div class="checkicon" style="display: inline-block;">
-					<input style="height: 24px; width: 24px; margin-right: 20px; margin-left: 30px;" 
-						   class="checkbox" 
+				<div class="checkicon opt-correct">
+					<input class="checkbox" 
 						   type="checkbox"
 						   id="cCheck"
 						   v-on:change="checkC()"
 						   v-model="cCorrect"><label for="cCheck"></label>
 				</div>
 				<!--move up-->
-				<div style="display: inline-block;">
-					<i style="color: #333333; font-size: 170%; margin-left: 20px;" class="iconfont" v-on:click="mvUpC()">&#xe7c6;</i>
+				<div style="display: inline-block;" class="opt-mvup">
+					<i style="color: #333333; font-size: 170%;" class="iconfont" v-on:click="mvUpC()">&#xe7c6;</i>
 				</div>
 				<!--move down-->
-				<div style="display: inline-block;">
+				<div style="display: inline-block;" class="opt-mvdown">
 					<i style="color: #333333; font-size: 170%;" class="iconfont" v-on:click="mvDownC()">&#xe8ed;</i>
 				</div>
 				<div style="height: 20px;"></div>
@@ -223,15 +225,15 @@
 <!-------------------------------------------------------------------------------------------------------------------------->
 			<div class="answerd" v-show="showD">
 				<!--title-->
-				<div style="display: inline-block; margin-left: 0px; margin-right: 20px;">选项D</div>
+				<div class="opt-label">选项D</div>
 
 				<!--input-->
-				<div style="display: inline-block; margin-right: 20px;">
+				<div class="opt-input">
 					<input class="longinput" type="text" v-model="dval">
 				</div>
 				
 				<!--add-->
-				<div style="display: inline-block;">
+				<div class="opt-add">
 					<i style="color: #333333; font-size: 150%;" 
 					   class="iconfont" 
 					   v-on:click="dAddNewOpt()"
@@ -242,12 +244,12 @@
 				</div>
 				
 				<!--del-->
-				<div style="display: inline-block;">
-					<i style="color: #333333; font-size: 150%; margin-right: 20px;" class="iconfont" v-on:click="delD()">&#xe6a9;</i>
+				<div class="opt-del">
+					<i style="color: #333333; font-size: 150%;" class="iconfont" v-on:click="delD()">&#xe6a9;</i>
 				</div>
 				
 				<!--correct one-->
-				<div class="checkicon" style="display: inline-block;">
+				<div class="checkicon opt-correct" >
 					<input style="height: 24px; width: 24px; margin-right: 20px; margin-left: 30px;" 
 						   class="checkbox" 
 						   type="checkbox"
@@ -257,12 +259,12 @@
 				</div>
 				
 				<!--move up-->
-				<div style="display: inline-block;">
-					<i style="color: #333333; font-size: 170%; margin-left: 20px;" class="iconfont" v-on:click="mvUpD()">&#xe7c6;</i>
+				<div class="opt-mvup">
+					<i style="color: #333333; font-size: 170%;" class="iconfont" v-on:click="mvUpD()">&#xe7c6;</i>
 				</div>
 
 				<!--move down-->
-				<div style="display: inline-block;">
+				<div class="opt-mvdown">
 					<i style="color: #333333; font-size: 170%;" class="iconfont" v-on:click="mvDownD()">&#xe8ed;</i>
 				</div>
 
@@ -273,13 +275,13 @@
 <!----------------------------------------------------------------------------------------------------------------------------->
 			<div class="answere" v-show="showE">
 				<!--title-->
-				<div style="display: inline-block; margin-left: 0px; margin-right: 20px;">选项E</div>
+				<div class="opt-label">选项E</div>
 				<!--input-->
-				<div style="display: inline-block; margin-right: 20px;">
+				<div class="opt-input">
 					<input class="longinput" type="text" v-model="eval">
 				</div>
 				<!--add-->
-				<div style="display: inline-block;">
+				<div class="opt-add">
 					<i style="color: #333333; font-size: 150%;" 
 					   class="iconfont" 
 					   v-on:click="eAddNewOpt()"
@@ -289,11 +291,11 @@
 					<i style="color: #ffffff; font-size: 150%;" class="iconfont" v-show="showE">&#xe62d;</i>
 				</div>
 				<!--del-->
-				<div style="display: inline-block;">
-					<i style="color: #333333; font-size: 150%; margin-right: 20px;" class="iconfont" v-on:click="delE()">&#xe6a9;</i>
+				<div class="opt-del">
+					<i style="color: #333333; font-size: 150%;" class="iconfont" v-on:click="delE()">&#xe6a9;</i>
 				</div>
 				<!--correct one-->
-				<div class="checkicon" style="display: inline-block;">
+				<div class="checkicon opt-correct">
 					<input style="height: 24px; width: 24px; margin-right: 20px; margin-left: 30px;" 
 						   class="checkbox" 
 						   type="checkbox"
@@ -302,16 +304,17 @@
 						   v-model="eCorrect"><label for="eCheck"></label>
 				</div>
 				<!--move up-->
-				<div style="display: inline-block;">
-					<i style="color: #333333; font-size: 170%; margin-left: 20px;" class="iconfont" v-on:click="mvUpE()">&#xe7c6;</i>
+				<div class="opt-mvup">
+					<i style="color: #333333; font-size: 170%;" class="iconfont" v-on:click="mvUpE()">&#xe7c6;</i>
 				</div>
 				<!--move down-->
-				<div style="display: inline-block;">
+				<div class="opt-mvdown">
 					<i style="color: #333333; font-size: 170%;" class="iconfont">&#xe8ed;</i>
 				</div>
 				<div style="height: 20px;"></div>
 			</div>
-		</div>
+		</div><!--end opts-div-->
+		</div><!--end opts-->
 
 			
 
@@ -332,7 +335,7 @@
 			<div style="height: 40px;"></div>
 		</div>
 
-		</div>
+	
 
 	
 	</div>
@@ -815,14 +818,16 @@
 			},			
 
 			saveEdit(){
-				var api = global_.ques_update;
-				var ans;
+				let api = global_.ques_update,
+				    ans = this.answer;
+
+				/*
 				if (this.type == 1) {
 					ans = this.answer;
 
 				} else if (this.type == 2) {
 					ans = this.getAnswers(this.answers);
-				}
+				}*/
 
 				let data = {
 					id: this.id,
@@ -944,6 +949,13 @@
 </script>
 
 <style type="text/css" scoped>
+input:not(.checkbox) {
+	width:600px;
+	height:36px;
+	background:rgba(255,255,255,1);
+	border:1px solid rgba(153,153,153,1);
+	border-radius:4px;
+}
 .checkicon {
 	position: relative;
 }
@@ -957,13 +969,16 @@
 	height: 22px;
 	border: 2px solid #cccccc;
 	position: absolute;
-	left: 30px;
-	top: 4px;
+	left: 0px;
+	top: 0px;
 }
 
 .checkicon input[type="checkbox"]:checked + label {
+	/*
 	background: #0099ff;
-	border: 1px solid #0099ff;
+	border: 1px solid #0099ff;*/
+	background: #5c9cec;
+	border: 1px solid #5c9cec;
 	background-image: url("../../assets/white-correct.png");
 	background-repeat: no-repeat;
 }
@@ -996,42 +1011,52 @@
 	margin-left: 95px;
 }
 
-.iconfont {
-	cursor: pointer;
-}
-
 .opts {
+	/*
 	background: #ffffff;
 	position: relative;
-	width: 800px;
+	width: 680px;
 	margin-bottom: 30px;
 	text-align: left;
+	border: 1px solid red;
+	*/
+	width:1000px;
+	/*height:192px;*/
+	height: 100%;
+	border:1px solid rgba(92,156,236,1);
+	border-radius:0px 0px 4px 4px;
+	margin-left: 98px;
+	margin-bottom: 30px;
 }
 
 .checkbox {
-	height: 18px;
+	height: 20px;
+	width: 20px;
 }
 
 .answers {
 	position: relative;
 	height: 40px;
-	background: #f7f7f7;
+	width: 100%;
+	/*background: #f7f7f7;*/
+	background: #f0f7ff;
+	/*border: 1px solid red;*/
 }
 
 .ansopt {
 	display: inline-block;
-	margin-right: 320px;
+	margin-right: 640px;
 	margin-top: 8px;
-	margin-left: 20px;
+	margin-left: 10px;
 }
 
 .adddel {
 	display: inline-block;
-	margin-right: 20px;
+	margin-right: 10px;
 }
 .rightopt {
 	display: inline-block;
-	margin-right: 20px;
+	margin-right: 10px;
 }
 .mvupdown {
 	display: inline-block;
@@ -1092,9 +1117,45 @@ div>.mchoice input {
 }
 
 .opts-div {
+	/*border: 1px solid red;*/
+	width: 1000px !important;
 	text-align: right;
-	width: 650px;
-	padding-left: 5px;
+	width: 100%;
 }
+
+.iconfont {
+	cursor: pointer;
+}
+
+.opt-label {
+	 display: inline-block; 
+	 margin-right: 20px;
+}
+
+.opt-input {
+	display: inline-block; 
+	margin-right: 30px;
+}
+
+.opt-add, .opt-del, .opt-correct, .opt-mvup, .opt-mvdown {
+	display: inline-block; 
+}
+
+.opt-mvup {
+	margin-left: 30px;
+}
+
+.opt-mvdown {
+	display: inline-block; 
+	margin-right: 60px;
+}
+
+.opt-correct {
+	height: 22px; 
+	width: 22px; 
+	margin-left: 30px;
+}
+
+</style>
 
 </style>

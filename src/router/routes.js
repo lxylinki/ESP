@@ -31,7 +31,7 @@ const ManagerEdit = ()=> import('@/components/accountmanage/managermanage/Manage
 
 //Experiment Manage
 const ExpManage = ()=> import('@/components/expmanage/ExpManage.vue');
-const ExpConfig = ()=> import('@/components/expmanage/ExpConfig.vue');
+//const ExpConfig = ()=> import('@/components/expmanage/ExpConfig.vue');
 //const ExpAdd = ()=> import('@/components/expmanage/ExpAdd.vue');
 //const ExpEdit = ()=> import('@/components/expmanage/ExpEdit.vue');
 
@@ -88,8 +88,8 @@ const myRoutes = [
 		{path: '/manageredit', meta: {title: '管理员管理'}, component: ManagerEdit},
 		
 
-		{path: '/expmanage', meta: {title:'实验管理'}, component: ExpManage},
-		{path: '/expconfig', meta: {title:'实验管理'}, component: ExpConfig},
+		{path: '/expmanage', meta: {title:'实验项目管理'}, component: ExpManage},
+		//{path: '/expconfig', meta: {title:'实验管理'}, component: ExpConfig},
 		//{path: '/expadd', meta: {title:'实验管理'}, component: ExpAdd},
 		//{path: '/expedit',  meta: {title:'实验管理'}, component: ExpEdit},
 
@@ -100,9 +100,9 @@ const myRoutes = [
 		//{path: '/examedit', meta: {title:'考核管理'}, component: ExamEdit},
 
 
-		{path: '/questionmanage', meta: {title:'试题管理'}, component: QuesManage},
-		{path: '/questionadd', meta: {title:'试题管理'}, component: QuesAdd},
-		{path: '/questionedit', meta: {title: '试题管理'}, component: QuesEdit},
+		{path: '/questionmanage', meta: {title:'公共题库管理'}, component: QuesManage},
+		{path: '/questionadd', meta: {title:'公共题库管理'}, component: QuesAdd},
+		{path: '/questionedit', meta: {title: '公共题库管理'}, component: QuesEdit},
 
 		{path: '/teacherstats', meta: {title:'成绩统计'}, component: TeacherStat},
 		{path: '/studentstats', meta: {title:'成绩统计'}, component: StudentStat},

@@ -422,6 +422,7 @@
 	display: inline-block;
 }
 
+/*
 .goback, .goback:hover, .goback:active, .goback:focus{
 	color: white;
 	background: #d2d5d2;
@@ -432,7 +433,7 @@
 	background: #31313c;
   	color: white;
   	border-color: #31313c;
-}
+}*/
 
 .togglesign {
 	font-size: 12px;

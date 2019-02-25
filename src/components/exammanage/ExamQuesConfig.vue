@@ -555,7 +555,7 @@
 	display: inline-block; 
 	width: 40px; 
 	height: 100px; 
-	background: #0099ff;
+	background: #5c9cec;
 	margin-top: 52px;
 	margin-left: 0;
 	cursor: pointer;
@@ -565,11 +565,12 @@
 
 .add-complete-text, .add-ques-text {
 	writing-mode: vertical-lr;
-	margin-left: 8px;
+	margin-left: 10px;
 	margin-top: 5px;
+	font-size: 14px;
 }
 .add-complete-icon, .add-ques-icon {
 	margin-left: 10px;
-	font-size: 120%;
+	font-size: 100%;
 }
 </style>

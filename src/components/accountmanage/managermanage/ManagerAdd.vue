@@ -153,6 +153,7 @@
 	margin-right: 8px;
 }
 
+/*
 .goback, .goback:hover, .goback:active, .goback:focus{
 	color: white;
 	background: #d2d5d2;
@@ -163,7 +164,7 @@
 	background: #31313c;
   	color: white;
   	border-color: #31313c;
-}
+}*/
 
 .statusdiv {
 	display: flex;
