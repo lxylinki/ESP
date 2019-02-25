@@ -410,8 +410,8 @@
 					this.filtered_catags.unshift({'id': null, 'name': '全部分类'});
 
 				}, (err)=>{
-					console.log(err);
-					//Utils.err_process.call(this, err, '请求实验分类列表失败');
+					//console.log(err);
+					Utils.err_process.call(this, err, '请求实验分类列表失败');
 				});				
 			},
 

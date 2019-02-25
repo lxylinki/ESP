@@ -28,7 +28,7 @@
 						  v-on:keydown.native=""
 						  placeholder="请搜索模板名称">		  
 				</el-input>
-				<button class="searchbtn exp-searchbtn" v-on:click="">
+				<button class="searchbtn tpl-searchbtn" v-on:click="">
 					<i style="color: white;" class="el-icon-search"></i>
 				</button>
 			</div>
@@ -86,7 +86,6 @@
 		      prop=""
 		      label="创建人"
 		      min-width="100">
-		    	
 		    </el-table-column>
 
 		    <!--
