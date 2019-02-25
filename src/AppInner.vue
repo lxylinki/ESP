@@ -158,14 +158,59 @@
             		},
              		{
 	            		name:'实验报告',
-	            		url: "/reportmanage",
+	            		url: "",
 	            		userGroup: [
 	            			global_.school_admin_group, 
 	            			global_.teacher_group,
 	            			global_.student_group
 	            		],
 	            		isSubShow:false,
-	            		subItems:[],
+	            		subItems:[
+	            			{
+	            				name: '模板管理',
+	            				url: '/tplmanage',
+			            		userGroup: [
+			            			global_.school_admin_group, 
+			            			global_.teacher_group,
+			            			global_.student_group
+			            		],
+			            		isSubShow: false,
+			            		subItems:[]
+	            			},
+	            			{
+	            				name: '实验报告',
+	            				url: '',
+			            		userGroup: [
+			            			global_.school_admin_group, 
+			            			global_.teacher_group,
+			            			global_.student_group
+			            		],
+			            		isSubShow: false,
+			            		subItems:[]
+	            			},
+	            			{
+	            				name: '报告记录',
+	            				url: '',
+			            		userGroup: [
+			            			global_.school_admin_group, 
+			            			global_.teacher_group,
+			            			global_.student_group
+			            		],
+			            		isSubShow: false,
+			            		subItems:[]
+	            			},
+	            			{
+	            				name: '报告成绩',
+	            				url: '',
+			            		userGroup: [
+			            			global_.school_admin_group, 
+			            			global_.teacher_group,
+			            			global_.student_group
+			            		],
+			            		isSubShow: false,
+			            		subItems:[]
+	            			}	            				            		            		
+	            		],
 	            		icon_highlight:require('@/assets/report.png'),
 	            		icon: require('@/assets/report_dark.png') 	                        		            			
             		},

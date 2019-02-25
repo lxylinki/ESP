@@ -2,7 +2,7 @@
 	<div id='expmanage'>
 		<div style="width: 100%; height: 35px; border-bottom: 2px solid #eee">
 			<span style="color: #1281b2; font-weight: bold; font-size: 20px;">|</span> 
-			<span class="pagetitle">实验管理</span>
+			<span>实验管理</span>
 		</div>
 
 		<div style="height: 20px;"></div>

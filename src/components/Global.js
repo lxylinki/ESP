@@ -77,6 +77,9 @@
 	const teacher_group = 2;
 	const student_group = 3;
 
+	//experiment report
+	const report_tpl_list = url_prefix + 'exam/report-offline/list-tpl';
+
 	export default {
 		super_admin_group,
 		url_prefix,
@@ -145,5 +148,7 @@
 
 		manager_list,
 		manager_create,
-		manager_update
+		manager_update,
+
+		report_tpl_list
 	}

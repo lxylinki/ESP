@@ -140,7 +140,7 @@
 	border-bottom: none;
 	border-right: none;
 	padding-top: 5px;
-	padding-left: 20px;
+	padding-left: 15px;
 }
 
 .navbtn {

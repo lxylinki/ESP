@@ -11,8 +11,6 @@ const AppInner = ()=> import('@/AppInner.vue');
 
 //1. create components
 //Account Manage
-const AccountManage = ()=> import('@/components/accountmanage/AccountManage.vue');
-
 const ClassManage = ()=> import('@/components/accountmanage/classmanage/ClassManage.vue');
 const ClassAdd = ()=> import('@/components/accountmanage/classmanage/ClassAdd.vue');
 const ClassEdit = ()=> import('@/components/accountmanage/classmanage/ClassEdit.vue');
@@ -31,15 +29,8 @@ const ManagerEdit = ()=> import('@/components/accountmanage/managermanage/Manage
 
 //Experiment Manage
 const ExpManage = ()=> import('@/components/expmanage/ExpManage.vue');
-//const ExpConfig = ()=> import('@/components/expmanage/ExpConfig.vue');
-//const ExpAdd = ()=> import('@/components/expmanage/ExpAdd.vue');
-//const ExpEdit = ()=> import('@/components/expmanage/ExpEdit.vue');
 
 //Exam Manage
-//const ExamManage = ()=> import('@/components/exammanage/ExamManage.vue');
-//const ExamAdd = ()=> import('@/components/exammanage/ExamAdd.vue');
-//const ExamEdit = ()=> import('@/components/exammanage/ExamEdit.vue');
-
 const ExamManage = ()=> import('@/components/exammanage/ExamManage.vue');
 const ExamQuesConfig = ()=> import('@/components/exammanage/ExamQuesConfig.vue');
 
@@ -52,8 +43,12 @@ const QuesEdit = ()=> import('@/components/questionmanage/QuesEdit.vue');
 const TeacherStat = ()=> import('@/components/scorestats/TeacherView.vue');
 const StudentStat = ()=> import('@/components/scorestats/StudentView.vue');
 
+//Exp Report
+const TplManage = ()=> import('@/components/reportmanage/tplmanage/TplManage.vue');
+const TplAdd = ()=> import('@/components/reportmanage/tplmanage/TplAdd.vue');
+
 //Experiment Report
-const ReportManage = ()=> import('@/components/reportmanage/ReportManage.vue');
+//const ReportManage = ()=> import('@/components/reportmanage/ReportManage.vue');
 
 //Version Update
 //const UpdateNote = ()=> import('@/components/versionupdate/UpdateNote.vue');
@@ -89,15 +84,10 @@ const myRoutes = [
 		
 
 		{path: '/expmanage', meta: {title:'实验项目管理'}, component: ExpManage},
-		//{path: '/expconfig', meta: {title:'实验管理'}, component: ExpConfig},
-		//{path: '/expadd', meta: {title:'实验管理'}, component: ExpAdd},
-		//{path: '/expedit',  meta: {title:'实验管理'}, component: ExpEdit},
 
 
 		{path: '/exammanage', meta: {title:'考核管理'}, component: ExamManage},
 		{path: '/examquesconfig', meta: {title: '考核管理'}, component: ExamQuesConfig},
-		//{path: '/examadd', meta:{title:'考核管理'}, component: ExamAdd},
-		//{path: '/examedit', meta: {title:'考核管理'}, component: ExamEdit},
 
 
 		{path: '/questionmanage', meta: {title:'公共题库管理'}, component: QuesManage},
@@ -107,10 +97,12 @@ const myRoutes = [
 		{path: '/teacherstats', meta: {title:'成绩统计'}, component: TeacherStat},
 		{path: '/studentstats', meta: {title:'成绩统计'}, component: StudentStat},
 
+		{path: '/tplmanage', meta: {title: '模板管理'}, component: TplManage},
+		{path: '/tpladd', meta: {title: '模板管理'}, component: TplAdd},
 		//{path: '/updatenote', meta: {title: '版本更新'}, component: UpdateNote},
 		//{path: '/downloadupdate', meta: {title: '版本更新'}, component: DownloadUpdate},
 
-		{path: '/reportmanage', meta: {title: '实验报告管理'}, component: ReportManage}  
+		//{path: '/reportmanage', meta: {title: '实验报告管理'}, component: ReportManage}  
 		//{path: '/testpage', meta: {title: 'Test'}, component: TestGround}
 	 ]
 	},
