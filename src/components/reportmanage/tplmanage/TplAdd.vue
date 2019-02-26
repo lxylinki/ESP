@@ -9,8 +9,9 @@
 			<div class="tpl-name-label">模板名称</div>
 			<input class="tpl-name longinput" type="text" v-model="tpl_name" placeholder="必填">
 			<span class="redalert" v-show="!tpl_name">*</span>
-			<span class="whitedefault"v-show="tpl_name">*</span>
+			<span class="whitedefault" v-show="tpl_name">*</span>
 		</div>
+
 
 		<div class="tpl-catag-group">
 			<div class="tpl-catag-label">实验分类</div>
@@ -20,12 +21,13 @@
 				  :key="item.id"
 				  :label="item.name"
 				  :value="item.id"
-				  :class="{leafcatag: item.isleaf, midcatag: item.ismid, unselectable: item.isleaf}">
+				  :class="{leafcatag: item.isleaf, midcatag: item.ismid, unselectable: !item.isleaf}">
 				</el-option>
 			</el-select>
 			<span class="redalert" v-show="!catag_value">*</span>
-			<span class="whitedefault"v-show="catag_value">*</span>
+			<span class="whitedefault" v-show="catag_value">*</span>
 		</div>
+
 
 		<div class="tpl-note-group">
 			<div class="tpl-note-label">模板备注</div>
@@ -39,13 +41,18 @@
 
 		<div class="tpl-up-group">
 			<div class="tpl-up-label">模板上传</div>
-			<input class="real-upload-btn" type="file" id="upload-file" v-on:change="upFile($event)" multiple>		
-			<el-button class="addbtn upload-btn">上传文件</el-button>
-			<div class="tpl-upload-fig"></div>
+			<input class="real-upload-btn" type="file" id="upload-file" v-on:change="up_preCheck($event)" multiple>		
+			<el-button class="addbtn upload-btn" >上传文件</el-button>
+			<p class="addbtn-limit">仅支持word, excel</p>
+			<p class="addbtn-warn" v-show="wrong_format">文件格式错误</p>
+			<div class="tpl-upload-fig">
+				<img v-show="valid_thumbnail" id="thumbnail" class="thumbnail" src=""><br>
+				<label for="thumbnail" class="img-label">{{filename}}</label>
+			</div>
 		</div>
 
 		<div class="btn-group">
-			<el-button class="confirm" v-on:click="">确定</el-button>
+			<el-button class="confirm" v-on:click="preCheck()">确定</el-button>
 			<el-button class="goback" v-on:click="goBack()">返回</el-button>
 		</div>
 
@@ -53,55 +60,177 @@
 </template>
 
 <script type="text/javascript">
-	import MD5 from '@/assets/js/md5.js';
+	//import MD5 from '@/assets/js/simp-md5.js';
 	import global_ from '@/components/Global.js';
+	import NewMD5 from '@/assets/js/md5.js';
+	import Utils from '@/components/Utils.js';
 
 	export default {
 		data(){
 			return {
 				//user defined file name
+				upfile: null,
+				wrong_format: false,
+				valid_thumbnail: false,
+				filename: '',
 				tpl_name: '',
 				tpl_note: '',
 				tpl_score: '',
 				catag_value: '',
-				catag_options: []
+				catag_options: [],
+				support_formats: ['doc', 'docx', 'xls', 'xlsx']
 			}
 		},
 		methods:{
-			preup(event){
-				let fname = event.target.files[0].name,
-				//api report error
-				    md5 = MD5.hex_md5(this.tpl_name);
-
-				let data = {
-					"fname": fname,
-					"name": this.tpl_name,
-					"md5": md5,
-					"note": this.note,
-					"thumbnail": null
-				}
-
-				let api = global_.report_tpl_preup;
-				this.$http.post(api, data).then((resp)=>{
-					console.log(resp);
-				}, (err)=>{
-					console.log(err);
+			pre_upload(file) {
+				return new Promise((resolve, reject)=>{
+					//let fname = event.target.files[0].name,
+					let fname = file.name,
+					    //md5 = MD5.hex_md5(this.tpl_name);
+					    md5 = NewMD5.md5(this.tpl_name);
+					let data = {
+						"fname": fname,
+						"name": this.tpl_name,
+						"md5": md5,
+						"note": this.tpl_note,
+						"thumbnail": null
+					}
+					let api = global_.report_tpl_preup;
+					this.$http.post(api, data).then((resp)=>{
+						console.log(this.upfile);
+						resolve(resp);
+					}, (err)=>{
+						Utils.err_process.call(this, err, '预上传失败');
+					});
 				});
 			},
 
-			upFile(event) {
-				this.preup(event);
-				/*
-				let formData = new FormData();
-				let real_filename = event.target.files[0].name;
-				//actual file name
-				console.log(real_filename);
-				formData.append("resource", event.target.files[0]);
-				let api = global_.report_tpl_create;
-				this.$http.post(api, formData).then((response)=>{
-				}, (err)=>{
-					console.log(err);
-				});*/
+			real_upload(file) {
+				return new Promise((resolve, reject)=>{
+					let api = global_.report_tpl_up;
+
+					let formData = new FormData();
+					formData.append('resource', file);
+					formData.append('single_file', 1);
+					formData.append('name', this.tpl_name);
+
+					//formData.append('cid', this.catag_value);
+					//formData.append('note', this.tpl_note);
+					//formData.append('thumbnail', null);
+					this.$http.post(api, formData).then((resp)=>{
+						resolve(resp);
+					}, (err)=>{
+						Utils.err_process.call(this, err, '上传失败');
+					});
+				});
+			},
+
+			up_preCheck(event){
+				if(!this.tpl_name) {
+					Utils.lalert('请输入模板名称');
+					return;			
+				} else {
+					this.upload(event);
+				}				
+			},
+
+			preCheck(){
+				if(!this.tpl_name) {
+					Utils.lalert('请输入模板名称');
+					return;			
+
+				} else if(!this.catag_value){
+					Utils.lalert('请选择实验分类');
+					return;
+
+				} else {
+					this.addCreate();
+				}
+			},
+
+			addCreate() {
+				let _this = this;
+
+				//create template
+				function last(real_resp) {
+					console.log(real_resp.body);
+					let api = global_.report_tpl_create;
+					let data = {
+						'name': _this.tpl_name,
+						'single_file': 1,
+						'cid': _this.catag_value,
+						'note': _this.tpl_note,
+						'rid': real_resp.body.id,
+						'score': _this.tpl_score
+					}
+					_this.$http.post(api, data).then((resp)=>{
+						Utils.lalert('模板创建成功');
+						_this.$router.go(-1);
+
+					}, (err)=>{
+						//TODO: add precheck
+						Utils.err_process.call(_this, err, '模板创建失败');
+					});
+				}
+
+				function next(pre_resp){
+					if(pre_resp.body.id && pre_resp.body.fid) {
+						// file exists
+						return;
+					} else {
+						// need to real upload
+						_this.real_upload.call(_this, _this.upfile).then(last);
+					}
+				}
+
+				if(this.upfile) {
+					this.pre_upload(this.upfile).then(next);
+				} else {
+					Utils.lalert('未选择文件');
+				}
+			},
+
+			setThumbnail(format){
+				if(this.support_formats.includes(format)){
+					this.valid_thumbnail = true;
+					this.wrong_format = false;
+					if(format === 'xls' || format ==='xlsx') {
+						$('.thumbnail').attr('src', require('@/assets/excel.svg'));
+					} else if(format === 'doc' || format ==='docx') {
+						$('.thumbnail').attr('src', require('@/assets/word.svg'));
+					}
+				} else {
+					this.wrong_format = true;
+					this.valid_thumbnail = false;
+					return;
+				}
+			},
+
+			upload(event){
+				//save the file
+				if(event.srcElement.files.length>0) {
+					this.upfile = event.srcElement.files[0];	
+					let format = this.upfile.name.split('.').pop();
+					this.setThumbnail(format);
+					this.filename = this.upfile.name;
+
+				} else {
+					Utils.lalert('未选择文件');
+					return;
+				}
+				
+				let _this = this;
+				function next(pre_resp){
+					if(pre_resp.body.id && pre_resp.body.fid) {
+						// file exists
+						Utils.lalert('文件已存在');
+						return;
+					} else {
+						// need to real upload
+						_this.real_upload.call(_this, _this.upfile);
+					}
+				}
+				this.pre_upload(_this.upfile).then(next);
 			},
 
 			goBack(){
@@ -109,7 +238,7 @@
 			},
 
 		    decorFileInp(){
-				var upbtn = document.querySelector(".upload-btn"),
+				let upbtn = document.querySelector(".upload-btn"),
 				    upfile = document.querySelector("#upload-file");
 				 
 				upbtn.addEventListener("click", function(e) {
@@ -130,10 +259,8 @@
 					'all': 1
 				}
 				this.$http.post(api, data).then((resp)=>{
-					this.expandCatag(this.catag_options, resp.body);				
-					this.filtered_catags = this.catag_options;
-					//this.filtered_catags.unshift({'id': null, 'name': '全部分类'});
-
+					this.expandCatag(this.catag_options, resp.body);
+					//console.log(this.catag_options);				
 				}, (err)=>{
 					//console.log(err);
 					Utils.err_process.call(this, err, '请求实验分类列表失败');
@@ -158,7 +285,6 @@
 		},
 
 		mounted(){
-			//alert(MD5.hex_md5('123'));
 			this.decorFileInp();
 			this.reqCatagList();
 		}
@@ -222,6 +348,7 @@
 	border-radius:4px;
 	margin-left:130px;
 	margin-top: 30px;
+	text-align: center;
 }
 
 .btn-group {
@@ -244,5 +371,34 @@
 	/*must be the same with bg color*/
 	color: #ffffff;
 }
+.unselectable {
+	color: #d7d7d7;
+	pointer-events: none;
+}
 
+.addbtn-limit {
+	display: inline-block;
+	font-size: 14px;
+	margin-left: 20px;
+	color: #999999;
+}
+
+.addbtn-warn {
+	display: inline-block;
+	font-size: 14px;
+	margin-left: 20px;
+	color: red;
+}
+
+.thumbnail {
+	width:43px;
+	height:56px;
+	position: relative;
+	top: 10px;
+}
+.img-label {
+	font-size: 14px;
+	position: relative;
+	color: #999999;
+}
 </style>

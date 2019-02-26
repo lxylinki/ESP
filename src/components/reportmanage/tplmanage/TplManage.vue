@@ -8,10 +8,11 @@
 		<div style="height: 20px;"></div>
 
 		<div class="selectclass">
+			<!--
 			<div style="display: inline-block; width: 20px;"></div>
 			<div class="pick-status-title">状态： </div>
 			<div style="display: inline-block;">
-				  <el-select v-model="status_value" placeholder="请选择状态" v-on:change="filterExam()">
+				  <el-select v-model="status_value" placeholder="请选择状态" v-on:change="">
 				    <el-option
 				      v-for="item in status_options"
 				      :key="item.value"
@@ -19,8 +20,7 @@
 				      :value="item.value">
 				    </el-option>
 				  </el-select>		
-			</div>
-
+			</div> -->
 
 			<div class="searchwindow tpl-searchwindow">
 				<el-input class="searchinput tpl-searchinput" 
@@ -64,26 +64,26 @@
 			</el-table-column>-->
 		    
 		    <el-table-column
-		      prop=""
+		      prop="name"
 		      label="模板名称"
 		      min-width="100"
 		      :show-overflow-tooltip="true">
 		    </el-table-column>
 		    	    
 		    <el-table-column
-		      prop=""
+		      prop="score"
 		      label="总分"
 		      min-width="100">
 		    </el-table-column>
 
 		    <el-table-column
-		      prop=""
+		      prop="created_at"
 		      label="创建时间"
 		      min-width="100">
 		    </el-table-column>
 
 		    <el-table-column
-		      prop=""
+		      prop="realname"
 		      label="创建人"
 		      min-width="100">
 		    </el-table-column>
@@ -110,6 +110,12 @@
 		  </el-table>
 		</template>
 
+		
+		<div style="height: 40px;"></div>
+   		<NewPager v-bind:current_page='curPage' 
+   	           	  v-bind:pages='totalPage'
+   		          @setPage='loadPage'
+   		       ></NewPager>
 
 	</div>
 </template>
@@ -117,8 +123,13 @@
 <script type="text/javascript">
 	import global_ from '@/components/Global.js';
 	import Utils from '@/components/Utils.js';
+	import NewPager from '@/components/NewPager.vue';
 
 	export default {
+		components: {
+			'NewPager': NewPager
+		},
+
 		data(){
 			return {
 				search_state:'',
@@ -127,6 +138,8 @@
 				status_value: null,
 				status_options: [],
 				rowsPerPage: 10,
+				totalPage: 0,
+				curPage: 1,
 				row_nums: [
 					{
 						label: '5',
@@ -153,10 +166,25 @@
 		},
 
 		methods: {
-			reqTplList(){
-				let api = global_.report_tpl_list;
-				this.$http.post(api, {}).then((resp)=>{
+			reqTplList(name, page){
+				let api = global_.report_tpl_list
+						+ '?page=' 
+						+ page 
+						+ '&pagesize=' 
+						+ this.rowsPerPage;
+
+				let data = {
+					'search':{
+						'name': name
+					}
+				}
+
+				this.$http.post(api, data).then((resp)=>{
+					this.list = resp.body._list;
+					this.curPage = page;
+					this.totalPage = resp.body.total_page;
 					console.log(resp);
+
 				}, (err)=>{
 					console.log(err);
 				});
@@ -164,11 +192,15 @@
 
 			addTpl(){
 				this.$router.push('/tpladd');
+			},
+
+			loadPage(page){
+				this.reqTplList(this.search_state, page);
 			}
 		},
 
 		mounted(){
-			this.reqTplList();
+			this.reqTplList(null, 1);
 		}
 	}	
 </script>
