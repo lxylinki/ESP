@@ -10,7 +10,7 @@
 
 
 		<div class="selectclass">
-			<div style="display: inline-block; width: 20px;"></div>
+			<!--<div style="display: inline-block; width: 20px;"></div>-->
 
 			<div class="statustitle">状态：</div>
 			
@@ -305,6 +305,7 @@
 				var _this = this;
 				Utils.lconfirm("确定删除学生？", function(){_this.delStudent(row)});
 			},
+			
 			delStudent(row) {
 				var api = global_.student_delete;
 				let data = {

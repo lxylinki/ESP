@@ -10,7 +10,7 @@
 
 
 		<div class="selectclass">
-			<div style="display: inline-block; width: 20px;"></div>
+			<!--<div style="display: inline-block; width: 20px;"></div>-->
 
 			<div class="statustitle">状态：</div>
 			

@@ -51,6 +51,7 @@ function convTime(ntime) {
 	function add0(m){
 		return m<10?'0'+m:m 
 	}
+	// ntime * 1000 milliseconds
 	var unixTime = new Date(ntime * 1000);
 	
 	var y = unixTime.getFullYear();

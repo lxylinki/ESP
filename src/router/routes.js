@@ -46,6 +46,9 @@ const StudentStat = ()=> import('@/components/scorestats/StudentView.vue');
 //Exp Report
 const TplManage = ()=> import('@/components/reportmanage/tplmanage/TplManage.vue');
 const TplAdd = ()=> import('@/components/reportmanage/tplmanage/TplAdd.vue');
+const ExpReport = ()=> import('@/components/reportmanage/expreport/ExpReport.vue');
+const ReportAdd = ()=> import('@/components/reportmanage/expreport/ReportAdd.vue');
+
 
 //Experiment Report
 //const ReportManage = ()=> import('@/components/reportmanage/ReportManage.vue');
@@ -99,6 +102,9 @@ const myRoutes = [
 
 		{path: '/tplmanage', meta: {title: '模板管理'}, component: TplManage},
 		{path: '/tpladd', meta: {title: '模板管理'}, component: TplAdd},
+
+		{path: '/expreport', meta: {title: '实验报告'}, component: ExpReport},
+		{path: '/reportadd', meta: {title: '实验报告'}, component: ReportAdd},
 		//{path: '/updatenote', meta: {title: '版本更新'}, component: UpdateNote},
 		//{path: '/downloadupdate', meta: {title: '版本更新'}, component: DownloadUpdate},
 
@@ -107,7 +113,6 @@ const myRoutes = [
 	 ]
 	},
 	{path: '*', redirect: '/login'}	/*default when no match*/
-	
 ];
 
 //3. instanciate router from VueRouter

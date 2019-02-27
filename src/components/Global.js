@@ -78,11 +78,15 @@
 	const student_group = 3;
 
 	//experiment report
+	//template
 	const report_tpl_list = url_prefix + 'exam/report-offline/list-tpl';
 	const report_tpl_create = url_prefix + 'exam/report-offline/create-tpl';
 	const report_tpl_preup = url_prefix + 'resources/resource/pre-upload';
 	const report_tpl_up = url_prefix + 'resources/resource/upload';
 	const report_tpl_delete = url_prefix + 'exam/report-offline/del-tpl';
+
+	//report
+	const report_list = url_prefix + 'exam/report-offline/list';
 
 
 	export default {
@@ -159,5 +163,7 @@
 		report_tpl_preup,
 		report_tpl_up,
 		report_tpl_create,
-		report_tpl_delete
+		report_tpl_delete,
+
+		report_list
 	}

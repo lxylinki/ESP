@@ -34,10 +34,11 @@
 			<textarea class="tpl-note" v-model="tpl_note"></textarea>
 		</div>
 
+		<!--
 		<div class="tpl-score-group">
 			<div class="tpl-score-label">模板分数</div>
 			<input class="tpl-score" type="text" v-model="tpl_score">
-		</div>
+		</div> -->
 
 		<div class="tpl-up-group">
 			<div class="tpl-up-label">模板上传</div>
@@ -161,7 +162,7 @@
 						'cid': _this.catag_value,
 						'note': _this.tpl_note,
 						'rid': real_resp.body.id,
-						'score': _this.tpl_score
+						//'score': _this.tpl_score
 					}
 					_this.$http.post(api, data).then((resp)=>{
 						//console.log(resp);

@@ -194,6 +194,7 @@
 		     	};
 
 		     	this.$http.post(class_api, req_data).then((resp)=>{
+		     		//console.log(resp);
 		     		this.tableData = resp.body._list;
 		     		this.totalPage = resp.body.total_page;
 		     		this.filterData(page);

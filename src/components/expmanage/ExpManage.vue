@@ -122,6 +122,7 @@
 			<template>
 			  <el-table
 			    class="tchr-list"
+			    @row-click="clickRow"
 			    :data="tlist"
 			    :highlight-current-row="true"
 			    style="width: 100%;">
@@ -137,34 +138,13 @@
 			      min-width="200">
 			    </el-table-column>
 
-			    <!--<el-table-column
-			      prop="user_id"
-			      label="ID"
-			      min-width="100">
-			    </el-table-column>-->
-
-			    <!--
 			    <el-table-column
 			      prop="operation"
 			      label="操作"
 			      min-width="200">
 			      <template slot-scope="scope">
-			      	<el-button v-show="!focus_tids.includes(scope.row.user_id)" class="op selectbtn" type="text" @click="selectRow(scope.row)">
-			      		+添加
-			      	</el-button>
-			      	<el-button v-show="focus_tids.includes(scope.row.user_id)" class="op removebtn" type="text" @click="removeRow(scope.row)">
-			      		-移除
-			      	</el-button>
-			      </template>
-			    </el-table-column> -->
-
-			    <el-table-column
-			      prop="operation"
-			      label="操作"
-			      min-width="200">
-			      <template slot-scope="scope">
-			      	<i class="iconfont unchecked-box" v-show="!focus_tids.includes(scope.row.user_id)" @click="selectRow(scope.row)">&#xe63c;</i>
-			      	<i class="iconfont checked-box" v-show="focus_tids.includes(scope.row.user_id)" @click="removeRow(scope.row)">&#xe63e;</i>
+			      	<i class="iconfont unchecked-box" v-show="!focus_tids.includes(scope.row.user_id)">&#xe63c;</i>
+			      	<i class="iconfont checked-box" v-show="focus_tids.includes(scope.row.user_id)">&#xe63e;</i>
 			      </template>
 			    </el-table-column>
 
@@ -473,6 +453,19 @@
 				this.reqTeacherData(this.t_search_state, 1);
 			},
 
+			clickRow(trow) {
+				if(!this.focus_tids.includes(trow.user_id)) {
+					this.focus_tids.push(trow.user_id);
+
+				} else {
+					let idx = this.focus_tids.indexOf(trow.user_id);
+					if(idx != -1) {
+						this.focus_tids.splice(idx, 1);
+					}					
+				}				
+			},
+
+			/*
 			selectRow(trow){
 				if(!this.focus_tids.includes(trow.user_id)) {
 					this.focus_tids.push(trow.user_id);
@@ -484,7 +477,7 @@
 				if(idx != -1) {
 					this.focus_tids.splice(idx, 1);
 				}
-			},
+			},*/
 
 			rmTeachers(eid, user_ids){
 				return new Promise((resolve, reject)=>{

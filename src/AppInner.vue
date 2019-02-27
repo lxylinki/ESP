@@ -53,6 +53,7 @@
 	import Nav from './components/Nav.vue';
 	import global_ from './components/Global.js';
 	import store from '@/vuex/store.js';
+	import Utils from '@/components/Utils.js';
 	//import { setCookie, getCookie, delCookie } from './assets/js/cookie.js';
 	
 	export default {
@@ -179,7 +180,7 @@
 	            			},
 	            			{
 	            				name: '实验报告',
-	            				url: '',
+	            				url: '/expreport',
 			            		userGroup: [
 			            			global_.school_admin_group, 
 			            			global_.teacher_group,
