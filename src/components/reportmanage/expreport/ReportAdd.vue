@@ -20,7 +20,7 @@
 		</div>
 
 		<div class="display-area" v-show="tpl_selected">
-			<span>名称：{{tpl_name}}</span><br><span>分数：{{score}}分</span>
+			<span>名称：{{tpl_name}}</span><br><span>分数：{{tpl_score}}分</span>
 		</div>
 
 		<div class="time-group">
@@ -41,7 +41,7 @@
 		</div>
 
 <!--------------------------------------------------------------------------------------------------------------------------->
-		<div id="show-all-tpls" v-show="true">
+		<div id="show-all-tpls" v-show="false">
 
 			<div class="selectclass">
 				<div class="searchwindow tpl-searchwindow">
@@ -116,8 +116,8 @@
 	   		       ></NewPager>
 
 			<div class="tpl-btn-group">
-				<el-button class="tpl-confirm" v-on:click="">确定</el-button>
-				<el-button class="tpl-goback" v-on:click="">取消</el-button>
+				<el-button class="confirm" v-on:click="">确定</el-button>
+				<el-button class="goback" v-on:click="cancel()">取消</el-button>
 			</div>
 
 		</div>
@@ -143,10 +143,11 @@
 				rowsPerPage: 10,
 				search_state:'',
 				tpl_choice: '',
+				layeridx: null,
 
 				report_name: '',
 				tpl_selected: true,
-				score: 0,
+				tpl_score: 0,
 				tpl_name: 'test',
 				start_time: null,
 				end_time: null,
@@ -179,7 +180,18 @@
 				this.$router.go(-1);
 			},
 
+			showTplList(){
+				this.reqTplList(null, 1);
+				this.layeridx = layer.open({
+					type: 1,
+					area: ['700px', '765px'],
+					title: '',
+					content: $('#show-all-tpls')
+				});	
+			},
+
 /*--------------------------------------------------------------------------------------------------------------------*/
+			
 			invokeSearch(e) {
 				if(e.keyCode == 13) {
 					this.reqTplList(this.search_state, 1);
@@ -233,16 +245,29 @@
 
 			row_selected(row) {
 				return this.tpl_choice == row.id;
+			},
+
+			cancel(){
+				layer.close(this.layeridx);
 			}
 		},
 
 		mounted(){
-			this.reqTplList(null, 1);
+			//this.reqTplList(null, 1);
 		}
 	}
 </script>
 
 <style type="text/css" scoped>
+#show-all-tpls .selectclass {
+	background: white;
+	height: 100px;
+}
+
+#show-all-tpls {
+	padding: 20px;
+	overflow: auto;
+}
 
 .report-name {
 	box-sizing: border-box;
@@ -341,6 +366,12 @@
 /*hide hover effect*/
 #show-all-tpls .el-table--enable-row-hover >>> .el-table__body tr:not(.current-row):hover>td{
 	background-color: transparent !important;
+}
+
+.tpl-btn-group {
+	position: absolute;
+	bottom: 30px;
+	right: 30px;
 }
 
 </style>

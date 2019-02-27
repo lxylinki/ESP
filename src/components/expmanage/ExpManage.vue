@@ -576,7 +576,7 @@
 
 			this.reqCatagList();
 			this.reqList(null, '', this.curPage);
-			this.reqTeacherData(null, 1);
+			//this.reqTeacherData(null, 1);
 		}
 	}
 </script>
