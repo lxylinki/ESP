@@ -25,10 +25,10 @@
 			<div class="searchwindow tpl-searchwindow">
 				<el-input class="searchinput tpl-searchinput" 
 						  v-model="search_state"
-						  v-on:keydown.native=""
+						  v-on:keydown.native="invokeSearch($event)"
 						  placeholder="请搜索模板名称">		  
 				</el-input>
-				<button class="searchbtn tpl-searchbtn" v-on:click="">
+				<button class="searchbtn tpl-searchbtn" v-on:click="searchReq()">
 					<i style="color: white;" class="el-icon-search"></i>
 				</button>
 			</div>
@@ -77,7 +77,7 @@
 		    </el-table-column>
 
 		    <el-table-column
-		      prop="created_at"
+		      prop="create_time"
 		      label="创建时间"
 		      min-width="100">
 		    </el-table-column>
@@ -100,7 +100,7 @@
 		      min-width="100">
 
 		      <template slot-scope="scope">
-		      	<el-button class="op" type="text" @click="">
+		      	<el-button class="op" type="text" @click="deleteRow(scope.row)">
 		      		<i class="iconfont">&#xe7e0;</i>删除
 		      	</el-button>
 
@@ -166,6 +166,16 @@
 		},
 
 		methods: {
+			invokeSearch(e) {
+				if(e.keyCode == 13) {
+					this.reqTplList(this.search_state, 1);
+				}
+			},
+
+			searchReq(){
+				this.reqTplList(this.search_state, 1);
+			},
+
 			reqTplList(name, page){
 				let api = global_.report_tpl_list
 						+ '?page=' 
@@ -180,13 +190,16 @@
 				}
 
 				this.$http.post(api, data).then((resp)=>{
-					this.list = resp.body._list;
-					this.curPage = page;
+					this.tableData = resp.body._list;
+					for(let item of this.tableData) {
+						item.create_time = Utils.convTime(item.created_at);
+					}
 					this.totalPage = resp.body.total_page;
-					console.log(resp);
+					this.filterData(page);
+					//console.log(resp);
 
 				}, (err)=>{
-					console.log(err);
+					Utils.err_process.call(this, err, '请求模板列表失败');
 				});
 			},
 
@@ -196,6 +209,34 @@
 
 			loadPage(page){
 				this.reqTplList(this.search_state, page);
+			},
+
+			filterData(page){
+				this.list = this.tableData;
+				this.curPage = page;
+			},
+
+			pageSizeChange(){
+				this.reqTplList(this.search_state, 1);
+			},
+
+			deleteRow(row) {
+				let _this = this;
+				Utils.lconfirm("确定删除模板？", function(){_this.delTemplate(row)});
+			},
+
+			delTemplate(row) {
+				//console.log(row);
+				let api = global_.report_tpl_delete;
+				let data = {
+					'paper_id': row.id
+				}
+				this.$http.post(api, data).then((resp)=>{
+					Utils.lalert('删除模板成功');
+					this.loadPage(this.curPage);
+				}, (err)=>{
+					Utils.err_process.call(this, err, '删除模板失败');
+				});
 			}
 		},
 

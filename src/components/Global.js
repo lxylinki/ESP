@@ -82,6 +82,7 @@
 	const report_tpl_create = url_prefix + 'exam/report-offline/create-tpl';
 	const report_tpl_preup = url_prefix + 'resources/resource/pre-upload';
 	const report_tpl_up = url_prefix + 'resources/resource/upload';
+	const report_tpl_delete = url_prefix + 'exam/report-offline/del-tpl';
 
 
 	export default {
@@ -157,5 +158,6 @@
 		report_tpl_list,
 		report_tpl_preup,
 		report_tpl_up,
-		report_tpl_create
+		report_tpl_create,
+		report_tpl_delete
 	}

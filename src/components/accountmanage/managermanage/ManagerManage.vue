@@ -188,31 +188,10 @@
 		methods: {
 			invokeSearch(e){
 		     	if(e.keyCode == 13) {
-		     		this.searchReq(this.curPage);
+		     		//this.searchReq(this.curPage);
+		     		this.searchReq(1);
 		     	}
 		    },
-
-		    /*
-		    joinList(list1, list2){
-		    	for(var i in list2) {
-		    		if(!Utils.contains_obj(list1, list2[i])) {
-		    			list1.push(list2[i]);
-		    		}
-		    	}
-		    	return list1;
-		    },*/
-
-		    // with search keyword
-		    /*
-		    searchReq(page){
-		    	asyncReq.call(this);
-		    	async function asyncReq(){
-		    		let searchRes1 = await this.reqMngList( this.search_state,'', '', page);
-		    		let searchRes2 = await this.reqMngList('', this.search_state, '', page);
-		    		//this.tableData = this.joinList(searchRes1.body._list, searchRes2.body._list);
-		    		//this.filterData(page);
-		    	}
-		    },*/
 
 		    searchReq(page) {
 		    	asyncReq.call(this);

@@ -97,7 +97,7 @@
 					}
 					let api = global_.report_tpl_preup;
 					this.$http.post(api, data).then((resp)=>{
-						console.log(this.upfile);
+						//console.log(this.upfile);
 						resolve(resp);
 					}, (err)=>{
 						Utils.err_process.call(this, err, '预上传失败');
@@ -164,6 +164,7 @@
 						'score': _this.tpl_score
 					}
 					_this.$http.post(api, data).then((resp)=>{
+						//console.log(resp);
 						Utils.lalert('模板创建成功');
 						_this.$router.go(-1);
 
