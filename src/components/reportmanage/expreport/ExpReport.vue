@@ -69,13 +69,13 @@
 		    </el-table-column>
 		    	    
 		    <el-table-column
-		      prop="started_at"
+		      prop="start_time"
 		      label="开始时间"
 		      min-width="100">
 		    </el-table-column>
 
 		    <el-table-column
-		      prop="ended_at"
+		      prop="end_time"
 		      label="截止时间"
 		      min-width="100">
 		    </el-table-column>
@@ -86,16 +86,23 @@
 		      min-width="100">
 		    </el-table-column>
 
+		    <!--
 		    <el-table-column
 		      prop=""
 		      label="创建人"
 		      min-width="100">
-		    </el-table-column>
+		    </el-table-column> -->
 
 		    <el-table-column
 		      prop="status"
 		      label="状态"
 		      min-width="100">
+		      <template slot-scope="scope">
+		      	<span v-if="scope.row.status == 0">未发布</span>
+		      	<span v-if="scope.row.status == 1">已发布</span>
+		      	<span v-if="scope.row.status == 2">已关闭</span>
+		      	<span v-if="scope.row.status == 3">成绩公布</span>
+		      </template>
 		    </el-table-column>
 
 		    <!--
@@ -111,9 +118,11 @@
 
 		      <template slot-scope="scope">
 		      	<el-button class="op" type="text" @click="">
-		      		操作
+		      		发布
 		      	</el-button>
-
+		      	<el-button class="op" type="text" @click="">
+		      		删除
+		      	</el-button>
 		      </template>
 		    </el-table-column>
 
@@ -124,12 +133,14 @@
 </template>
 
 <script type="text/javascript">
+	import Utils from '@/components/Utils.js';
 	import global_ from '@/components/Global.js';
 	export default {
 		data(){
 			return {
 				list: [],
 				tableData: [],
+				curPage: 1,
 				status_value: '',
 				status_options: [],
 				search_state: '',
@@ -174,10 +185,19 @@
 				this.$http.post(api, data).then((resp)=>{
 					console.log(resp);
 					this.tableData = resp.body._list;
-					this.list = this.tableData;
+					for(let item of this.tableData) {
+						item.start_time = Utils.convTime(item.started_at);
+						item.end_time = Utils.convTime(item.ended_at);
+					}
+					this.filterData(page);
 				}, (err)=>{
 					Utils.err_process.call(this, err, '请求实验报告列表失败');
 				});
+			},
+
+			filterData(page){
+				this.list = this.tableData;
+				this.curPage = page;
 			},
 
 			addReport(){
@@ -186,7 +206,7 @@
 		},
 
 		mounted(){
-			this.reqReportList();
+			this.reqReportList(1);
 		}
 	}
 </script>
