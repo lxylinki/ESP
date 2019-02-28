@@ -62,29 +62,28 @@
 			</el-table-column>-->
 		    
 		    <el-table-column
-		      prop=""
+		      prop="name"
 		      label="实验名称"
 		      min-width="100"
 		      :show-overflow-tooltip="true">
 		    </el-table-column>
 		    	    
 		    <el-table-column
-		      prop=""
+		      prop="started_at"
 		      label="开始时间"
 		      min-width="100">
 		    </el-table-column>
 
 		    <el-table-column
-		      prop=""
+		      prop="ended_at"
 		      label="截止时间"
 		      min-width="100">
 		    </el-table-column>
 
 		    <el-table-column
-		      prop=""
+		      prop="full_score"
 		      label="总分"
 		      min-width="100">
-		    	
 		    </el-table-column>
 
 		    <el-table-column
@@ -94,7 +93,7 @@
 		    </el-table-column>
 
 		    <el-table-column
-		      prop=""
+		      prop="status"
 		      label="状态"
 		      min-width="100">
 		    </el-table-column>
@@ -175,6 +174,7 @@
 				this.$http.post(api, data).then((resp)=>{
 					console.log(resp);
 					this.tableData = resp.body._list;
+					this.list = this.tableData;
 				}, (err)=>{
 					Utils.err_process.call(this, err, '请求实验报告列表失败');
 				});

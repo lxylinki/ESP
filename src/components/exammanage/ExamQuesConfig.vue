@@ -510,13 +510,19 @@
 	margin-left: 20px;
 }
 
+
 .pickexptitle {
 	display: inline-block; 
-	line-height: 70px;
+	line-height: 60px;
 }
 
 .pickquestype {
 	display: inline-block;
+}
+
+.quesmng-searchwindow {
+    position: relative;
+    top: -7px;	
 }
 
 #ltable, #rtable {

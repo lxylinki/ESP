@@ -81,11 +81,12 @@ select {
   overflow: hidden;
 }
 
+/*
 .el-input__inner{
   width:200px;
   height:36px;
   border-radius:4px;
-}
+}*/
 
 .el-table td {
   height: 40px;
@@ -100,7 +101,8 @@ select {
   /*text-align: center;*/
 }
 
-.el-button {
+/*avoid data picker*/
+.el-button:not(.el-picker-panel__link-btn) {
 	line-height: 0;
 }
 
@@ -175,7 +177,10 @@ input[type="radio"]:checked + label::before {
   height: 35px;
 }
 
-.confirm, .confirm:hover, .confirm:active, .confirm:focus{
+.confirm:not(.el-time-panel__btn), 
+.confirm:not(.el-time-panel__btn):hover, 
+.confirm:not(.el-time-panel__btn):active, 
+.confirm:not(.el-time-panel__btn):focus {
   /*background: #0099ff;*/
     background: #5c9cec;
     color: white;
@@ -194,7 +199,7 @@ input[type="radio"]:checked + label::before {
 
 .searchbtn {
   width:40px;
-  height:36px;
+  height:40px;
   background:rgba(92,156,236,1);
   border: rgba(92,156,236,1);
   border-radius:0px 4px 4px 0px;

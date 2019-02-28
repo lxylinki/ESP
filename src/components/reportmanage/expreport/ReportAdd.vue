@@ -23,10 +23,19 @@
 			<span>名称：{{tpl_name}}</span><br><span>分数：{{tpl_score}}分</span>
 		</div>
 
+		<!--
 		<div class="time-group">
 			<div class="time-label">开始时间</div>
 			<input class="start-time" type="datetime-local" v-model="start_time"><span class="until">至</span>
 			<input class="end-time" type="datetime-local" v-model="end_time">
+			<div class="time-interval" v-show="start_time && end_time">{{interval(start_time, end_time)}}</div>
+		</div> --> 
+
+		<div class="time-group">
+			<div class="time-label">开始时间</div>
+			<el-date-picker v-model="start_time" type="datetime" :picker-options="pickerOptsStart" placeholder="选择日期时间"></el-date-picker>
+			<span class="until">至</span>
+			<el-date-picker v-model="end_time" type="datetime" :picker-options="pickerOptsEnd" placeholder="选择日期时间"></el-date-picker>
 			<div class="time-interval" v-show="start_time && end_time">{{interval(start_time, end_time)}}</div>
 		</div>
 
@@ -36,7 +45,7 @@
 		</div>
 
 		<div class="btn-group">
-			<el-button class="confirm" v-on:click="">确定</el-button>
+			<el-button class="confirm" v-on:click="preCheck()">确定</el-button>
 			<el-button class="goback" v-on:click="goBack()">返回</el-button>
 		</div>
 
@@ -80,7 +89,7 @@
 			    <el-table-column
 			      prop="create_time"
 			      label="创建时间"
-			      min-width="100">
+			      min-width="120">
 			    </el-table-column>
 
 			    <el-table-column
@@ -99,7 +108,7 @@
 			    <el-table-column
 			      prop="operation"
 			      label="操作"
-			      min-width="100">
+			      min-width="80">
 			      <template slot-scope="scope">
 			      	<i class="iconfont unchecked-box" v-show="!row_selected(scope.row)">&#xe63c;</i>
 			      	<i class="iconfont checked-box" v-show="row_selected(scope.row)">&#xe63e;</i>
@@ -116,7 +125,7 @@
 	   		       ></NewPager>
 
 			<div class="tpl-btn-group">
-				<el-button class="confirm" v-on:click="">确定</el-button>
+				<el-button class="confirm" v-on:click="choose()">确定</el-button>
 				<el-button class="goback" v-on:click="cancel()">取消</el-button>
 			</div>
 
@@ -142,21 +151,32 @@
 				curPage: 1,
 				rowsPerPage: 10,
 				search_state:'',
-				tpl_choice: '',
+				tpl_choice: null,
 				layeridx: null,
 
 				report_name: '',
-				tpl_selected: true,
+				tpl_selected: false,
 				tpl_score: 0,
 				tpl_name: 'test',
 				start_time: null,
 				end_time: null,
-				report_note: ''
+				report_note: '',
+
+				pickerOptsStart: {
+					disabledDate:(time)=>{
+						return time.getTime() < Date.now() - 8.64e7;
+					}
+				},
+				pickerOptsEnd: {
+				    disabledDate:(time) => {
+				        return time.getTime() < this.start_time || time.getTime() < Date.now();
+				    }
+				},
+
 			}
 		},
 
 		methods: {
-
 			toSeconds(time_str){
 				if(time_str) {
 					return Date.parse(time_str) / 1000;
@@ -173,7 +193,12 @@
 			},
 
 			interval(start, end) {
-				return this.toDayHourMin(this.toSeconds(end) - this.toSeconds(start));
+				if(end >= start) {
+					return this.toDayHourMin(this.toSeconds(end) - this.toSeconds(start));
+				} else {
+					return '-' + this.toDayHourMin(this.toSeconds(start) - this.toSeconds(end));
+				}
+				
 			},
 
 			goBack(){
@@ -186,12 +211,47 @@
 					type: 1,
 					area: ['700px', '765px'],
 					title: '',
-					content: $('#show-all-tpls')
+					content: $('#show-all-tpls'),
+					cancel: this.cancel
 				});	
 			},
 
+			preCheck(){
+				if(!this.report_name) {
+					Utils.lalert('请输入实验报告名称');
+					return;
+
+				} else if(!this.tpl_choice) {
+					Utils.lalert('请选择模板');
+					return;
+
+				} else if(!this.start_time || !this.end_time){
+					Utils.lalert('请输入起止时间');
+					return;
+
+				} else {
+					this.addCreate();
+				}
+			},
+
+			addCreate(){
+				let api = global_.report_create;
+				let data = {
+					'paper_id': this.tpl_choice,
+					'name': this.report_name,
+					'started_at': this.toSeconds(this.start_time),
+					'ended_at': this.toSeconds(this.end_time),
+					//'suggested_time': 60
+				}
+				this.$http.post(api, data).then((resp)=>{
+					console.log(resp);
+
+				}, (err)=>{
+					Utils.err_process.call(this, err, '创建实验报告失败');
+				});
+			},
 /*--------------------------------------------------------------------------------------------------------------------*/
-			
+	
 			invokeSearch(e) {
 				if(e.keyCode == 13) {
 					this.reqTplList(this.search_state, 1);
@@ -241,13 +301,22 @@
 			clickRow(row) {
 				//console.log(row);
 				this.tpl_choice = row.id;
+				this.tpl_name = row.name;
+				this.tpl_score = row.score;
 			},
 
 			row_selected(row) {
 				return this.tpl_choice == row.id;
 			},
 
+			choose(){
+				this.tpl_selected = true;
+				layer.close(this.layeridx);
+			},
+
 			cancel(){
+				this.tpl_selected = false;
+				this.tpl_choice = null;
 				layer.close(this.layeridx);
 			}
 		},
@@ -336,7 +405,7 @@
 	color: rgba(153,153,153,1);
 }
 
-.report-name-group, .display-area, .time-group, .report-note-group {
+.report-name-group, .display-area, .time-group, .report-note-group, .tpl-select-group {
 	margin-bottom: 30px;
 }
 
