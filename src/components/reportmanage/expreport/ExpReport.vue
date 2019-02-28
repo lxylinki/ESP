@@ -211,6 +211,9 @@
 						+ this.rowsPerPage;
 
 				let data = {
+					'match':{
+						'status': null
+					},
 					'search': {
 						'name': name
 					}
