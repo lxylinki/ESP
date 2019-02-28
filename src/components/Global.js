@@ -88,6 +88,9 @@
 	//report
 	const report_list = url_prefix + 'exam/report-offline/list';
 	const report_create = url_prefix + 'exam/report-offline/create';
+	const report_pub = url_prefix + 'exam/report-offline/pub';
+	const report_delete = url_prefix + 'exam/report-offline/del';
+	const report_exam_close = url_prefix + 'exam/exam/close';
 
 	export default {
 		super_admin_group,
@@ -166,5 +169,8 @@
 		report_tpl_delete,
 
 		report_list,
-		report_create
+		report_create,
+		report_pub,
+		report_delete,
+		report_exam_close
 	}

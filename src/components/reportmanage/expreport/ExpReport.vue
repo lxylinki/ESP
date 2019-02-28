@@ -117,12 +117,20 @@
 		      min-width="100">
 
 		      <template slot-scope="scope">
-		      	<el-button class="op" type="text" @click="">
+
+		      	<el-button v-show="scope.row.status==0" class="op" type="text" @click="pubReport(scope.row)">
 		      		发布
 		      	</el-button>
-		      	<el-button class="op" type="text" @click="">
+		      	<el-button v-show="scope.row.status==0" class="op" type="text" @click="deleteRow(scope.row)">
 		      		删除
 		      	</el-button>
+		      	<el-button v-show="scope.row.status==1" class="op" type="text" @click="closeExam(scope.row)">
+		      		关闭考试
+		      	</el-button>
+		      	<el-button v-show="scope.row.status==2" class="op" type="text" @click="">
+		      		成绩公布
+		      	</el-button>
+
 		      </template>
 		    </el-table-column>
 
@@ -202,7 +210,54 @@
 
 			addReport(){
 				this.$router.push('/reportadd');
-			}
+			},
+
+			pubReport(row){
+				//console.log(row);
+				let api = global_.report_pub;
+				let data = {
+					'exam_id': row.id
+				}
+				this.$http.post(api, data).then((resp)=>{
+					console.log(resp);
+					this.reqReportList(this.curPage);
+				}, (err)=>{
+					Utils.err_process.call(this, err, '实验报告发布失败');
+				});
+			},
+
+  			deleteRow(row) {
+  				var _this = this;
+  				Utils.lconfirm("确定删除实验报告？", function(){_this.delReport(row)});
+  			},
+
+  			delReport(row) {
+  				let api = global_.report_delete;
+  				let data = {
+  					'exam_id': row.id
+  				}
+				this.$http.post(api, data).then((resp)=>{
+					console.log(resp);
+					Utils.lalert('删除实验报告成功');
+					this.reqReportList(this.curPage);
+				}, (err)=>{
+					Utils.err_process.call(this, err, '实验报告删除失败');
+				});  				
+  			},
+
+  			closeExam(row) {
+  				let api = global_.report_exam_close;
+  				let data = {
+  					'id': row.id
+  				}
+				this.$http.post(api, data).then((resp)=>{
+					console.log(resp);
+					Utils.lalert('关闭考试成功');
+					this.reqReportList(this.curPage);
+				}, (err)=>{
+					Utils.err_process.call(this, err, '考试关闭失败');
+				});   				
+  			}
 		},
 
 		mounted(){
