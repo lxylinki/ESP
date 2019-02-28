@@ -117,7 +117,6 @@
 		      min-width="100">
 
 		      <template slot-scope="scope">
-
 		      	<el-button v-show="scope.row.status==0" class="op" type="text" @click="pubReport(scope.row)">
 		      		发布
 		      	</el-button>
@@ -127,8 +126,11 @@
 		      	<el-button v-show="scope.row.status==1" class="op" type="text" @click="closeExam(scope.row)">
 		      		关闭考试
 		      	</el-button>
-		      	<el-button v-show="scope.row.status==2" class="op" type="text" @click="">
+		      	<el-button v-show="scope.row.status==2" class="op" type="text" @click="pubScore(scope.row)">
 		      		成绩公布
+		      	</el-button>
+		      	<el-button v-show="scope.row.status==3" class="op" type="text" @click="getStats(scope.row)">
+		      		报告统计
 		      	</el-button>
 
 		      </template>
@@ -175,11 +177,33 @@
 						value: 50
 					}
 				],	
+				status_options: [
+					{
+						label: '全部状态',
+						value: null
+					},
+					{
+						label: '未发布',
+						value: 0
+					},
+					{
+						label: '已发布',
+						value: 1
+					},
+					{
+						label: '已关闭',
+						value: 2
+					},
+					{
+						label: '成绩公示',
+						value: 3
+					},
+				]
 			}
 		},
 
 		methods: {
-			reqReportList(page){
+			reqReportList(name, page){
 				let api = global_.report_list
 						+ '?page=' 
 						+ page 
@@ -187,7 +211,9 @@
 						+ this.rowsPerPage;
 
 				let data = {
-
+					'search': {
+						'name': name
+					}
 				}
 
 				this.$http.post(api, data).then((resp)=>{
@@ -220,7 +246,7 @@
 				}
 				this.$http.post(api, data).then((resp)=>{
 					console.log(resp);
-					this.reqReportList(this.curPage);
+					this.reqReportList(null, this.curPage);
 				}, (err)=>{
 					Utils.err_process.call(this, err, '实验报告发布失败');
 				});
@@ -239,7 +265,7 @@
 				this.$http.post(api, data).then((resp)=>{
 					console.log(resp);
 					Utils.lalert('删除实验报告成功');
-					this.reqReportList(this.curPage);
+					this.reqReportList(null, this.curPage);
 				}, (err)=>{
 					Utils.err_process.call(this, err, '实验报告删除失败');
 				});  				
@@ -253,15 +279,33 @@
 				this.$http.post(api, data).then((resp)=>{
 					console.log(resp);
 					Utils.lalert('关闭考试成功');
-					this.reqReportList(this.curPage);
+					this.reqReportList(null, this.curPage);
 				}, (err)=>{
 					Utils.err_process.call(this, err, '考试关闭失败');
 				});   				
+  			},
+
+  			pubScore(row) {
+  				let api = global_.report_score_pub;
+  				let data = {
+  					'id': row.id
+  				}
+				this.$http.post(api, data).then((resp)=>{
+					console.log(resp);
+					Utils.lalert('成绩公布成功');
+					this.reqReportList(null, this.curPage);
+				}, (err)=>{
+					Utils.err_process.call(this, err, '成绩公布失败');
+				});    				
+  			},
+
+  			getStats(){
+  				this.$router.push('/reportstats');
   			}
 		},
 
 		mounted(){
-			this.reqReportList(1);
+			this.reqReportList(null, 1);
 		}
 	}
 </script>

@@ -48,6 +48,7 @@ const TplManage = ()=> import('@/components/reportmanage/tplmanage/TplManage.vue
 const TplAdd = ()=> import('@/components/reportmanage/tplmanage/TplAdd.vue');
 const ExpReport = ()=> import('@/components/reportmanage/expreport/ExpReport.vue');
 const ReportAdd = ()=> import('@/components/reportmanage/expreport/ReportAdd.vue');
+const ReportStats = ()=> import('@/components/reportmanage/expreport/ReportStats.vue');
 
 
 //Experiment Report
@@ -105,6 +106,7 @@ const myRoutes = [
 
 		{path: '/expreport', meta: {title: '实验报告'}, component: ExpReport},
 		{path: '/reportadd', meta: {title: '实验报告'}, component: ReportAdd},
+		{path: '/reportstats', meta: {title: '实验报告'}, component: ReportStats},
 		//{path: '/updatenote', meta: {title: '版本更新'}, component: UpdateNote},
 		//{path: '/downloadupdate', meta: {title: '版本更新'}, component: DownloadUpdate},
 

@@ -91,6 +91,7 @@
 	const report_pub = url_prefix + 'exam/report-offline/pub';
 	const report_delete = url_prefix + 'exam/report-offline/del';
 	const report_exam_close = url_prefix + 'exam/exam/close';
+	const report_score_pub = url_prefix + 'exam/exam/release-score';
 
 	export default {
 		super_admin_group,
@@ -172,5 +173,6 @@
 		report_create,
 		report_pub,
 		report_delete,
-		report_exam_close
+		report_exam_close,
+		report_score_pub
 	}
