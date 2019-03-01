@@ -393,6 +393,7 @@
 		},
 
 		mounted(){
+			Utils.page_check_status.call(this);
 			this.reqCatagList();
 			//this.reqTplList(null, 1);
 		}

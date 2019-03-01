@@ -280,6 +280,7 @@
 		},
 
 		mounted(){
+			Utils.page_check_status.call(this);
 			var edit = this.$store.state.edit;
 			
 			//if this is a page refresh go back

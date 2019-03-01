@@ -11,7 +11,7 @@
 			
 			<div class="pick-status-title">状态： </div>
 			<div style="display: inline-block;">
-				  <el-select v-model="status_value" placeholder="请选择状态" v-on:change="">
+				  <el-select v-model="status_value" placeholder="请选择状态" v-on:change="filterReport()">
 				    <el-option
 				      v-for="item in status_options"
 				      :key="item.value"
@@ -24,10 +24,10 @@
 			<div class="searchwindow report-searchwindow">
 				<el-input class="searchinput report-searchinput" 
 						  v-model="search_state"
-						  v-on:keydown.native=""
+						  v-on:keydown.native="invokeSearch($event)"
 						  placeholder="请搜索模板名称">		  
 				</el-input>
-				<button class="searchbtn report-searchbtn" v-on:click="">
+				<button class="searchbtn report-searchbtn" v-on:click="filterReport()">
 					<i style="color: white;" class="el-icon-search"></i>
 				</button>
 			</div>
@@ -40,7 +40,7 @@
 
 			<div style="display: inline-block; float: right; margin: 10px;">
 				<span>显示 </span>
-					<select v-model="rowsPerPage" v-on:change="" style="width: 60px; height: 25px;">
+					<select v-model="rowsPerPage" v-on:change="filterReport()" style="width: 60px; height: 25px;">
 						<option v-for="item in row_nums" v-bind:value="item.value">
 							{{item.label}}
 						</option>
@@ -53,13 +53,14 @@
 		  <el-table
 		    class="mytable"
 		    :data="list"
+		    :row-class-name="row_name"
 		    style="width: 100%;">
-		    <!--
+		    
 			<el-table-column
 			  label="序号"
-			  type="index"
-			  min-width="100">
-			</el-table-column>-->
+			  :formatter="formatter"
+			  min-width="50">
+			</el-table-column>
 		    
 		    <el-table-column
 		      prop="name"
@@ -83,7 +84,7 @@
 		    <el-table-column
 		      prop="full_score"
 		      label="总分"
-		      min-width="100">
+		      min-width="50">
 		    </el-table-column>
 
 		    <!--
@@ -139,18 +140,31 @@
 		  </el-table>
 		</template>
 
+		<div style="height: 40px;"></div>
+    		<NewPager v-bind:current_page='curPage' 
+   	           	  	  v-bind:pages='totalPage'
+   		          	  @setPage='loadPage'
+   		       ></NewPager>
+
 	</div>
 </template>
 
 <script type="text/javascript">
 	import Utils from '@/components/Utils.js';
 	import global_ from '@/components/Global.js';
+	import NewPager from '@/components/NewPager.vue';
+
 	export default {
+		components:{
+			'NewPager': NewPager
+		},
 		data(){
 			return {
+				mod_name: 'exp-report',
 				list: [],
 				tableData: [],
 				curPage: 1,
+				totalPage: 0,
 				status_value: '',
 				status_options: [],
 				search_state: '',
@@ -203,7 +217,16 @@
 		},
 
 		methods: {
-			reqReportList(name, page){
+			row_name({row, rowIndex}){
+				row.ridx = rowIndex;
+			},
+
+			//for el-table
+			formatter(row, column ,cellValue) {
+				return this.rowsPerPage * (this.curPage - 1)  + (1+ row.ridx);
+			},
+
+			reqReportList(status, name, page){
 				let api = global_.report_list
 						+ '?page=' 
 						+ page 
@@ -212,7 +235,7 @@
 
 				let data = {
 					'match':{
-						'status': null
+						'status': status
 					},
 					'search': {
 						'name': name
@@ -220,8 +243,9 @@
 				}
 
 				this.$http.post(api, data).then((resp)=>{
-					console.log(resp);
+					//console.log(resp);
 					this.tableData = resp.body._list;
+					this.totalPage = resp.body.total_page;
 					for(let item of this.tableData) {
 						item.start_time = Utils.convTime(item.started_at);
 						item.end_time = Utils.convTime(item.ended_at);
@@ -237,6 +261,20 @@
 				this.curPage = page;
 			},
 
+			loadPage(page) {
+				this.reqReportList(this.status_value, this.search_state, page);
+			},
+
+			invokeSearch(e) {
+				if(e.keyCode == 13) {
+					this.filterReport();
+				}
+			},
+
+			filterReport(){
+				this.reqReportList(this.status_value, this.search_state, this.curPage);
+			},
+
 			addReport(){
 				this.$router.push('/reportadd');
 			},
@@ -249,7 +287,7 @@
 				}
 				this.$http.post(api, data).then((resp)=>{
 					console.log(resp);
-					this.reqReportList(null, this.curPage);
+					this.reqReportList(this.status_value, this.search_state, this.curPage);
 				}, (err)=>{
 					Utils.err_process.call(this, err, '实验报告发布失败');
 				});
@@ -268,7 +306,7 @@
 				this.$http.post(api, data).then((resp)=>{
 					console.log(resp);
 					Utils.lalert('删除实验报告成功');
-					this.reqReportList(null, this.curPage);
+					this.reqReportList(this.status_value, this.search_state, this.curPage);
 				}, (err)=>{
 					Utils.err_process.call(this, err, '实验报告删除失败');
 				});  				
@@ -282,7 +320,7 @@
 				this.$http.post(api, data).then((resp)=>{
 					console.log(resp);
 					Utils.lalert('关闭考试成功');
-					this.reqReportList(null, this.curPage);
+					this.reqReportList(this.status_value, this.search_state, this.curPage);
 				}, (err)=>{
 					Utils.err_process.call(this, err, '考试关闭失败');
 				});   				
@@ -296,19 +334,25 @@
 				this.$http.post(api, data).then((resp)=>{
 					console.log(resp);
 					Utils.lalert('成绩公布成功');
-					this.reqReportList(null, this.curPage);
+					this.reqReportList(this.status_value, this.search_state, this.curPage);
 				}, (err)=>{
 					Utils.err_process.call(this, err, '成绩公布失败');
 				});    				
   			},
-
-  			getStats(){
+  			//each row is a exp report
+  			getStats(row){
+				this.$store.commit('sign', this.mod_name);
+				this.$store.commit('setEdit', true);
+				this.$store.commit('pickRow', row);
+				this.$store.commit('setCurPage', this.curPage);
+				this.$store.commit('setCurSearch', this.search_state);
   				this.$router.push('/reportstats');
   			}
 		},
 
 		mounted(){
-			this.reqReportList(null, 1);
+			Utils.page_check_status.call(this);
+			this.reqReportList(null, null, 1);
 		}
 	}
 </script>

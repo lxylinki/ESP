@@ -361,6 +361,7 @@
 		},
 
 		mounted(){
+			Utils.page_check_status.call(this);
 			this.reqData('','','', 1);
 			//layer.close(this.loading);
 		}

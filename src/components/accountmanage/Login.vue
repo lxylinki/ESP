@@ -121,7 +121,7 @@
 						
 						//console.log(response);
 						if(resp.body.group == global_.student_group) {
-							this.$router.push('/studentstats');
+							this.$router.push('/expreport');
 
 						} else {
 							this.$router.push('/expmanage');

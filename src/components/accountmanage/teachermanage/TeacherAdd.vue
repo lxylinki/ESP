@@ -111,6 +111,10 @@
 					});
 				}				
 			}
+		},
+
+		mounted(){
+			Utils.page_check_status.call(this);
 		}
 	}
 </script>

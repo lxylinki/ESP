@@ -78,20 +78,24 @@
 	const student_group = 3;
 
 	//experiment report
-	//template
+	//exp template
 	const report_tpl_list = url_prefix + 'exam/report-offline/list-tpl';
 	const report_tpl_create = url_prefix + 'exam/report-offline/create-tpl';
 	const report_tpl_preup = url_prefix + 'resources/resource/pre-upload';
 	const report_tpl_up = url_prefix + 'resources/resource/upload';
 	const report_tpl_delete = url_prefix + 'exam/report-offline/del-tpl';
 
-	//report
+	//exp report
 	const report_list = url_prefix + 'exam/report-offline/list';
 	const report_create = url_prefix + 'exam/report-offline/create';
 	const report_pub = url_prefix + 'exam/report-offline/pub';
 	const report_delete = url_prefix + 'exam/report-offline/del';
 	const report_exam_close = url_prefix + 'exam/exam/close';
 	const report_score_pub = url_prefix + 'exam/exam/release-score';
+	const report_class_list = url_prefix + 'exam/exam-stats/class-list';
+
+	//exp report record
+	const report_rec_list = url_prefix + 'exam/exam-record/list';
 
 	export default {
 		super_admin_group,
@@ -174,5 +178,8 @@
 		report_pub,
 		report_delete,
 		report_exam_close,
-		report_score_pub
+		report_score_pub,
+		report_class_list,
+
+		report_rec_list
 	}

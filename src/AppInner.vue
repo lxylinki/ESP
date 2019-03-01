@@ -173,7 +173,6 @@
 			            		userGroup: [
 			            			global_.school_admin_group, 
 			            			global_.teacher_group,
-			            			global_.student_group
 			            		],
 			            		isSubShow: false,
 			            		subItems:[]
@@ -191,7 +190,7 @@
 	            			},
 	            			{
 	            				name: '报告记录',
-	            				url: '',
+	            				url: '/reportrec',
 			            		userGroup: [
 			            			global_.school_admin_group, 
 			            			global_.teacher_group,

@@ -179,7 +179,7 @@
     }
 
     /*hide original 1st and last page*/
-    .jump.bgprimary.ends {
+    div.jump.ends {
     	display: none;
     }
 

@@ -75,7 +75,7 @@ function login_check_status(){
 	var profile = global_.status_check;
 
 	this.$http.post(profile, {}).then((resp)=>{
-		this.$router.push('expmanage');
+		this.$router.push('/expreport');
 
 	}, (err)=>{
 		//stay at login

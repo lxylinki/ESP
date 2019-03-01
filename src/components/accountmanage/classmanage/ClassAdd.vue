@@ -236,6 +236,8 @@
 			}
 		},
 		mounted(){
+			Utils.page_check_status.call(this);
+			
 			$(document).on('click', 'li.select-item', function(){
 				$(this).addClass("highlight").siblings().removeClass("highlight");
 			});	
