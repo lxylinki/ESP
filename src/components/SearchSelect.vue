@@ -44,6 +44,7 @@
 			makeChoice(item){
 				if(item.hasOwnProperty('class_name')) {
 					this.selected_item = item.class_name;
+
 				} else if(item.hasOwnProperty('name')) {
 					this.selected_item = item.name;
 				}
@@ -82,10 +83,10 @@
 
 				} else {
 					//adapt to both class list and report list
-					if(this.items[0].hasOwnProperty('class_name')) {
+					if(this.items[1].hasOwnProperty('class_name')) {
 						this.filtered_items = this.items.filter( item => item.class_name.indexOf(this.item_search_state) != -1);
 
-					} else if(this.items[0].hasOwnProperty('name')) {
+					} else if(this.items[1].hasOwnProperty('name')) {
 						this.filtered_items = this.items.filter( item => item.name.indexOf(this.item_search_state) != -1);
 					}
 					
@@ -150,7 +151,7 @@
 	padding-left: 10px;
 	padding-right: 10px;
 	padding-top: 5px;
-	width: 170px;
+	width: 174px;
 	height: 36px;
 	border-radius: 4px;
 	border: 1px solid #cccccc;

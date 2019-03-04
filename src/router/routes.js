@@ -46,11 +46,13 @@ const StudentStat = ()=> import('@/components/scorestats/StudentView.vue');
 //Exp Report
 const TplManage = ()=> import('@/components/reportmanage/tplmanage/TplManage.vue');
 const TplAdd = ()=> import('@/components/reportmanage/tplmanage/TplAdd.vue');
+
 const ExpReport = ()=> import('@/components/reportmanage/expreport/ExpReport.vue');
 const ReportAdd = ()=> import('@/components/reportmanage/expreport/ReportAdd.vue');
 const ReportStats = ()=> import('@/components/reportmanage/expreport/ReportStats.vue');
-const ReportRec = ()=> import('@/components/reportmanage/reportrecord/ReportRec.vue');
 
+const ReportRec = ()=> import('@/components/reportmanage/reportrecord/ReportRec.vue');
+const ReportGrade = ()=>import('@/components/reportmanage/reportrecord/ReportGrade.vue');
 
 //Experiment Report
 //const ReportManage = ()=> import('@/components/reportmanage/ReportManage.vue');
@@ -110,6 +112,7 @@ const myRoutes = [
 		{path: '/reportstats', meta: {title: '实验报告'}, component: ReportStats},
 
 		{path: '/reportrec', meta:{title: '实验报告记录'}, component: ReportRec},
+		{path: '/reportgrade', meta:{tiitle: '实验报告记录'}, component: ReportGrade},
 		//{path: '/updatenote', meta: {title: '版本更新'}, component: UpdateNote},
 		//{path: '/downloadupdate', meta: {title: '版本更新'}, component: DownloadUpdate},
 

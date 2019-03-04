@@ -17,7 +17,7 @@
 				<SearchSelect v-bind:items="report_options"
 							  @makechoice="filterByReport"></SearchSelect>
 			</div>
-
+			<!--
 			<div class="searchwindow report-rec-searchwindow">
 				<el-input class="searchinput report-rec-searchinput" 
 						  v-model="search_state"
@@ -27,7 +27,7 @@
 				<button class="searchbtn report-searchbtn" v-on:click="filterReport()">
 					<i style="color: white;" class="el-icon-search"></i>
 				</button>
-			</div>	
+			</div>-->	
 		</div>
 
 
@@ -124,7 +124,7 @@
 		      label="操作"
 		      min-width="100">
 		      <template slot-scope="scope">
-		      	<el-button class="op" type="text" @click="">
+		      	<el-button class="op" v-bind:disabled="scope.row.marked_at" type="text" @click="gradeReport(scope.row)">
 		      		批改
 		      	</el-button>
 		      </template>
@@ -217,7 +217,7 @@
 				async function asyncReq(){
 					let resp = await Utils.reqAllReport.call(this);
 					this.report_options = resp.body._list;
-					this.report_options.unshift({id: null, class_name: '全部报告'});
+					this.report_options.unshift({id: null, name: '全部报告'});
 	     			this.report_value = this.report_options[0].id;
 				}
 			},
@@ -249,7 +249,7 @@
 						item.grade_time = Utils.convTime(item.marked_at);
 					}
 					this.filterData(page);
-					console.log(resp);
+					//console.log(resp);
 
 				}, (err)=>{
 					Utils.err_process.call(this, err, '请求报告记录列表失败');
@@ -277,6 +277,10 @@
 			filterByReport(exam_id) {
 				this.report_value = exam_id;
 				this.loadPage(1);
+			},
+
+			gradeReport(row) {
+				console.log(row);
 			}		
 		},
 
