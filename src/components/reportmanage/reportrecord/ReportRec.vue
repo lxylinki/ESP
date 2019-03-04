@@ -156,6 +156,7 @@
 		},
 		data(){
 			return {
+				mod_name: 'report-rec',
 				list: [],
 				tableData: [],
 				rowsPerPage: 10,
@@ -244,12 +245,12 @@
 					for(let item of this.tableData) {
 						item.exam_name = resp.body.exams[item.exam_id].name;
 						item.student_name = resp.body.users[item.user_id].realname;
-						item.class_name = resp.body.classes[item.class_id].name;
+						//item.class_name = resp.body.classes[item.class_id].name;
 						item.submit_time = Utils.convTime(item.joined_at);
 						item.grade_time = Utils.convTime(item.marked_at);
 					}
 					this.filterData(page);
-					//console.log(resp);
+					console.log(resp);
 
 				}, (err)=>{
 					Utils.err_process.call(this, err, '请求报告记录列表失败');
@@ -280,11 +281,18 @@
 			},
 
 			gradeReport(row) {
-				console.log(row);
+				//console.log(row);
+				this.$store.commit('sign', this.mod_name);
+				this.$store.commit('setEdit', true);
+				this.$store.commit('pickRow', row);
+				this.$store.commit('setCurPage', this.curPage);
+				this.$store.commit('setCurSearch', this.search_state);
+				this.$router.push('/reportgrade');
 			}		
 		},
 
 		mounted(){
+			Utils.page_check_status.call(this);
 			this.reqClassData(null, null, 1);
 			this.reqReportData();
 			this.reqRecList(null, null, null, null, 1);
