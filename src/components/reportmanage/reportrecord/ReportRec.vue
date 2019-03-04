@@ -6,10 +6,16 @@
 		</div>
 
 		<div class="selectclass">
-			<div class="pickclasstitle">班级：</div>	
-			<div class="pick-class"  style="display: inline-block;">
+			<div class="pick-class-title">班级：</div>	
+			<div class="class-picker">
 				<SearchSelect v-bind:items="class_options"
 							  @makechoice="filterByClass"></SearchSelect>
+			</div>
+
+			<div class="pick-report-title">报告：</div>	
+			<div class="report-picker">
+				<SearchSelect v-bind:items="report_options"
+							  @makechoice="filterByReport"></SearchSelect>
 			</div>
 
 			<div class="searchwindow report-rec-searchwindow">
@@ -21,9 +27,22 @@
 				<button class="searchbtn report-searchbtn" v-on:click="filterReport()">
 					<i style="color: white;" class="el-icon-search"></i>
 				</button>
-			</div>
-			
+			</div>	
 		</div>
+
+
+		<div style="">
+			<div style="display: inline-block; float: right; margin: 10px;">
+				<span>显示 </span>
+					<select v-model="rowsPerPage" v-on:change="pageSizeChange()" style="width: 60px; height: 25px;">
+						<option v-for="item in row_nums" v-bind:value="item.value">
+							{{item.label}}
+						</option>
+					</select>
+				<span> 条</span>
+			</div>
+		</div>
+
 
 		<template>
 		  <el-table
@@ -59,13 +78,13 @@
 		    <el-table-column
 		      prop="submit_time"
 		      label="提交时间"
-		      min-width="100">
+		      min-width="120">
 		    </el-table-column>
 
 		    <el-table-column
 		      prop="grade_time"
 		      label="批改时间"
-		      min-width="100">
+		      min-width="120">
 		    </el-table-column>
 
 		    <!--
@@ -142,12 +161,35 @@
 				rowsPerPage: 10,
 				class_value: '',
 				report_value: '',
+				student_value: '',
 				marked_value: '',
 				search_state: '',
 				curPage: 1,
 				totalPage: 0,
-				class_options: []
-
+				class_options: [],
+				report_options:[],
+				row_nums: [
+					{
+						label: '5',
+						value: 5
+					},
+					{
+						label: '10',
+						value: 10
+					},
+					{
+						label: '15',
+						value: 15
+					},
+					{
+						label: '20',
+						value: 20
+					},
+					{
+						label:'50',
+						value: 50
+					}
+				],	
 			}
 		},
 		methods:{
@@ -166,12 +208,21 @@
 					let resp = await Utils.reqClassList.call(this, tkeyword, ckeyword, page);
 	     			this.class_options = resp.body._list;
 	     			this.class_options.unshift({id: null, class_name: '全部班级'});
-	     			this.class_value = this.class_options[0].id;
-	     			//console.log(this.class_value);					
+	     			this.class_value = this.class_options[0].id;					
 				}
 			},
 
-			reqRecList(class_id, exam_id, has_marked, page){
+			reqReportData(){
+				asyncReq.call(this);
+				async function asyncReq(){
+					let resp = await Utils.reqAllReport.call(this);
+					this.report_options = resp.body._list;
+					this.report_options.unshift({id: null, class_name: '全部报告'});
+	     			this.report_value = this.report_options[0].id;
+				}
+			},
+
+			reqRecList(class_id, exam_id, user_id, has_marked, page){
 				let api = global_.report_rec_list
 						+ '?page=' 
 						+ page 
@@ -182,6 +233,7 @@
 					'match': {
 						'class_id': class_id,
 						'exam_id': exam_id,
+						'user_id': user_id,
 						'has_marked': has_marked
 					}
 				}
@@ -210,29 +262,50 @@
 			},
 
 			loadPage(page) {
-				this.reqRecList(this.class_value, this.report_value, this.marked_value, page);
+				this.reqRecList(this.class_value, this.report_value, this.student_value, this.marked_value, page);
+			},
+
+			pageSizeChange(){
+				this.loadPage(1);
 			},
 
 			filterByClass(class_id) {
 				this.class_value = class_id;
+				this.loadPage(1);
+			},
+
+			filterByReport(exam_id) {
+				this.report_value = exam_id;
 				this.loadPage(1);
 			}		
 		},
 
 		mounted(){
 			this.reqClassData(null, null, 1);
-			this.reqRecList(null, null, null, 1);
+			this.reqReportData();
+			this.reqRecList(null, null, null, null, 1);
 		}
 	}
 </script>
 
 <style type="text/css" scoped>
-.pickclasstitle {
+.pick-class-title, .pick-report-title {
 	display: inline-block;
 	line-height: 60px;
 }
+
+.pick-report-title {
+	margin-left: 20px;
+}
+
+.class-picker, .report-picker {
+	display: inline-block;
+}
+
 .report-rec-searchwindow {
     position: relative;
     top: -7px;
+    margin: 20px 20px 0 20px;
 }
+
 </style>

@@ -191,6 +191,26 @@ function reqTeacherList(keyword, page){
 	});	
 }
 
+
+function reqAllReport(){
+	return new Promise((resolve, reject)=>{
+		let api = global_.report_list +'?page=1';
+		let data = {};	
+		this.$http.post(api, data).then((resp)=>{
+			let total_report = resp.body.total;
+			let full_list_api = api + '&pagesize=' + total_report;
+			this.$http.post(full_list_api, data).then((resp)=>{
+				resolve(resp);
+
+			}, (err)=>{
+				err_process.call(this, err, '请求实验报告列表失败');
+			});
+		}, (err)=>{
+			err_process.call(this, err, '请求实验报告列表失败');
+		});
+	});
+}
+
 	
 function obj_equal(obj1, obj2) {
 	var result = true;
@@ -225,6 +245,7 @@ export default {
 	reqExpList,
 	reqClassList,
 	reqTeacherList,
+	reqAllReport,
 	obj_equal,
 	contains_obj
 }
