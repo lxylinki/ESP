@@ -271,7 +271,7 @@
 .note-text{
     font-size: 14px;
     width: 100%;
-    height: 100%;
+    height: 60px;
     word-break: break-all;
     text-align: justify;
     color: #666666;
@@ -308,7 +308,7 @@
 
 .collapse .note-text{
     overflow: hidden;
-    height: 100%;
+    height: 60px;
 }
 </style>
 
