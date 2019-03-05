@@ -96,6 +96,7 @@
 
 	//exp report record
 	const report_rec_list = url_prefix + 'exam/exam-record/list';
+	const report_rec_view = url_prefix + 'exam/exam/view';
 	const report_rec_card = url_prefix + 'exam/paper-card/view';
 	const report_rec_ques = url_prefix + 'exam/exam/questions';
 	const report_rec_load = url_prefix + 'resources/resource/load';
@@ -185,6 +186,7 @@
 		report_class_list,
 
 		report_rec_list,
+		report_rec_view,
 		report_rec_card,
 		report_rec_ques,
 		report_rec_load

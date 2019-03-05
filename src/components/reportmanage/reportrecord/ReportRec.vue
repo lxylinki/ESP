@@ -124,7 +124,7 @@
 		      label="操作"
 		      min-width="100">
 		      <template slot-scope="scope">
-		      	<el-button class="op" v-bind:disabled="scope.row.marked_at" type="text" @click="gradeReport(scope.row)">
+		      	<el-button class="op" v-bind:disabled="scope.row.marked_at || !scope.row.submitted_at" type="text" @click="gradeReport(scope.row)">
 		      		批改
 		      	</el-button>
 		      </template>
@@ -250,7 +250,7 @@
 						item.grade_time = Utils.convTime(item.marked_at);
 					}
 					this.filterData(page);
-					console.log(resp);
+					//console.log(resp);
 
 				}, (err)=>{
 					Utils.err_process.call(this, err, '请求报告记录列表失败');
