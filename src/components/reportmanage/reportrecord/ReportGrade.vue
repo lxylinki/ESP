@@ -17,7 +17,6 @@
 
 		<div class="note-group">
 			<p class="note-text">{{exp_note}}</p>
-			<div class="expand-collapse"></div>
 		</div>
 
 		<div class="display-group">
@@ -125,82 +124,7 @@
 					});
 				});
 			},
-
-			displayNote(){
-				let flexibleDiv;
-				let container = document.querySelector(".note-group"),
-				    hiddendiv = document.querySelector(".expand-collapse");
-				 /*   
-				if(container.offsetHeight > 50) {
-					container.setAttribute("class","note-group collapse");
-
-				}else{
-					container.setAttribute("class","note-group");
-					container.removeChild(hiddendiv);
-				}*/
-				container.setAttribute("class","note-group collapse");
-
-				if(container.offsetHeight < 50) {
-					console.log(container.offsetHeight);
-					container.setAttribute("class","note-group");
-					container.removeChild(hiddendiv);					
-				}
-
-				container.addEventListener("click", function(){
-					if(!flexibleDiv){
-						flexibleDiv=hiddendiv;
-					}
-					if(event.target===flexibleDiv){
-						if(container.getAttribute("class").split(" ").indexOf("collapse")!==-1){
-							container.setAttribute("class","note-group expand");
-						}else{
-							container.setAttribute("class","note-group collapse");
-						}
-					}
-				}, false);
-			}
-
-			//retrieve fid based on paper_id
-			/*
-			reqExamQues(){
-				asyncReq.call(this);
-				async function asyncReq(){
-					let resp = await this.reqPaperCard();
-					console.log(resp);
-					let api = global_.report_rec_ques;
-					let data = {
-						'paper_id': resp.body[0][0].paper_id,
-						'mode': 2
-					}
-					
-					this.$http.post(api, data).then((resp)=>{
-						//prepare for multiple models
-						//testing
-						let type = resp.body._list.main[0].type;
-						let qid = resp.body._list.main[0].question_id;
-						console.log(resp.body._list.questions[type][qid].fid);
-						let fid = resp.body._list.questions[type][qid].fid;
-						let api = global_.report_rec_load + '/' + fid;
-						this.$http.post(api, {}).then((resp)=>{
-							console.log(resp);
-						}, (err)=>{
-							console.log(resp);
-						});
-					}, (err)=>{
-						Utils.err_process.call(this, err, '查看试题失败');
-					});
-				}
-			}*/
 		},
-
-		/*
-		updated(){
-			console.log('updated');
-			//let note-group_info = window.getComputedStyle(container);
-			//console.log(note-group_info.height);
-			console.log(container.offsetHeight);
-			console.log(document.querySelector(".note-text").offsetHeight);
-		},*/
 
 		mounted(){
 			let edit = this.$store.state.edit;
@@ -215,11 +139,10 @@
 				this.exam_id = this.exam_record.exam_id;
 				this.start_time = Utils.convTime(this.exam_record.joined_at);
 				this.end_time = Utils.convTime(this.exam_record.updated_at);
-				//
-				this.reqRecView().then(this.displayNote);
+			
+				//this.reqRecView().then(this.displayNote);
+				this.reqRecView();
 				this.reqFileInfo();
-				//this.reqRecView();
-				//this.displayNote();
 			}			
 		}
 	}	
@@ -243,25 +166,8 @@
 	width:90%;
 	height:500px;
 	background:rgba(242,242,242,1);
+	text-align: center;
 }
-/*
-.note-group {
-	position: relative;
-	margin-bottom: 20px;
-}
-
-.note-group.hidden {
-	border: 1px solid red;
-	height: 72px;
-	overflow: hidden;
-}
-
-.note-text {
-	font-size: 14px;
-	word-break: break-all;
-	text-align: justify;
-	position: relative;
-}*/
 
 .note-group{
     width: 90%;
@@ -275,40 +181,28 @@
     word-break: break-all;
     text-align: justify;
     color: #666666;
+    overflow: hidden;
 }
 
-/*
-.collapse .note-text::after{
-    content: ' ... ';
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    padding-left: 20px;
-}*/
+.note-text:hover {
+	height: 100%;
+}
+
 
 .expand-collapse {
-	/*background: yellowgreen;*/
-}
-
-.collapse .expand-collapse::after{
-    content: '展开';
+	background: yellowgreen;
     color: #999999;
     display: block;
-    width: 100%;
-    text-align: right;
-}
-
-.expand .expand-collapse::after{
-    content: '收起';
-    color: #999999;
-    display: block;
-    width: 100%;
-    text-align: right;
-}
+    width: 100%;}
 
 .collapse .note-text{
     overflow: hidden;
     height: 60px;
+}
+
+.thumbnail {
+	position: relative;
+	top: 50%;
 }
 </style>
 

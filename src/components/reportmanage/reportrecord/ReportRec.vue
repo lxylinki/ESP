@@ -303,7 +303,8 @@
 <style type="text/css" scoped>
 .pick-class-title, .pick-report-title {
 	display: inline-block;
-	line-height: 60px;
+	line-height: 55px;
+	vertical-align: middle;
 }
 
 .pick-report-title {
