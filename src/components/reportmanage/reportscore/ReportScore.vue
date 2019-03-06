@@ -1,9 +1,10 @@
 <template>
-	<div id="reportrecord">
+	<div id="reportscore">
 		<div style="width: 100%; height: 35px;">
 			<span style="color: #1890ff; font-weight: bold">|</span>  
-			<span>报告记录</span>
-		</div>
+			<span>报告成绩</span>
+		</div>	
+
 		<div style="height: 20px;"></div>
 
 		<div class="selectclass">
@@ -11,26 +12,27 @@
 			<div class="class-picker">
 				<SearchSelect v-bind:items="class_options"
 							  @makechoice="filterByClass"></SearchSelect>
-			</div>
+			</div>	
 
 			<div class="pick-report-title">报告：</div>	
 			<div class="report-picker">
 				<SearchSelect v-bind:items="report_options"
 							  @makechoice="filterByReport"></SearchSelect>
-			</div>
-			<!--
-			<div class="searchwindow report-rec-searchwindow">
-				<el-input class="searchinput report-rec-searchinput" 
-						  v-model="search_state"
-						  v-on:keydown.native=""
-						  placeholder="请搜索报告名称">		  
-				</el-input>
-				<button class="searchbtn report-searchbtn" v-on:click="filterReport()">
-					<i style="color: white;" class="el-icon-search"></i>
-				</button>
-			</div>-->	
-		</div>
+			</div>	
 
+			<div class="pick-if-failed">是否通过： </div>
+			<div class="failed-picker">
+				  <el-select v-model="failed_value" placeholder="请选择是否通过" v-on:change="loadPage(1)">
+				    <el-option
+				      v-for="item in failed_options"
+				      :key="item.value"
+				      :label="item.label"
+				      :value="item.value">
+				    </el-option>
+				  </el-select>					
+			</div>
+
+		</div>	
 
 		<div>
 			<div style="display: inline-block; float: right; margin: 10px;">
@@ -42,8 +44,7 @@
 					</select>
 				<span> 条</span>
 			</div>
-		</div>
-
+		</div>		
 
 		<template>
 		  <el-table
@@ -58,7 +59,7 @@
 			</el-table-column>
 		    
 		    <el-table-column
-		      prop="exam_name"
+		      prop="report_name"
 		      label="报告名称"
 		      min-width="120"
 		      :show-overflow-tooltip="true">
@@ -76,22 +77,23 @@
 		      min-width="100">
 		    </el-table-column>
 
+		    <!--
 		    <el-table-column
-		      prop="submit_time"
-		      label="提交时间"
-		      min-width="120">
-		    </el-table-column>
+		      prop=""
+		      label="参加次数"
+		      min-width="100">
+		    </el-table-column>-->
 
 		    <el-table-column
-		      prop="grade_time"
-		      label="批改时间"
-		      min-width="120">
+		      prop="submit_times"
+		      label="提交次数"
+		      min-width="100">
 		    </el-table-column>
 
 		    <!--
 		    <el-table-column
-		      prop="score"
-		      label="总分"
+		      prop="submit_time"
+		      label="提交时间"
 		      min-width="100">
 		    </el-table-column>-->
 
@@ -99,37 +101,23 @@
 		      prop="score"
 		      label="得分"
 		      min-width="100">
-		      <template slot-scope="scope">
-		      	<span v-if="!scope.row.submitted_at">未提交</span>
-		      	<span v-else>{{scope.row.score}}</span>
-		      </template>
-		    </el-table-column>
-
-		    <el-table-column
-		      prop="marked_by"
-		      label="批改人"
-		      min-width="100">
-		    </el-table-column>
+		    </el-table-column>	
 
 		    <el-table-column
 		      prop=""
-		      label="状态"
+		      label="是否通过"
 		      min-width="100">
 		      <template slot-scope="scope">
-		      	<span v-if="!scope.row.marked_at">未批改</span>
-		      	<span v-else>已批改</span>
+		      	<span v-if="scope.row.failed == 0">已通过</span>
+		      	<span v-if="scope.row.failed == 1">未通过</span>
 		      </template>
-		    </el-table-column>
+		    </el-table-column>	
 
 		    <el-table-column
-		      label="操作"
+		      prop="update_time"
+		      label="更新时间"
 		      min-width="100">
-		      <template slot-scope="scope">
-		      	<el-button class="op" v-bind:disabled="!scope.row.submitted_at" type="text" @click="gradeReport(scope.row)">
-		      		批改
-		      	</el-button>
-		      </template>
-		    </el-table-column>
+		    </el-table-column>		    
 
 		  </el-table>
 		</template>
@@ -139,7 +127,6 @@
    	           	  	  v-bind:pages='totalPage'
    		          	  @setPage='loadPage'
    		       ></NewPager>
-
 
 	</div>
 </template>
@@ -154,20 +141,15 @@
 		components: {
 			'NewPager': NewPager,
 			'SearchSelect': SearchSelect
-		},
+		},	
 		data(){
 			return {
-				mod_name: 'report-rec',
-				list: [],
-				tableData: [],
-				rowsPerPage: 10,
+				list:[],
+				tableData:[],
 				class_value: '',
 				report_value: '',
+				failed_value: '',
 				student_value: '',
-				marked_value: '',
-				search_state: '',
-				curPage: 1,
-				totalPage: 0,
 				class_options: [],
 				report_options:[],
 				row_nums: [
@@ -191,10 +173,28 @@
 						label:'50',
 						value: 50
 					}
-				],	
+				],		
+				failed_options: [
+					{
+						label: '全部',
+						value: null
+					},
+					{
+						label: '已通过',
+						value: 0
+					},
+					{
+						label: '未通过',
+						value: 1
+					},
+				],
+				rowsPerPage: 10,
+				curPage: 1,
+				totalPage: 0			
 			}
 		},
-		methods:{
+
+		methods: {
 			row_name({row, rowIndex}){
 				row.ridx = rowIndex;
 			},
@@ -202,7 +202,46 @@
 			//for el-table
 			formatter(row, column ,cellValue) {
 				return this.rowsPerPage * (this.curPage - 1)  + (1 + row.ridx);
-			},	
+			},
+
+			reqStatsData(class_id, exam_id, failed, user_id, page){
+				let api = global_.report_stats_list
+						+ '?page=' 
+						+ page 
+						+ '&pagesize=' 
+						+ this.rowsPerPage;
+
+				let data = {
+					'match': {
+						'class_id': class_id,
+						'exam_id': exam_id,
+						'falied': failed,
+						'user_id': user_id
+					}
+				}
+				this.$http.post(api, data).then((resp)=>{
+					this.tableData = resp.body._list;
+					this.totalPage = resp.body.total_page;
+					
+					for(let item of this.tableData) {
+						item.report_name = resp.body.exams[item.exam_id].name;
+						item.student_name = resp.body.users[item.user_id].realname;
+						//item.class_name = resp.body.classes[item.class_id].name;
+						item.submit_time = Utils.convTime(item.created_at);
+						item.update_time = Utils.convTime(item.updated_at);
+					}
+
+					this.filterData(page);
+					//console.log(resp);
+				}, (err)=>{
+					Utils.err_process.call(this, err, '请求报告成绩失败');
+				});
+			},
+
+			filterData(page) {
+				this.list = this.tableData;
+				this.curPage = page;
+			},
 
 			reqClassData(tkeyword, ckeyword, page){
 				asyncReq.call(this);
@@ -224,53 +263,6 @@
 				}
 			},
 
-			reqRecList(class_id, exam_id, user_id, has_marked, page){
-				let api = global_.report_rec_list
-						+ '?page=' 
-						+ page 
-						+ '&pagesize=' 
-						+ this.rowsPerPage;
-
-				let data = {
-					'match': {
-						'class_id': class_id,
-						'exam_id': exam_id,
-						'user_id': user_id,
-						'has_marked': has_marked
-					}
-				}
-
-				this.$http.post(api, data).then((resp)=>{
-					this.totalPage = resp.body.total_page;
-					this.tableData = resp.body._list;
-					for(let item of this.tableData) {
-						item.exam_name = resp.body.exams[item.exam_id].name;
-						item.student_name = resp.body.users[item.user_id].realname;
-						//item.class_name = resp.body.classes[item.class_id].name;
-						item.submit_time = Utils.convTime(item.submitted_at);
-						item.grade_time = Utils.convTime(item.marked_at);
-					}
-					this.filterData(page);
-					//console.log(resp);
-
-				}, (err)=>{
-					Utils.err_process.call(this, err, '请求报告记录列表失败');
-				});
-			},
-
-			filterData(page){
-				this.list = this.tableData;
-				this.curPage = page;
-			},
-
-			loadPage(page) {
-				this.reqRecList(this.class_value, this.report_value, this.student_value, this.marked_value, page);
-			},
-
-			pageSizeChange(){
-				this.loadPage(1);
-			},
-
 			filterByClass(class_id) {
 				this.class_value = class_id;
 				this.loadPage(1);
@@ -281,45 +273,37 @@
 				this.loadPage(1);
 			},
 
-			gradeReport(row) {
-				//console.log(row);
-				this.$store.commit('sign', this.mod_name);
-				this.$store.commit('setEdit', true);
-				this.$store.commit('pickRow', row);
-				this.$store.commit('setCurPage', this.curPage);
-				this.$store.commit('setCurSearch', this.search_state);
-				this.$router.push('/reportgrade');
-			}		
+			loadPage(page) {
+				this.reqStatsData(this.class_value, this.report_value, this.failed_value, this.student_value, page);
+			}
 		},
 
 		mounted(){
 			Utils.page_check_status.call(this);
+			this.reqStatsData(null, null, null, null, 1);
 			this.reqClassData(null, null, 1);
 			this.reqReportData();
-			this.reqRecList(null, null, null, null, 1);
-		}
+		}	
 	}
 </script>
 
 <style type="text/css" scoped>
-.pick-class-title, .pick-report-title {
+.pick-class-title, .pick-report-title, .pick-if-failed {
 	display: inline-block;
 	line-height: 55px;
 	vertical-align: middle;
 }
 
-.pick-report-title {
+.pick-report-title, .pick-if-failed {
 	margin-left: 20px;
 }
 
-.class-picker, .report-picker {
+.class-picker, .report-picker, .failed-picker {
 	display: inline-block;
 }
 
-.report-rec-searchwindow {
-    position: relative;
-    top: -7px;
-    margin: 20px 20px 0 20px;
+.failed-picker {
+	position: relative;
+	top: 3px;
 }
-
 </style>

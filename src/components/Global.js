@@ -103,6 +103,9 @@
 	const report_mark = url_prefix + 'exam/paper-card/mark';
 	const report_rec_mark = url_prefix + 'exam/exam-record/mark';
 
+	//
+	const report_stats_list = url_prefix + 'exam/exam-stats/user-list';
+
 	export default {
 		super_admin_group,
 		url_prefix,
@@ -193,5 +196,7 @@
 		report_rec_ques,
 		report_rec_load,
 		report_mark,
-		report_rec_mark
+		report_rec_mark,
+
+		report_stats_list
 	}

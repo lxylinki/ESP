@@ -251,6 +251,7 @@
 		},
 
 		mounted(){
+			Utils.page_check_status.call(this);
 			let edit = this.$store.state.edit;
 			
 			if(!edit) {

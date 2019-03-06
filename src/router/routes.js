@@ -54,6 +54,8 @@ const ReportStats = ()=> import('@/components/reportmanage/expreport/ReportStats
 const ReportRec = ()=> import('@/components/reportmanage/reportrecord/ReportRec.vue');
 const ReportGrade = ()=>import('@/components/reportmanage/reportrecord/ReportGrade.vue');
 
+const ReportScore = ()=>import('@/components/reportmanage/reportscore/ReportScore.vue');
+
 //Experiment Report
 //const ReportManage = ()=> import('@/components/reportmanage/ReportManage.vue');
 
@@ -113,6 +115,8 @@ const myRoutes = [
 
 		{path: '/reportrec', meta:{title: '实验报告记录'}, component: ReportRec},
 		{path: '/reportgrade', meta:{tiitle: '实验报告记录'}, component: ReportGrade},
+
+		{path: '/reportscore', meta:{title: '报告成绩'}, component: ReportScore},
 		//{path: '/updatenote', meta: {title: '版本更新'}, component: UpdateNote},
 		//{path: '/downloadupdate', meta: {title: '版本更新'}, component: DownloadUpdate},
 
