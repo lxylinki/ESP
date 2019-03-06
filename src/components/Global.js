@@ -100,6 +100,8 @@
 	const report_rec_card = url_prefix + 'exam/paper-card/view';
 	const report_rec_ques = url_prefix + 'exam/exam/questions';
 	const report_rec_load = url_prefix + 'resources/resource/load';
+	const report_mark = url_prefix + 'exam/paper-card/mark';
+	const report_rec_mark = url_prefix + 'exam/exam-record/mark';
 
 	export default {
 		super_admin_group,
@@ -189,5 +191,7 @@
 		report_rec_view,
 		report_rec_card,
 		report_rec_ques,
-		report_rec_load
+		report_rec_load,
+		report_mark,
+		report_rec_mark
 	}

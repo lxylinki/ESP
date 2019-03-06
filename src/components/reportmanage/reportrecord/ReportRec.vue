@@ -105,7 +105,7 @@
 		    </el-table-column>
 
 		    <el-table-column
-		      prop=""
+		      prop="marked_by"
 		      label="批改人"
 		      min-width="100">
 		    </el-table-column>
@@ -124,7 +124,7 @@
 		      label="操作"
 		      min-width="100">
 		      <template slot-scope="scope">
-		      	<el-button class="op" v-bind:disabled="scope.row.marked_at || !scope.row.submitted_at" type="text" @click="gradeReport(scope.row)">
+		      	<el-button class="op" v-bind:disabled="!scope.row.submitted_at" type="text" @click="gradeReport(scope.row)">
 		      		批改
 		      	</el-button>
 		      </template>
