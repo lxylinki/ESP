@@ -106,7 +106,7 @@
 		    </el-table-column>
 
 		    <el-table-column
-		      prop="marked_by"
+		      prop="grader_name"
 		      label="批改人"
 		      min-width="100">
 		    </el-table-column>
@@ -249,6 +249,12 @@
 						//item.class_name = resp.body.classes[item.class_id].name;
 						item.submit_time = Utils.convTime(item.submitted_at);
 						item.grade_time = Utils.convTime(item.marked_at);
+						
+						if(resp.body.users[item.marked_by]) {
+							item.grader_name = resp.body.users[item.marked_by].realname;
+						} else {
+							item.grader_name = null;
+						}
 					}
 					this.filterData(page);
 					//console.log(resp);
