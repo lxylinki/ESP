@@ -282,7 +282,8 @@
 				let api = global_.exam_details;
 				let data = {
 					"record_id": row.record_id,
-					"exper_id": row.exper_id,
+					//"exper_id": row.exper_id,
+					"eid": row.exper_id,
 					"exam_id": row.exam_id,
 					"class_id": this.class_id
 				}

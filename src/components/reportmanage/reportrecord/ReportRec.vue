@@ -18,6 +18,19 @@
 				<SearchSelect v-bind:items="report_options"
 							  @makechoice="filterByReport"></SearchSelect>
 			</div>
+
+			<div class="pick-graded-title">批改状态： </div>
+			<div class="graded-picker">
+				  <el-select v-model="marked_value" placeholder="请选择" v-on:change="loadPage(1)">
+				    <el-option
+				      v-for="item in graded_options"
+				      :key="item.value"
+				      :label="item.label"
+				      :value="item.value">
+				    </el-option>
+				  </el-select>					
+			</div>
+
 			<!--
 			<div class="searchwindow report-rec-searchwindow">
 				<el-input class="searchinput report-rec-searchinput" 
@@ -188,6 +201,21 @@
 						value: 50
 					}
 				],	
+
+				graded_options: [
+					{
+						label: '全部',
+						value: null
+					},
+					{
+						label: '已批改',
+						value: 1
+					},
+					{
+						label: '未批改',
+						value: 0
+					},
+				],
 			}
 		},
 		methods:{
@@ -307,17 +335,17 @@
 </script>
 
 <style type="text/css" scoped>
-.pick-class-title, .pick-report-title {
+.pick-class-title, .pick-report-title, .pick-graded-title {
 	display: inline-block;
 	line-height: 55px;
 	vertical-align: middle;
 }
 
-.pick-report-title {
+.pick-report-title, .pick-graded-title {
 	margin-left: 20px;
 }
 
-.class-picker, .report-picker {
+.class-picker, .report-picker, .graded-picker {
 	display: inline-block;
 }
 
@@ -327,4 +355,8 @@
     margin: 20px 20px 0 20px;
 }
 
+.graded-picker {
+	position: relative;
+	top: 3px;
+}
 </style>

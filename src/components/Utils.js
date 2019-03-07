@@ -77,7 +77,7 @@ function login_check_status(){
 	var profile = global_.status_check;
 
 	this.$http.post(profile, {}).then((resp)=>{
-		this.$router.push('/expreport');
+		this.$router.push('/studentstats');
 
 	}, (err)=>{
 		//stay at login
@@ -127,6 +127,39 @@ function reqExpList(keyword, page){
 	    });  	
 	});
  }
+
+//just a student copy
+function reqExpSlist(keyword, page){
+	return new Promise((resolve, reject)=>{
+	    var list_api = global_.exp_slist
+					 + '?page=' 
+					 + page; 
+
+		let req_data = {
+			"search": {
+				"name": keyword
+			}
+		};
+
+	    this.$http.post(list_api, req_data).then((resp)=>{
+	    	var total_exp = resp.body.total;
+	    	var full_list_api = list_api + '&pagesize='+ total_exp; 
+
+	    	this.$http.post(full_list_api, req_data).then((resp)=>{
+	    		resolve(resp);
+
+	    	},(err)=>{
+				//layer.close(this.loading);
+				err_process.call(this, err, '请求实验列表失败');    		
+	    	});
+
+	    }, (err)=>{
+			//layer.close(this.loading);
+			err_process.call(this, err, '请求实验列表失败'); 
+	    });  	
+	});
+ }
+
 
 function reqClassList(tkeyword, ckeyword, page){
 	return new Promise((resolve, reject)=>{
@@ -245,6 +278,7 @@ export default {
 	login_check_status,
 	page_check_status,
 	reqExpList,
+	reqExpSlist,
 	reqClassList,
 	reqTeacherList,
 	reqAllReport,

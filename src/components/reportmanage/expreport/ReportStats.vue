@@ -3,6 +3,7 @@
 		<div style="width: 100%; height: 35px;">
 			<span style="color: #1890ff; font-weight: bold">|</span>  
 			<span>报告统计</span>
+			<el-button class="altgoback" type="text" v-on:click="goBack()">返回</el-button>
 		</div>
 		<div style="height: 20px;"></div>
 		<div class="selectclass">
@@ -145,6 +146,10 @@
 		},
 
 		methods: {
+			goBack(){
+				this.$router.go(-1);
+			},
+			
 			row_name({row, rowIndex}){
 				row.ridx = rowIndex;
 			},
@@ -243,5 +248,8 @@
 .report-stats-searchwindow {
     position: relative;
     top: -7px;
+}
+.altgoback {
+	margin-left: 20px;
 }
 </style>
