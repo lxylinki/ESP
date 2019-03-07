@@ -30,20 +30,16 @@
 				</button>
 			</div>-->	
 		</div>
-
-
-		<div>
-			<div style="display: inline-block; float: right; margin: 10px;">
-				<span>显示 </span>
-					<select v-model="rowsPerPage" v-on:change="pageSizeChange()" style="width: 60px; height: 25px;">
-						<option v-for="item in row_nums" v-bind:value="item.value">
-							{{item.label}}
-						</option>
-					</select>
-				<span> 条</span>
-			</div>
+	
+		<div style="display: inline-block; float: right; margin: 10px;">
+			<span>显示 </span>
+				<select v-model="rowsPerPage" v-on:change="pageSizeChange()" style="width: 60px; height: 25px;">
+					<option v-for="item in row_nums" v-bind:value="item.value">
+						{{item.label}}
+					</option>
+				</select>
+			<span> 条</span>
 		</div>
-
 
 		<template>
 		  <el-table
@@ -246,7 +242,10 @@
 					for(let item of this.tableData) {
 						item.exam_name = resp.body.exams[item.exam_id].name;
 						item.student_name = resp.body.users[item.user_id].realname;
-						//item.class_name = resp.body.classes[item.class_id].name;
+						if(Object.keys(resp.body.classes).includes(item.class_id)) {
+							item.class_name = resp.body.classes[item.class_id].name;
+						}
+						
 						item.submit_time = Utils.convTime(item.submitted_at);
 						item.grade_time = Utils.convTime(item.marked_at);
 						

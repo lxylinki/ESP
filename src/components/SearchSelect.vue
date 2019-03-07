@@ -3,7 +3,7 @@
 	    <div class="allitems">
 
 	    	<div class="select-header select-header-normal">
-		    	<input type="text" class="select-header-text" v-on:focus="showToggle=true" v-model="selected_item" readonly="readonly"></input>
+		    	<input type="text" class="select-header-text" v-on:focus="showToggle=true" v-model="selected_item" readonly="readonly" placeholder="请选择"></input>
 				<i class="iconfont togglesign" v-on:click="toggleList()" v-show="!showToggle">&#xe607;</i>
 				<i class="iconfont togglesign" v-on:click="toggleList()" v-show="showToggle">&#xe608;</i>
 				<div class="place-holder" v-show="showToggle"></div>
@@ -120,6 +120,7 @@
 	width: 200px;
 	height: 36px;
 	border-radius: 4px;
+
 }
 
 .init-place-holder {
@@ -182,6 +183,7 @@
 	overflow-y: scroll; 
 	height: 190px;
 	overflow: auto;
+	color: #666666;
 }
 
 .togglesign {
@@ -197,6 +199,7 @@
 
 .select-header-text {
 	border: none;
+	color: #666666;
 }
 
 .select-header-text:focus {
@@ -218,12 +221,4 @@
 	background: #f7f8fc;
 }
 
-.highlight {
-	background: #f7f8fc;
-}
-
-.select-text {
-	width: 100%;
-}
-	
 </style>

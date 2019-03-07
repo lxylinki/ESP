@@ -12,7 +12,7 @@
 			<div class="class-picker">
 				<SearchSelect v-bind:items="class_options"
 							  @makechoice="filterByClass"></SearchSelect>
-			</div>	
+			</div>
 
 			<div class="pick-report-title">报告：</div>	
 			<div class="report-picker">
@@ -22,7 +22,7 @@
 
 			<div class="pick-if-failed">是否通过： </div>
 			<div class="failed-picker">
-				  <el-select v-model="failed_value" placeholder="请选择是否通过" v-on:change="loadPage(1)">
+				  <el-select v-model="failed_value" placeholder="请选择" v-on:change="loadPage(1)">
 				    <el-option
 				      v-for="item in failed_options"
 				      :key="item.value"
@@ -215,7 +215,7 @@
 					'match': {
 						'class_id': class_id,
 						'exam_id': exam_id,
-						'falied': failed,
+						'failed': failed,
 						'user_id': user_id
 					}
 				}
@@ -226,7 +226,9 @@
 					for(let item of this.tableData) {
 						item.report_name = resp.body.exams[item.exam_id].name;
 						item.student_name = resp.body.users[item.user_id].realname;
-						//item.class_name = resp.body.classes[item.class_id].name;
+						if(Object.keys(resp.body.classes).includes(item.class_id)) {
+							item.class_name = resp.body.classes[item.class_id].name;
+						}
 						item.submit_time = Utils.convTime(item.created_at);
 						item.update_time = Utils.convTime(item.updated_at);
 					}
@@ -275,6 +277,10 @@
 
 			loadPage(page) {
 				this.reqStatsData(this.class_value, this.report_value, this.failed_value, this.student_value, page);
+			},
+
+			pageSizeChange(){
+				this.loadPage(1);
 			}
 		},
 

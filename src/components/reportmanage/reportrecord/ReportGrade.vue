@@ -400,4 +400,9 @@
 	top: 930px;
 }
 
+.comment {
+	padding: 15px;
+	box-sizing: border-box;
+}
+
 </style>

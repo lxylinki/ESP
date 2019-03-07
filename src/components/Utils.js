@@ -8,10 +8,12 @@ function lalert(text) {
 
 function err_process(err, text){
 	console.log(err);
-	if (err.body.error == -403 || err.status == 403 || err.status == 401) {
-		if(this.loading) {
-			layer.close(this.loading);
-		}		
+	
+	if(this.loading) {
+		layer.close(this.loading);
+	}
+
+	if (err.body.error == -403 || err.status == 403 || err.status == 401) {		
 		this.$router.push('/login');//{"name" : "login"}
 		
 	} else if(text) {
