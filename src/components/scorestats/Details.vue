@@ -2,7 +2,7 @@
 	<div id="details" class="scorefig">
 		
 		<div class="qtitle">{{idx+1}}.[{{qtype}}]
-		{{detail.question}}</div>
+		{{detail.question}} ({{detail.score}}分)</div>
 		
 		<br>
 
@@ -15,9 +15,11 @@
 
 		<div v-bind:class="{ correct: detail.answer == 'A' }">A. {{detail.option_a}}</div>
 		<div v-bind:class="{ correct: detail.answer == 'B' }">B. {{detail.option_b}}</div>
-		<div v-bind:class="{ correct: detail.answer == 'C' }">C. {{detail.option_c}}</div>
-		<div v-bind:class="{ correct: detail.answer == 'D' }">D. {{detail.option_d}}</div>
-		<div v-bind:class="{ correct: detail.answer == 'E' }">E. {{detail.option_e}}</div>
+		<div v-show="detail.option_c" v-bind:class="{ correct: detail.answer == 'C' }">C. {{detail.option_c}}</div>
+		<div v-show="detail.option_d" v-bind:class="{ correct: detail.answer == 'D' }">D. {{detail.option_d}}</div>
+		<div v-show="detail.option_e" v-bind:class="{ correct: detail.answer == 'E' }">E. {{detail.option_e}}</div>
+
+		<div class="analysis">题目解析: {{detail.analysis}}</div>
 
 		<div class="decor">|</div>
 		<div class="accuracydiv">
@@ -39,6 +41,8 @@
 		},
 
 		mounted(){
+			console.log(this.detail);
+
 			if(this.detail.type == 1) {
 				this.qtype = '单选';
 
@@ -68,6 +72,11 @@
 
 .qans {
 	display: inline-block;
+}
+
+.analysis {
+	position: relative;
+	top: 20px;
 }
 
 .accuracydiv {

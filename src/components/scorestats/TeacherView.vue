@@ -233,7 +233,7 @@
 					let resp = await Utils.reqExpList.call(this, keyword, page);
 			    	this.exp_options = resp.body._list;
 			    	this.exp_options.unshift({'name': '所有实验', 'eid': null});
-			    	this.exp_value = this.exp_options[0].id;
+			    	this.exp_value = this.exp_options[0].eid;
 			    	this.reqRecord();
 				}
 			},

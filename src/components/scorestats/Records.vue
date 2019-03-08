@@ -378,7 +378,7 @@
 		            series: {
 		            	name: chart_name,
 		                type: 'pie',
-		                radius : '75%',
+		                radius : '65px',
 		                center: ['60%', '50%'],
 		                labelLine: {
 		                	show: false
