@@ -216,7 +216,7 @@
 			reqQuesList(page){
 				asyncReq.call(this);
 				async function asyncReq(){
-					let resp = await Utils.reqExpList.call(this);
+					let resp = await Utils.reqExpList.call(this, null, 1);
 					this.exp_options = resp.body._list;
 					this.exp_options.unshift({'name': '所有实验', 'id': null});
 

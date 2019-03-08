@@ -35,7 +35,7 @@
 			      v-for="item in exp_options"
 			      :key="item.id"
 			      :label="item.name"
-			      :value="item.id">
+			      :value="item.eid">
 			    </el-option>
 			  </el-select>
 			</template>

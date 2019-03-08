@@ -325,7 +325,7 @@
 			reqQuesList(eid, type, keyword, page){
 				asyncReq.call(this);
 				async function asyncReq(){
-					let resp = await Utils.reqExpList.call(this);
+					let resp = await Utils.reqExpList.call(this, null, 1);
 					this.exp_options = resp.body._list;
 					/*
 					for(let item of this.exp_options) {
