@@ -17,7 +17,7 @@
 				      v-for="item in exp_options"
 				      :key="item.id"
 				      :label="item.name"
-				      :value="item.eid">
+				      :value="item.id">
 				    </el-option>
 				  </el-select>				
 			</div>
@@ -39,7 +39,7 @@
 
 			<div class="searchwindow teacher-searchwindow">
 				<el-input class="teacher-searchinput" v-model="search_keyword" v-on:keydown.native="invokeSearch($event)" placeholder="请搜索实验名称"></el-input>
-				<button class="searchbtn"  v-on:click="reqRecord()">
+				<button class="searchbtn"  v-on:click="searchReq()">
 					<i style="color: white;" class="el-icon-search"></i>
 				</button>
 			</div>
@@ -96,7 +96,7 @@
 			      	<!--<el-button type="text" @click="tableData.splice(scope.$index, 1)">-->
 			      	<!--<el-button class="op" type="text" @click="delRow(scope.$index)">-->
 			      	<el-button class="op" style="color: #0099ff;" type="text" @click="showRight(scope.row, scope.$index)">
-			      		详情 <!--<i class="iconfont" style="color: #0099ff;"> &#xe629;</i>-->
+			      		详情 <i class="iconfont" style="color: #0099ff;"> &#xe629;</i>
 			      	</el-button>
 
 			      </template>
@@ -135,8 +135,8 @@
 			<!--<div style="height: 20px;"></div>-->
 			<Records v-if="right_panel"
 					 ref="recordPanel" 
-					 v-bind:class_id = 'row_class_value'
-					 v-bind:expr_id = 'row_exp_value'
+					 v-bind:class_id = 'class_value'
+					 v-bind:expr_id = 'exp_value'
 					 v-bind:user_id = 'user_value'
 			         v-bind:records='records'
 			         v-bind:exam_records='exam_records'
@@ -163,8 +163,6 @@
 				//exper_id, class_id
 				exp_value: '',
 				class_value: '',
-				row_exp_value: '',
-				row_class_value: '',
 				user_value: '',
 				exp_options: [],
 				class_options: [],
@@ -179,7 +177,7 @@
 
 				curPage: 1,
 				totalPage: 0,
-				rowsPerPage: 10,
+				rowsPerPage: 5,
 				row_nums:[
 					{
 						label: '5',
@@ -232,8 +230,7 @@
 				async function asyncReq(){
 					let resp = await Utils.reqExpList.call(this, keyword, page);
 			    	this.exp_options = resp.body._list;
-			    	this.exp_options.unshift({'name': '所有实验', 'eid': null});
-			    	this.exp_value = this.exp_options[0].eid;
+			    	this.exp_value = this.exp_options[0].id;
 			    	this.reqRecord();
 				}
 			},
@@ -244,7 +241,6 @@
 				async function asyncReq(){
 					let resp = await Utils.reqClassList.call(this, tkeyword, ckeyword, page);
 	     			this.class_options = resp.body._list;
-	     			this.class_options.unshift({id: null, class_name: '全部班级'});
 	     			this.class_value = this.class_options[0].id;
 	     			//console.log(this.class_value);					
 				}
@@ -258,17 +254,18 @@
 		     				   + this.rowsPerPage;
 
 		     	let req_data = {
-		     		"eid": eid,
+		     		/*
+		     		"exper_id": eid,
 		     		"class_id": cid,
 		     		"search": {
 		     			"name": keyword
-		     		}
+		     		}*/
 		     	};
 
 		     	this.$http.post(record_api, req_data).then((resp)=>{
 		     		this.scorelist = resp.body._list;
 		     		//console.log(this.scorelist);
-		     		//console.log(resp);
+		     		console.log(resp);
 		     		if (this.scorelist.length == 0) {
 		     			this.right_panel = false;
 
@@ -279,18 +276,21 @@
 		     		this.totalPage = resp.body.total_page;
 		     		this.curPage = page;
 
+
 		     	}, (err)=>{
-		     		Utils.err_process.call(this, err, '请求记录列表失败');
+		     		layer.alert('请求记录列表失败',
+		     			{title:'提示', area:['280px','190px']});
+		     		console.log(err);
 		     	});
 
 		     },
 
 		     reqRecord(){
-		     	this.reqRecordData(this.exp_value, this.class_value, this.search_keyword, 1);
+		     	this.reqRecordData(this.exp_value, this.class_value, '', 1);
 		     },
 
 		     loadPage(page){
-		     	this.reqRecordData(this.exp_value, this.class_value, this.search_keyword, page);
+		     	this.reqRecordData(this.exp_value, this.class_value, '', page);
 		     },
 
 		     showRight(row, idx){
@@ -304,26 +304,29 @@
 
 		     	let data = {
 		     		//"exper_id": this.exp_value,
-		     		"eid": row.eid,
-		     		"class_id": row.class_id,
+		     		"eid": this.exp_value,
+		     		"class_id": this.class_value,
 		     		"user_id": row.user_id
+		     		// "eid": 'No',
+		     		// "user_id": '5o',
+		     		// "class_id": 'En'
 		     	};
-
-		     	this.row_exp_value = row.eid;
-		     	this.row_class_value = row.class_id;
 
 		     	this.$http.post(api, data).then((resp)=>{
 		     		this.records = resp.body;
 		     		//console.log(resp);
 
 		     		if (this.records.length == 0) {
-		     			Utils.lalert('无记录');
+		     			layer.alert('无记录', {title:'提示', area:['280px','190px']});
 		     			return;
 		     			
 		     		} else {
 		     			this.right_panel = true;
 		     		}
-
+		     		//records are all similar!
+		     		//console.log('Records:');
+		     		//console.log(this.records);
+		     		
 		     		let api = global_.exp_exam_list;
 		     		let data = {
 		     			"record_id": row.id
@@ -334,8 +337,13 @@
 		     			layer.close(this.loading);
 
 		     		}, (err)=>{
-		     			Utils.err_process.call(this, err, '请求实验考核记录失败');
+		     			layer.alert('请求实验考核记录失败',
+		     				{title:'提示', area:['280px','190px']});
+		     			console.log(err);
+		     			layer.close(this.loading);
 		     		});
+
+
 
 		     	}, (err)=>{
 		     		layer.alert('请求详情失败',
@@ -391,7 +399,7 @@
 }
 
 .rightpanel {
-	width: 100%;
+	width: 100%; 
 	height: 100%; 
 	/*float: left;*/ 
 	display: inline-block; 

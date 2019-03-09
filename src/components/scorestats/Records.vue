@@ -5,7 +5,6 @@
 		<div id="idxbtns">
 
 			<!--<div style="position: absolute; width: 100%; height: 25px; border-bottom:1px solid #d7d7d7;"></div>-->
-
 			<!--<div class="btnsline"></div>-->
 			<div class="idxdiv" v-show="buttons[0]">
 				<div class="idxbtn btn1" 
@@ -69,20 +68,43 @@
 			<div class="scoretitle">得分统计</div><br>
 		</div>
 
-		<div class="scorefig" v-show="showToggle">
-			<el-container>
-  				<el-aside width="">
+		<div class="scorefig pie-charts" v-show="showToggle" >
+			<div class="exam-score">
+				<div class="pie-exam-score"></div>
+				<div class="exam-score-title chart-title">最终得分</div>	
+				<div class="chart-note"><p>得{{current_record.exam_score}}分，总分{{current_record.total_exam_score}}分</p></div>			
+			</div>
+
+
+			<div class="opt-score">
+				<div class="pie-opt-score"></div>
+				<div class="opt-score-title chart-title">测试题</div>
+				<div class="chart-note"><p>得{{current_record.opt_score}}分，总分{{current_record.total_score}}分</p></div>		
+			</div>
+			
+			<div class="resc-score">
+				<div class="pie-resc-score"></div>
+				<div class="resc-score-title chart-title">抢救治疗</div>
+				<div class="chart-note"><p>得{{current_record.rescue_score}}分，总分{{current_record.total_rescue_score}}分</p></div>	
+			</div>
+			
+			<!--
+			<el-container class="records-container">
+  				<el-aside class="records-container" width="150px">
+  					
 					<el-progress class="progress-circle" 
 								 :width="110"
 								 type="circle" 
-								 :percentage="Number(current_record.exam_score / current_record.total_exam_score * 100)"
+								 :percentage="Math.min((current_record.exam_score / current_record.total_exam_score * 100), 100)"
 								 status="text" 
 								 :stroke-width="9"
 								 color="#333333">{{current_record.exam_score}}</el-progress>
+					
+
 					<div class="innerText" style="text-align: center;">最终得分</div>	
 
   				</el-aside>
-  				<el-main style="background: transparent;"> 
+  				<el-main class="records-container" style="background: transparent;"> 
 
   					<div style="width: 400px; text-align: right;">
 	  					<div>
@@ -90,24 +112,23 @@
 		  								margin-right: 10px;"
 		  						 class="innerText">测试题</div>
 							<el-progress class="progress-bar" :text-inside="true" :stroke-width="18" 
-										:percentage="Number(current_record.opertation_score / current_record.total_score * 100)" 
+										:percentage="Math.min((current_record.opt_score / current_record.total_score * 100), 100)" 
 										color="#333333"></el-progress>  	
-							<div style="display: inline-block; margin-right: 10px;"><span class="innerText">{{current_record.opertation_score}}分 （总{{current_record.total_score}}分)</span></div>					
+							<div style="display: inline-block; margin-right: 10px;"><span class="innerText">{{current_record.opt_score}}分 （总{{current_record.total_score}}分)</span></div>					
 	  					</div>
 
 	  					<div>
 							<div style="display: inline-block; margin-right: 10px;"
 							     class="innerText">抢救治疗</div>
 							<el-progress class="progress-bar" :text-inside="true" :stroke-width="18" 
-										:percentage="Number(current_record.rescue_score / current_record.total_rescue_score * 100)" 
+										:percentage="Math.min((current_record.rescue_score / current_record.total_rescue_score * 100), 100)" 
 										color="#333333"></el-progress>	
 							<div style="display: inline-block; margin-right: 10px;"><span class="innerText">{{current_record.rescue_score}}分 （总{{current_record.total_rescue_score}}分)</span></div>		  						
 	  					</div>  						
   					</div>
-
   				</el-main>
-			</el-container>
-		</div>
+			</el-container> -->
+		</div><!--end score fig-->
 
 		<div style="height: 20px;"></div>
 		
@@ -135,7 +156,6 @@
 		      		<!--</el-button>-->
 				</li>
 			<!--</ul>-->
-
 		</div>
 	
 
@@ -165,6 +185,8 @@
 <script type="text/javascript">
 	import global_ from '../Global.js';
 	import Details from './Details.vue';
+	import Utils from '@/components/Utils.js';
+	import echarts from '@/../static/echarts.min.js';
 
 	export default {
 		props: ['records', 
@@ -175,7 +197,7 @@
 				'isTeacher'],
 
 		components: {
-			Details: Details
+			'Details': Details
 		},
 
 		data(){
@@ -194,12 +216,15 @@
 				selectThree: false,
 				selectFour: false,
 				selectFive: false,
+				record_id: this.records[0].record_id
 			}
 		},
 
 		methods:{
 			setCurrent(idx) {
 				this.current_record = this.records[idx];
+				this.record_id = this.current_record.record_id;
+				//console.log(this.record_id);
 				switch(idx+1) {
 					case 1:
 						this.selectOne = true;
@@ -242,7 +267,6 @@
 			add0(m){
 				return m<10?'0'+m:m 
 			},
-
 			convEndTime(ntime) {
 				var unixTime = new Date(ntime * 1000);
 				var commonTime = this.add0(unixTime.getHours()) + ':'
@@ -256,7 +280,7 @@
 				this.buttons = [false, false, false, false, false];
 				for(var i=0; i<this.records.length; i++) {
 					this.buttons[i] = true;
-					this.labels[i] = Utils.convTime.call(this, Number(this.records[i].created_at));
+					this.labels[i] = Utils.convTimeFull.call(this, Number(this.records[i].created_at));
 				}
 			},
 
@@ -273,16 +297,12 @@
 			},
 
 			showDetails(row) {
-				/*
-				$('li').click(function(){
-					$(this).addClass("highlight").siblings().removeClass("highlight");
-				});*/
-
+				this.showThirdToggle = true;
 				this.exam_name = row.name;
 				let api = global_.exam_details;
 				let data = {
-					"record_id": row.record_id,
-					"exper_id": row.exper_id,
+					"record_id": this.record_id,
+					"eid": row.eid,
 					"exam_id": row.exam_id,
 					"class_id": this.class_id
 				}
@@ -290,9 +310,7 @@
 					this.detail_list = resp.body;
 					
 				}, (err)=>{
-					layer.alert('请求考核明细失败',
-						{title:'提示', area:['280px','190px']});
-					console.log(err);
+					Utils.err_process.call(this, err, '请求考核明细失败');
 				});
 			},
 
@@ -326,29 +344,70 @@
 			delAll(){
 				let api = global_.record_delete;
 				let data = {
-					'exper_id': this.expr_id,
+					//'exper_id': this.expr_id,
+					'eid': this.expr_id,
 					'user_id': this.user_id,
 					'class_id': this.class_id,
 					"id": this.current_record.record_id
 				}
 
 				this.$http.post(api, data).then((resp)=>{
-					//var idx = this.records.indexOf(this.current_record);
-					//this.records.splice(idx, 1);
 					//notify parent to refresh scorelist
 					this.$emit('rmRecord');
-
-					console.log(resp);
-					layer.alert('学习记录清除成功',
-					{title:'提示', area:['280px','190px']});
-
+					//console.log(resp);
+					Utils.lalert('学习记录清除成功');
 				}, (err)=>{
-					layer.alert('学习记录清除失败',
-					{title:'提示', area:['280px','190px']});
-					console.log(err);
+					Utils.err_process.call(this, err, '学习记录清除失败');
 				});
-			}
+			},
 
+			drawPie(dom_class, chart_name, score, deduct){
+		        echarts.init(document.querySelector(dom_class)).setOption({
+					label: {
+					  normal: {
+					    position: 'inner',
+					    show: 'false'
+					  }
+					},
+
+					tooltip : {
+					    trigger: 'item',
+					    formatter: "{a} <br/> {b} : {c} ({d}%)"
+					},
+
+		            series: {
+		            	name: chart_name,
+		                type: 'pie',
+		                radius : '65px',
+		                center: ['60%', '50%'],
+		                labelLine: {
+		                	show: false
+		                },
+		                label: {
+		                	show: false
+		                },
+		                data: [
+		                    {name: '扣除', value: deduct, itemStyle:{normal:{color: '#ededed'}}},
+		                    {name: '得分', value: score, itemStyle:{normal:{color: '#9dd3fa'}}},
+		                ]
+		            }
+		        });
+			},
+
+			drawPies(current_record){
+				let exam_score = current_record.exam_score,
+				    exam_deduct = current_record.total_exam_score - exam_score,
+
+				    opt_score = current_record.opt_score,
+				    opt_deduct = current_record.total_score - opt_score,
+
+				    resc_score = current_record.rescue_score,
+				    resc_deduct = current_record.total_rescue_score - resc_score;
+				//3 score pies    
+		        this.drawPie('.pie-exam-score', '最终得分', exam_score, exam_deduct);
+		        this.drawPie('.pie-opt-score', '测试题', opt_score, opt_deduct);
+		        this.drawPie('.pie-resc-score', '抢救治疗', resc_score, resc_deduct);
+			}
 		},
 
 		watch: {
@@ -367,6 +426,13 @@
 				}
 				this.setCurrent(0);
 			},
+
+			current_record(newVal, oldVal) {
+				this.showSecondToggle = false;
+				this.showThirdToggle = false;
+				//update pie charts
+				this.drawPies(newVal);
+			}
 		},
 
 		mounted(){
@@ -380,9 +446,10 @@
 				this.current_record = this.records[0];
 				this.selectOne = true;
 				this.initButtons();
+				this.drawPies(this.current_record);
 				
 			} else {
-				layer.alert('无记录', {title:'提示', area:['280px','190px']});
+				Utils.lalert('无记录');
 			}
 		}
 	}
@@ -546,6 +613,38 @@
 	background: #ffffff; 
 	width: 100%; 
 	height: 100%;
+}
+
+.scorefig.pie-charts {
+	width: 100%;
+	height: 300px; 
+	display: flex; 
+	justify-content: space-between;
+}
+
+.pie-exam-score, .pie-opt-score, .pie-resc-score {
+	width: 100%;
+	height: 100%;
+}
+
+.exam-score, .opt-score, .resc-score {
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+
+.chart-title {
+	font-size: 14px;
+	color: #666666;
+	position: relative;
+	bottom: 60px;
+}
+
+.chart-note {
+	font-size: 14px;
+	color: #666666;
+	position: relative;
+	bottom: 70px;	
 }
 
 .progress-circle {

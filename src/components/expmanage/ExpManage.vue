@@ -1,8 +1,8 @@
 <template>
 	<div id='expmanage'>
-		<div style="width: 100%; height: 35px; border-bottom: 2px solid #eee">
-			<span style="color: #1281b2; font-weight: bold; font-size: 20px;">|</span> 
-			<span>实验管理</span>
+		<div style="width: 100%; height: 35px;">
+			<span style="color: #1890ff; font-weight: bold">|</span> 
+			实验管理
 		</div>
 
 		<div style="height: 20px;"></div>
@@ -300,7 +300,10 @@
 
 		    	if(ugroup == global_.teacher_group){
 		    		api_prefix = global_.exp_tlist;
-		    	} 
+		    		
+		    	} else if (ugroup == global_.student_group) {
+		    		api_prefix = global_.exp_slist;
+		    	}
 		    	/*
 		    	if(ugroup == global_.student_group){
 		    		api_prefix = global_.exp_stlist;

@@ -279,7 +279,8 @@
 					'name': this.report_name,
 					'started_at': this.toSeconds(this.start_time),
 					'ended_at': this.toSeconds(this.end_time),
-					'cid': this.catag_value
+					'cid': this.catag_value,
+					'note': this.report_note
 				}
 				this.$http.post(api, data).then((resp)=>{
 					console.log(resp);

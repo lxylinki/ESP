@@ -4,14 +4,34 @@
 			<span style="color: #1890ff; font-weight: bold">|</span>  
 			<span>报告记录</span>
 		</div>
+		<div style="height: 20px;"></div>
 
 		<div class="selectclass">
-			<div class="pickclasstitle">班级：</div>	
-			<div class="pick-class"  style="display: inline-block;">
+			<div class="pick-class-title">班级：</div>	
+			<div class="class-picker">
 				<SearchSelect v-bind:items="class_options"
 							  @makechoice="filterByClass"></SearchSelect>
 			</div>
 
+			<div class="pick-report-title">报告：</div>	
+			<div class="report-picker">
+				<SearchSelect v-bind:items="report_options"
+							  @makechoice="filterByReport"></SearchSelect>
+			</div>
+
+			<div class="pick-graded-title">批改状态： </div>
+			<div class="graded-picker">
+				  <el-select v-model="marked_value" placeholder="请选择" v-on:change="loadPage(1)">
+				    <el-option
+				      v-for="item in graded_options"
+				      :key="item.value"
+				      :label="item.label"
+				      :value="item.value">
+				    </el-option>
+				  </el-select>					
+			</div>
+
+			<!--
 			<div class="searchwindow report-rec-searchwindow">
 				<el-input class="searchinput report-rec-searchinput" 
 						  v-model="search_state"
@@ -21,8 +41,17 @@
 				<button class="searchbtn report-searchbtn" v-on:click="filterReport()">
 					<i style="color: white;" class="el-icon-search"></i>
 				</button>
-			</div>
-			
+			</div>-->	
+		</div>
+	
+		<div style="display: inline-block; float: right; margin: 10px;">
+			<span>显示 </span>
+				<select v-model="rowsPerPage" v-on:change="pageSizeChange()" style="width: 60px; height: 25px;">
+					<option v-for="item in row_nums" v-bind:value="item.value">
+						{{item.label}}
+					</option>
+				</select>
+			<span> 条</span>
 		</div>
 
 		<template>
@@ -59,13 +88,13 @@
 		    <el-table-column
 		      prop="submit_time"
 		      label="提交时间"
-		      min-width="100">
+		      min-width="120">
 		    </el-table-column>
 
 		    <el-table-column
 		      prop="grade_time"
 		      label="批改时间"
-		      min-width="100">
+		      min-width="120">
 		    </el-table-column>
 
 		    <!--
@@ -86,7 +115,7 @@
 		    </el-table-column>
 
 		    <el-table-column
-		      prop=""
+		      prop="grader_name"
 		      label="批改人"
 		      min-width="100">
 		    </el-table-column>
@@ -105,7 +134,7 @@
 		      label="操作"
 		      min-width="100">
 		      <template slot-scope="scope">
-		      	<el-button class="op" type="text" @click="">
+		      	<el-button class="op" v-bind:disabled="!scope.row.submitted_at" type="text" @click="gradeReport(scope.row)">
 		      		批改
 		      	</el-button>
 		      </template>
@@ -137,17 +166,56 @@
 		},
 		data(){
 			return {
+				mod_name: 'report-rec',
 				list: [],
 				tableData: [],
 				rowsPerPage: 10,
 				class_value: '',
 				report_value: '',
+				student_value: '',
 				marked_value: '',
 				search_state: '',
 				curPage: 1,
 				totalPage: 0,
-				class_options: []
+				class_options: [],
+				report_options:[],
+				row_nums: [
+					{
+						label: '5',
+						value: 5
+					},
+					{
+						label: '10',
+						value: 10
+					},
+					{
+						label: '15',
+						value: 15
+					},
+					{
+						label: '20',
+						value: 20
+					},
+					{
+						label:'50',
+						value: 50
+					}
+				],	
 
+				graded_options: [
+					{
+						label: '全部',
+						value: null
+					},
+					{
+						label: '已批改',
+						value: 1
+					},
+					{
+						label: '未批改',
+						value: 0
+					},
+				],
 			}
 		},
 		methods:{
@@ -166,12 +234,21 @@
 					let resp = await Utils.reqClassList.call(this, tkeyword, ckeyword, page);
 	     			this.class_options = resp.body._list;
 	     			this.class_options.unshift({id: null, class_name: '全部班级'});
-	     			this.class_value = this.class_options[0].id;
-	     			//console.log(this.class_value);					
+	     			this.class_value = this.class_options[0].id;					
 				}
 			},
 
-			reqRecList(class_id, exam_id, has_marked, page){
+			reqReportData(){
+				asyncReq.call(this);
+				async function asyncReq(){
+					let resp = await Utils.reqAllReport.call(this);
+					this.report_options = resp.body._list;
+					this.report_options.unshift({id: null, name: '全部报告'});
+	     			this.report_value = this.report_options[0].id;
+				}
+			},
+
+			reqRecList(class_id, exam_id, user_id, has_marked, page){
 				let api = global_.report_rec_list
 						+ '?page=' 
 						+ page 
@@ -182,6 +259,7 @@
 					'match': {
 						'class_id': class_id,
 						'exam_id': exam_id,
+						'user_id': user_id,
 						'has_marked': has_marked
 					}
 				}
@@ -192,12 +270,21 @@
 					for(let item of this.tableData) {
 						item.exam_name = resp.body.exams[item.exam_id].name;
 						item.student_name = resp.body.users[item.user_id].realname;
-						item.class_name = resp.body.classes[item.class_id].name;
-						item.submit_time = Utils.convTime(item.joined_at);
+						if(Object.keys(resp.body.classes).includes(item.class_id)) {
+							item.class_name = resp.body.classes[item.class_id].name;
+						}
+						
+						item.submit_time = Utils.convTime(item.submitted_at);
 						item.grade_time = Utils.convTime(item.marked_at);
+						
+						if(resp.body.users[item.marked_by]) {
+							item.grader_name = resp.body.users[item.marked_by].realname;
+						} else {
+							item.grader_name = null;
+						}
 					}
 					this.filterData(page);
-					console.log(resp);
+					//console.log(resp);
 
 				}, (err)=>{
 					Utils.err_process.call(this, err, '请求报告记录列表失败');
@@ -210,29 +297,66 @@
 			},
 
 			loadPage(page) {
-				this.reqRecList(this.class_value, this.report_value, this.marked_value, page);
+				this.reqRecList(this.class_value, this.report_value, this.student_value, this.marked_value, page);
+			},
+
+			pageSizeChange(){
+				this.loadPage(1);
 			},
 
 			filterByClass(class_id) {
 				this.class_value = class_id;
 				this.loadPage(1);
+			},
+
+			filterByReport(exam_id) {
+				this.report_value = exam_id;
+				this.loadPage(1);
+			},
+
+			gradeReport(row) {
+				//console.log(row);
+				this.$store.commit('sign', this.mod_name);
+				this.$store.commit('setEdit', true);
+				this.$store.commit('pickRow', row);
+				this.$store.commit('setCurPage', this.curPage);
+				this.$store.commit('setCurSearch', this.search_state);
+				this.$router.push('/reportgrade');
 			}		
 		},
 
 		mounted(){
+			Utils.page_check_status.call(this);
 			this.reqClassData(null, null, 1);
-			this.reqRecList(null, null, null, 1);
+			this.reqReportData();
+			this.reqRecList(null, null, null, null, 1);
 		}
 	}
 </script>
 
 <style type="text/css" scoped>
-.pickclasstitle {
+.pick-class-title, .pick-report-title, .pick-graded-title {
 	display: inline-block;
-	line-height: 60px;
+	line-height: 55px;
+	vertical-align: middle;
 }
+
+.pick-report-title, .pick-graded-title {
+	margin-left: 20px;
+}
+
+.class-picker, .report-picker, .graded-picker {
+	display: inline-block;
+}
+
 .report-rec-searchwindow {
     position: relative;
     top: -7px;
+    margin: 20px 20px 0 20px;
+}
+
+.graded-picker {
+	position: relative;
+	top: 3px;
 }
 </style>

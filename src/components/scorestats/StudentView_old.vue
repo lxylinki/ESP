@@ -37,6 +37,7 @@
 			<div class="leftpanel">
 
 			  <!--<div style="height: 30px;"></div>-->
+
 			  <template>
 			    <el-table
 			      ref="scoretable"
@@ -79,7 +80,8 @@
 
 			<!--seperate line-->
 			<div class="rightpanel">
-				<!--<div style="height: 20px;"></div>-->			
+				<!--<div style="height: 20px;"></div>-->
+				
 				<Records v-if="right_panel"
 						 v-bind:class_id = 'class_value'
 				         v-bind:records='records'
@@ -120,7 +122,7 @@
 			}
 		},
 		components: {
-			'Records': Records,
+			Records: Records,
 		},
 		
 		methods: {
@@ -197,7 +199,7 @@
 
 		     	let data = {
 		     		//"exper_id": this.exp_value,
-		     		"eid": row.eid,
+		     		"eid": this.exp_value,
 		     		"class_id": row.class_id,
 		     		"user_id": row.user_id
 		     	};
@@ -277,7 +279,6 @@
 	margin-top: 20px;
 }
 
-/*
 @media screen and (min-width: 1500px) {
      .rightpanel {
         overflow-x:hidden;
@@ -288,7 +289,7 @@
      .rightpanel {
         overflow-y:hidden;
     }
-}*/
+}
 
 .exptitle {
 	position: absolute;

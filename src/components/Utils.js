@@ -8,10 +8,12 @@ function lalert(text) {
 
 function err_process(err, text){
 	console.log(err);
-	if (err.body.error == -403 || err.status == 403 || err.status == 401) {
-		if(this.loading) {
-			layer.close(this.loading);
-		}		
+	
+	if(this.loading) {
+		layer.close(this.loading);
+	}
+
+	if (err.body.error == -403 || err.status == 403 || err.status == 401) {		
 		this.$router.push('/login');//{"name" : "login"}
 		
 	} else if(text) {
@@ -65,7 +67,28 @@ function convTime(ntime) {
 	               + add0(d) + ' '
 	               + add0(h) + ':' 
 	               + add0(mn);
+	return commonTime;
+}
+
+
+function convTimeFull(ntime) {
+	function add0(m){
+		return m<10?'0'+m:m 
+	}
+	// ntime * 1000 milliseconds
+	var unixTime = new Date(ntime * 1000);
 	
+	var y = unixTime.getFullYear();
+	var m = unixTime.getMonth()+1;
+	var d = unixTime.getDate();
+	var h = unixTime.getHours();
+	var mn = unixTime.getMinutes();
+
+	var commonTime = y + '年'
+	               + add0(m) + '月'
+	               + add0(d) + '日'
+	               + add0(h) + ':' 
+	               + add0(mn);	
 	return commonTime;
 }
 
@@ -75,7 +98,7 @@ function login_check_status(){
 	var profile = global_.status_check;
 
 	this.$http.post(profile, {}).then((resp)=>{
-		this.$router.push('/expreport');
+		this.$router.push('/studentstats');
 
 	}, (err)=>{
 		//stay at login
@@ -125,6 +148,39 @@ function reqExpList(keyword, page){
 	    });  	
 	});
  }
+
+//just a student copy
+function reqExpSlist(keyword, page){
+	return new Promise((resolve, reject)=>{
+	    var list_api = global_.exp_slist
+					 + '?page=' 
+					 + page; 
+
+		let req_data = {
+			"search": {
+				"name": keyword
+			}
+		};
+
+	    this.$http.post(list_api, req_data).then((resp)=>{
+	    	var total_exp = resp.body.total;
+	    	var full_list_api = list_api + '&pagesize='+ total_exp; 
+
+	    	this.$http.post(full_list_api, req_data).then((resp)=>{
+	    		resolve(resp);
+
+	    	},(err)=>{
+				//layer.close(this.loading);
+				err_process.call(this, err, '请求实验列表失败');    		
+	    	});
+
+	    }, (err)=>{
+			//layer.close(this.loading);
+			err_process.call(this, err, '请求实验列表失败'); 
+	    });  	
+	});
+ }
+
 
 function reqClassList(tkeyword, ckeyword, page){
 	return new Promise((resolve, reject)=>{
@@ -191,6 +247,26 @@ function reqTeacherList(keyword, page){
 	});	
 }
 
+
+function reqAllReport(){
+	return new Promise((resolve, reject)=>{
+		let api = global_.report_list +'?page=1';
+		let data = {};	
+		this.$http.post(api, data).then((resp)=>{
+			let total_report = resp.body.total;
+			let full_list_api = api + '&pagesize=' + total_report;
+			this.$http.post(full_list_api, data).then((resp)=>{
+				resolve(resp);
+
+			}, (err)=>{
+				err_process.call(this, err, '请求实验报告列表失败');
+			});
+		}, (err)=>{
+			err_process.call(this, err, '请求实验报告列表失败');
+		});
+	});
+}
+
 	
 function obj_equal(obj1, obj2) {
 	var result = true;
@@ -220,11 +296,14 @@ export default {
 	lconfirm,
 	encrypt,
 	convTime,
+	convTimeFull,
 	login_check_status,
 	page_check_status,
 	reqExpList,
+	reqExpSlist,
 	reqClassList,
 	reqTeacherList,
+	reqAllReport,
 	obj_equal,
 	contains_obj
 }

@@ -163,7 +163,7 @@
 	            		userGroup: [
 	            			global_.school_admin_group, 
 	            			global_.teacher_group,
-	            			global_.student_group
+	            			
 	            		],
 	            		isSubShow:false,
 	            		subItems:[
@@ -183,7 +183,7 @@
 			            		userGroup: [
 			            			global_.school_admin_group, 
 			            			global_.teacher_group,
-			            			global_.student_group
+			            			
 			            		],
 			            		isSubShow: false,
 			            		subItems:[]
@@ -194,18 +194,18 @@
 			            		userGroup: [
 			            			global_.school_admin_group, 
 			            			global_.teacher_group,
-			            			global_.student_group
+			            			
 			            		],
 			            		isSubShow: false,
 			            		subItems:[]
 	            			},
 	            			{
 	            				name: '报告成绩',
-	            				url: '',
+	            				url: '/reportscore',
 			            		userGroup: [
 			            			global_.school_admin_group, 
 			            			global_.teacher_group,
-			            			global_.student_group
+			          
 			            		],
 			            		isSubShow: false,
 			            		subItems:[]
@@ -216,11 +216,11 @@
             		},
              		{
 	            		name:'成绩统计',
-	            		url: "/studentstats",
+	            		url: "/teacherstats",
 	            		userGroup: [
 	            			global_.school_admin_group, 
 	            			global_.teacher_group,
-	            			global_.student_group
+	            			global_.student_group,
 	            		],
 	            		isSubShow:false,
 	            		subItems:[],
