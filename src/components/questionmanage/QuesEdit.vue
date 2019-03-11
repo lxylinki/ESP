@@ -870,24 +870,26 @@
 				this.$router.go(-1);
 			},
 
-			fillExpSelect(){
+			fillExpSelect(profile){
 				asyncReq.call(this);
 				async function asyncReq(){
-					let resp = await Utils.reqExpList.call(this);
+					let resp = await Utils.reqExpList.call(this, null, profile.body.group);
 					this.exp_options = resp.body._list;
 					this.exp_options.unshift({'name': '所有实验', 'id': null});
 				}				
 			}
 		},
 		mounted(){	
-			Utils.page_check_status.call(this);		
+			Utils.page_check_status.call(this).then(resp=>{
+				this.fillExpSelect(resp);
+			});		
 			var edit = this.$store.state.edit;
 			
 			if(!edit) {
 				this.$router.go(-1);
 
 			} else {
-				this.fillExpSelect();
+				//this.fillExpSelect();
 				var row = this.$store.state.row;
 				//console.log(row);
 				this.id = row.id;

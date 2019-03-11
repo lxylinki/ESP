@@ -301,9 +301,11 @@
 		    	if(ugroup == global_.teacher_group){
 		    		api_prefix = global_.exp_tlist;
 		    		
-		    	} else if (ugroup == global_.student_group) {
+		    	} else if (ugroup == global_.student_group){
 		    		api_prefix = global_.exp_slist;
+
 		    	}
+
 		    	/*
 		    	if(ugroup == global_.student_group){
 		    		api_prefix = global_.exp_stlist;

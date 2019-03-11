@@ -29,6 +29,7 @@
 	const exp_list = url_prefix + 'esp_admin/experiment-assign/assign-list';
 	const exp_slist = url_prefix + 'esp_admin/experiment-assign/list';
 	const exp_tlist = url_prefix + 'esp_admin/experiment-assign/teacher-list';
+	
 	const exp_teacher_add = url_prefix + 'esp_admin/experiment-auth/add-teachers';
 	const exp_teacher_list = url_prefix + 'esp_admin/experiment-auth/list';
 	const exp_teacher_delete = url_prefix + 'esp_admin/experiment-auth/del-teachers';

@@ -96,8 +96,7 @@
 	            				name: '学生管理',
 	            				url: "/studentmanage",
 	            				userGroup: [
-	            					global_.school_admin_group,
-	            					global_.teacher_group
+	            					global_.school_admin_group,  
 	            				],
 	            				isSubShow: false,
 	            				subItems: []
@@ -108,7 +107,6 @@
 			            		url: "/classmanage",
 			            		userGroup: [
 			            			global_.school_admin_group, 
-			            			global_.teacher_group
 			            		],
 			            		isSubShow:false,
 			            		subItems:[]          			
@@ -124,7 +122,6 @@
 	            		url: "/expmanage",
 	            		userGroup: [
 	            			global_.school_admin_group, 
-	            			global_.teacher_group
 	            		],
 	            		isSubShow:false,
 	            		subItems:[] ,
@@ -136,8 +133,8 @@
 	            		name:'公共题库管理',
 	            		url: "/questionmanage",
 	            		userGroup: [
-	            			global_.school_admin_group, 
-	            			global_.teacher_group
+	            			global_.school_admin_group,
+	            			global_.teacher_group 
 	            		],
 	            		isSubShow:false,
 	            		subItems:[],
@@ -162,7 +159,6 @@
 	            		url: "",
 	            		userGroup: [
 	            			global_.school_admin_group, 
-	            			global_.teacher_group,
 	            			
 	            		],
 	            		isSubShow:false,
@@ -172,7 +168,6 @@
 	            				url: '/tplmanage',
 			            		userGroup: [
 			            			global_.school_admin_group, 
-			            			global_.teacher_group,
 			            		],
 			            		isSubShow: false,
 			            		subItems:[]
@@ -182,7 +177,6 @@
 	            				url: '/expreport',
 			            		userGroup: [
 			            			global_.school_admin_group, 
-			            			global_.teacher_group,
 			            			
 			            		],
 			            		isSubShow: false,
@@ -193,7 +187,6 @@
 	            				url: '/reportrec',
 			            		userGroup: [
 			            			global_.school_admin_group, 
-			            			global_.teacher_group,
 			            			
 			            		],
 			            		isSubShow: false,
@@ -204,7 +197,6 @@
 	            				url: '/reportscore',
 			            		userGroup: [
 			            			global_.school_admin_group, 
-			            			global_.teacher_group,
 			          
 			            		],
 			            		isSubShow: false,

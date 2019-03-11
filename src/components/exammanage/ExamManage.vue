@@ -167,6 +167,8 @@
 		},
 		data(){
 			return {
+				mod_name: 'exp-manage',
+				user_group: 0,
 				list: [],
 				tableData: [],
 				exp_value: '',
@@ -216,10 +218,10 @@
 		},
 
 		methods: {
-			fillExpSelect(){
+			fillExpSelect(keyword, ugroup){
 				asyncReq.call(this);
 				async function asyncReq(){
-					let resp = await Utils.reqExpList.call(this, '', 1);
+					let resp = await Utils.reqExpList.call(this, keyword, ugroup);
 					this.exp_options = resp.body._list;
 					/*
 					for(let item of this.exp_options) {
@@ -382,7 +384,9 @@
 		},
 
 		mounted(){
-			Utils.page_check_status.call(this);
+			Utils.page_check_status.call(this).then(resp=>{
+				this.fillExpSelect(null, resp.body.group);
+			});
 			var name = this.$store.state.last_author;
 
 			if(name === this.mod_name) {
@@ -411,7 +415,7 @@
 				}*/				
 			}
 			//console.log(before, after, pagesize, keyword, curpage);
-			this.fillExpSelect();
+			
 			this.reqExamList(1);
 		}
 	}

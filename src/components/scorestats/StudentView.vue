@@ -139,10 +139,10 @@
 			},
 
 			
-			reqExpData(keyword, page) {
+			reqExpData(keyword, ugroup) {
 				asyncReq.call(this);
 				async function asyncReq(){
-					let resp = await Utils.reqExpSlist.call(this, keyword, page);
+					let resp = await Utils.reqExpList.call(this, keyword, ugroup);
 			    	this.exp_options = resp.body._list;
 			    	this.exp_value = this.exp_options[0].id;
 			    	this.reqRecord();
@@ -240,7 +240,9 @@
 		},
 
 		mounted(){
-			this.reqExpData('', 1);
+			Utils.page_check_status.call(this).then(resp=>{
+				this.reqExpData(null, resp.body.group);
+			});
 		}
 	}
 </script>

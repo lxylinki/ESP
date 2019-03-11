@@ -325,12 +325,9 @@
 			reqQuesList(eid, type, keyword, page){
 				asyncReq.call(this);
 				async function asyncReq(){
-					let resp = await Utils.reqExpList.call(this, null, 1);
+					let profile = await Utils.page_check_status.call(this);	
+					let resp = await Utils.reqExpList.call(this, null, profile.body.group);
 					this.exp_options = resp.body._list;
-					/*
-					for(let item of this.exp_options) {
-						console.log(item.eid);
-					}*/
 					this.exp_options.unshift({'name': '所有实验', 'id': null});
 
 					let api = global_.ques_list
@@ -470,7 +467,6 @@
 				}
 				this.$http.post(api, data).then((resp)=>{
 					this.remove(this.focus_qids, row.question_id);
-					//console.log(this.focus_qids);
 					this.reqEquesList(this.curPage);
 					Utils.lalert('删除考核试题成功');
 
@@ -486,7 +482,7 @@
 		},
 
 		mounted(){
-			Utils.page_check_status.call(this);
+			//Utils.page_check_status.call(this);
 			var edit = this.$store.state.edit;
 			if(!edit) {
 				this.$router.go(-1);
@@ -498,8 +494,8 @@
 				this.exam_id = row.id;
 				this.limit = Number(row.count);
 
-				this.reqEquesList();
 				this.reqQuesList(this.exp_value, this.qtype_value, this.search_state, this.curPage);
+				this.reqEquesList();
 			}	
 		}
 	}
