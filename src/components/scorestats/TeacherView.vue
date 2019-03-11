@@ -52,12 +52,13 @@
 		<div class="leftpanel">
 			<template>
 			    <el-table
+			      class="score_table"
 			      ref="scoretable"
 			      :highlight-current-row="true"
 			      :data="scorelist"
 			      @row-click="invokeShowRight"
 			      :row-class-name="row_name"
-			      style="width: 100%">
+			      style="width: 100%; height: 340px; overflow-y: scroll;">
 
 			      <el-table-column
 			        prop="realname"
@@ -354,16 +355,83 @@
 		     		this.$refs.recordPanel.delAll();
 		     	}
 		     }*/
+
+		     loadMore(){
+		     	let score_table = document.querySelector(".score_table"),
+                	scrollTop = score_table.scrollTop,
+                	scrollHeight = score_table.scrollHeight,
+                	viewHeight = score_table.offsetHeight;
+
+                console.log(scrollTop, scrollHeight, viewHeight);
+                /*
+                let _this = this;
+				this.mousewheel(score_table,
+					function(){
+	                	if(scrollTop + viewHeight === scrollHeight) {
+	                		if(viewHeight === scrollHeight) {
+	                		}
+
+	                		console.log('reached bottom', _this.curPage);
+	                		if(_this.curPage < _this.totalPage) {
+	                			_this.loadPage(_this.curPage + 1);
+	                		}
+	                	}
+					},
+
+					function(){
+	 					if (scrollTop === 0) {
+	                		console.log('reached top', _this.curPage);
+	                		if(_this.curPage > 1) {
+	                			_this.loadPage(_this.curPage-1);
+	                		}
+	                	}
+					});*/
+                //console.log(scrollTop, viewHeight, scrollHeight);
+		     },
+
+			 mousewheel(obj,downfn,upfn) {
+		        obj.onmousewheel = fn;
+
+		        if (obj.addEventListener) {
+		            obj.addEventListener('DOMMouseScroll', fn, false);
+		        }
+
+		        function fn(ev) {
+		            var ev = ev || event;
+		            var b = true;
+		            if (ev.wheelDelta) {
+		                b = ev.wheelDelta > 0 ? true : false;
+		            } else {
+		                b = ev.detail < 0 ? true : false;
+		            }
+		            if(b) {
+		                upfn&&upfn();
+		            } else {
+		                downfn&&downfn();
+		            }
+		            if (ev.preventDefault) {
+		                ev.preventDefault();
+		            }
+		            return false;
+		        }
+			}
 		},
+
 		beforeMount(){
 			this.loading = layer.load(1, {shade: false});
 		},
+
 		mounted(){
 			Utils.page_check_status.call(this).then(resp=>{
 				this.reqExpData(null, resp.body.group);
 			});
 
 			this.reqClassData('', '', 1);
+			
+            let self = this;
+              $(".score_table").scroll(function(){
+                self.loadMore();
+            });
 		}
 	}
 </script>

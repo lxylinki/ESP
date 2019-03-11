@@ -138,7 +138,7 @@ function reqExpList(keyword, ugroup){
 
 	return new Promise((resolve, reject)=>{
 		//console.log('This is reqExpList return!');
-		console.log(api_prefix);
+		//console.log(api_prefix);
 	    let list_api = api_prefix + '?page=1';
 
 		let req_data = {

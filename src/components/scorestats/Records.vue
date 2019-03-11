@@ -401,7 +401,7 @@
 				$(this).addClass("highlight").siblings().removeClass("highlight");
 			});
 
-			console.log(document.querySelector('.pie-exam-score').offsetWidth);
+			//console.log(document.querySelector('.pie-exam-score').offsetWidth);
 
 			if(this.records.length > 0) {
 				//console.log(this.records);
