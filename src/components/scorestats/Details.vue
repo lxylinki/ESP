@@ -183,7 +183,7 @@
 .analysis-detail {
 	box-sizing: border-box;
 	padding: 15px;
-	width: 100%;
+	width: 80%;
 	height: 100px;
 	border: 1px solid #d7d7d7;
 	margin-bottom: 40px;

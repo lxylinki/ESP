@@ -401,6 +401,8 @@
 				$(this).addClass("highlight").siblings().removeClass("highlight");
 			});
 
+			console.log(document.querySelector('.pie-exam-score').offsetWidth);
+
 			if(this.records.length > 0) {
 				//console.log(this.records);
 				//default value
@@ -587,7 +589,7 @@
 }
 
 .pie-exam-score, .pie-opt-score, .pie-resc-score {
-	width: 100%;
+	width: 250px;
 	height: 100%;
 	display: flex;
 	justify-content: center;
@@ -597,6 +599,7 @@
 	width: 100%;
 	height: 100%;
 	text-align: center;
+	/*border: 1px solid red;*/
 }
 
 .chart-title {
