@@ -338,9 +338,7 @@
 		     		});
 
 		     	}, (err)=>{
-		     		layer.alert('请求详情失败',
-		     			{title:'提示', area:['280px','190px']});
-		     		console.log(err);
+		     		Utils.err_process.call(this, err, '请求实验考核记录失败');
 		     	});
 		     },
 

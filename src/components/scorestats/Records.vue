@@ -72,62 +72,22 @@
 			<div class="exam-score">
 				<div class="pie-exam-score"></div>
 				<div class="exam-score-title chart-title">最终得分</div>	
-				<div class="chart-note"><p>得{{current_record.exam_score}}分，总分{{current_record.total_exam_score}}分</p></div>			
+				<div class="chart-note">得{{current_record.exam_score}}分，总分{{current_record.total_exam_score}}分</div>			
 			</div>
 
 
 			<div class="opt-score">
 				<div class="pie-opt-score"></div>
 				<div class="opt-score-title chart-title">测试题</div>
-				<div class="chart-note"><p>得{{current_record.opt_score}}分，总分{{current_record.total_score}}分</p></div>		
+				<div class="chart-note">得{{current_record.opt_score}}分，总分{{current_record.total_score}}分</div>		
 			</div>
 			
 			<div class="resc-score">
 				<div class="pie-resc-score"></div>
 				<div class="resc-score-title chart-title">抢救治疗</div>
-				<div class="chart-note"><p>得{{current_record.rescue_score}}分，总分{{current_record.total_rescue_score}}分</p></div>	
+				<div class="chart-note">得{{current_record.rescue_score}}分，总分{{current_record.total_rescue_score}}分</div>	
 			</div>
-			
-			<!--
-			<el-container class="records-container">
-  				<el-aside class="records-container" width="150px">
-  					
-					<el-progress class="progress-circle" 
-								 :width="110"
-								 type="circle" 
-								 :percentage="Math.min((current_record.exam_score / current_record.total_exam_score * 100), 100)"
-								 status="text" 
-								 :stroke-width="9"
-								 color="#333333">{{current_record.exam_score}}</el-progress>
-					
 
-					<div class="innerText" style="text-align: center;">最终得分</div>	
-
-  				</el-aside>
-  				<el-main class="records-container" style="background: transparent;"> 
-
-  					<div style="width: 400px; text-align: right;">
-	  					<div>
-		  					<div style="display: inline-block; 
-		  								margin-right: 10px;"
-		  						 class="innerText">测试题</div>
-							<el-progress class="progress-bar" :text-inside="true" :stroke-width="18" 
-										:percentage="Math.min((current_record.opt_score / current_record.total_score * 100), 100)" 
-										color="#333333"></el-progress>  	
-							<div style="display: inline-block; margin-right: 10px;"><span class="innerText">{{current_record.opt_score}}分 （总{{current_record.total_score}}分)</span></div>					
-	  					</div>
-
-	  					<div>
-							<div style="display: inline-block; margin-right: 10px;"
-							     class="innerText">抢救治疗</div>
-							<el-progress class="progress-bar" :text-inside="true" :stroke-width="18" 
-										:percentage="Math.min((current_record.rescue_score / current_record.total_rescue_score * 100), 100)" 
-										color="#333333"></el-progress>	
-							<div style="display: inline-block; margin-right: 10px;"><span class="innerText">{{current_record.rescue_score}}分 （总{{current_record.total_rescue_score}}分)</span></div>		  						
-	  					</div>  						
-  					</div>
-  				</el-main>
-			</el-container> -->
 		</div><!--end score fig-->
 
 		<div style="height: 20px;"></div>
@@ -378,8 +338,8 @@
 		            series: {
 		            	name: chart_name,
 		                type: 'pie',
-		                radius : '65px',
-		                center: ['60%', '50%'],
+		                radius : '60px',
+		                center: ['50%', '50%'],
 		                labelLine: {
 		                	show: false
 		                },
@@ -430,6 +390,7 @@
 			current_record(newVal, oldVal) {
 				this.showSecondToggle = false;
 				this.showThirdToggle = false;
+				this.detail_list = [];
 				//update pie charts
 				this.drawPies(newVal);
 			}
@@ -459,10 +420,13 @@
 
 .scorefigli {
 	cursor: pointer;
+	height: 40px;
+	line-height: 40px;
 }
 
 .highlight {
-	background: #f7f8fc;
+	/*background: #f7f8fc;*/
+	background: #f0f7ff;
 }
 
 /*
@@ -617,14 +581,16 @@
 
 .scorefig.pie-charts {
 	width: 100%;
-	height: 300px; 
+	height: 240px; 
 	display: flex; 
-	justify-content: space-between;
+	justify-content: space-around;
 }
 
 .pie-exam-score, .pie-opt-score, .pie-resc-score {
 	width: 100%;
 	height: 100%;
+	display: flex;
+	justify-content: center;
 }
 
 .exam-score, .opt-score, .resc-score {
@@ -637,14 +603,14 @@
 	font-size: 14px;
 	color: #666666;
 	position: relative;
-	bottom: 60px;
+	bottom: 50px;
 }
 
 .chart-note {
 	font-size: 14px;
 	color: #666666;
 	position: relative;
-	bottom: 70px;	
+	bottom: 50px;
 }
 
 .progress-circle {
