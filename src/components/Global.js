@@ -101,6 +101,11 @@
 	const report_score_pub = url_prefix + 'exam/exam/release-score';
 	const report_class_list = url_prefix + 'exam/exam-stats/class-list';
 
+	const report_mylist = url_prefix + 'exam/exam/my-list';
+	const report_slist = url_prefix + 'exam/exam/list';
+	const report_myscore = url_prefix + 'exam/exam-stats/user-list';
+	const report_join = url_prefix + 'exam/exam-record/join';
+
 	//exp report record
 	const report_rec_list = url_prefix + 'exam/exam-record/list';
 	const report_rec_view = url_prefix + 'exam/exam/view';
@@ -206,5 +211,10 @@
 		report_mark,
 		report_rec_mark,
 
-		report_stats_list
+		report_stats_list,
+
+		report_mylist,
+		report_slist,
+		report_myscore,
+		report_join,
 	}

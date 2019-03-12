@@ -223,10 +223,6 @@
 				async function asyncReq(){
 					let resp = await Utils.reqExpList.call(this, keyword, ugroup);
 					this.exp_options = resp.body._list;
-					/*
-					for(let item of this.exp_options) {
-						console.log(item);
-					}*/
 					this.exp_options.unshift({'name': '所有实验', 'id': null});
 				}
 			},

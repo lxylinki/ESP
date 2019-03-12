@@ -295,9 +295,7 @@
 
 			deleteAll(){
 				var _this = this;
-				var sure = layer.confirm("确定清空学习记录？",
-					{title:'提示', area:['280px','190px']},
-					function(){_this.delAll()});				
+				Utils.lconfirm("确定清空学习记录？", function(){_this.delAll()});				
 			},
 
 			//清空5次记录

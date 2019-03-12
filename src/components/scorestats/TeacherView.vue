@@ -1,5 +1,5 @@
 <template>
-	<div id="teacherview-old">
+	<div id="teacherview">
 		<div style="width: 100%; height: 35px; border-bottom: 2px solid #eee">
 			<span style="color: #1281b2; font-weight: bold; font-size: 20px;">|</span> 
 			<span class="pagetitle">成绩统计</span>
@@ -271,9 +271,9 @@
 		     	};
 
 		     	this.$http.post(record_api, req_data).then((resp)=>{
-		     		this.scorelist = resp.body._list;
-		     		//console.log(this.scorelist);
-		     		//console.log(resp);
+		     		if(resp.body) {
+		     			this.scorelist = resp.body._list;
+		     		}
 		     		if (this.scorelist.length == 0) {
 		     			this.right_panel = false;
 
@@ -362,16 +362,16 @@
 
 		     loadMore(){
 		     	let score_table = document.querySelector(".score_table .el-table__body-wrapper"),
+		     		jq_score_table = $(".score_table .el-table__body-wrapper"),
                 	scrollTop = score_table.scrollTop,
                 	scrollHeight = score_table.scrollHeight,
                 	viewHeight = score_table.offsetHeight;
+
                 //console.log(score_table);
                 let _this = this;
 				this.mousewheel(score_table,
 					function(){
 	                	if(scrollTop > 0 && scrollTop + viewHeight === scrollHeight) {
-	                		//console.log(scrollTop, viewHeight, scrollHeight);
-	                		//console.log('reached bottom', _this.curPage);
 	                		if(_this.curPage < _this.totalPage) {
 	                			_this.loadPage(_this.curPage + 1);
 	                		}
@@ -380,8 +380,6 @@
 
 					function(){
 	 					if (scrollTop === 0) {
-	 						//console.log(scrollTop, viewHeight, scrollHeight);
-	                		//console.log('reached top', _this.curPage);
 	                		if(_this.curPage > 1) {
 	                			_this.loadPage(_this.curPage-1);
 	                		}
@@ -429,7 +427,6 @@
 			Utils.page_check_status.call(this).then(resp=>{
 				this.reqExpData(null, resp.body.group);
 			});
-
 			this.reqClassData('', '', 1);
 			
             let self = this;

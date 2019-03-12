@@ -159,6 +159,7 @@
 	            		url: "",
 	            		userGroup: [
 	            			global_.school_admin_group, 
+	            			global_.student_group
 	            			
 	            		],
 	            		isSubShow:false,
@@ -201,7 +202,26 @@
 			            		],
 			            		isSubShow: false,
 			            		subItems:[]
-	            			}	            				            		            		
+	            			},
+	            			//student only 
+	            			{
+	            				name: '实验报告列表',
+	            				url: '/explist',
+			            		userGroup: [
+			            			global_.student_group, 
+			            		],
+			            		isSubShow: false,
+			            		subItems:[]
+	            			},	
+	            			{
+	            				name: '实验报告成绩',
+	            				url: '',
+			            		userGroup: [
+			            			global_.student_group, 
+			            		],
+			            		isSubShow: false,
+			            		subItems:[]
+	            			}
 	            		],
 	            		icon_highlight:require('@/assets/report.png'),
 	            		icon: require('@/assets/report_dark.png') 	                        		            			
@@ -227,7 +247,7 @@
 	            		isSubShow:false,
 	            		subItems:[],
 	            		icon_highlight:require('@/assets/stats.png'),
-	            		icon: require('@/assets/stats_dark.png') 	                        		            			
+	            		icon: require('@/assets/stats_dark.png') 	                        		           	
             		},
             		/*
              		{

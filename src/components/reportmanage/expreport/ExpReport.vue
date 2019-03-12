@@ -71,7 +71,7 @@
 		    	    
 		    <el-table-column
 		      prop="start_time"
-		      label="开始/截止时间"
+		      label="开始 / 截止时间"
 		      min-width="180">
 		      <template slot-scope="scope">
 		      	{{scope.row.start_time}}{{sep_sign}}
@@ -292,7 +292,7 @@
 					'exam_id': row.id
 				}
 				this.$http.post(api, data).then((resp)=>{
-					console.log(resp);
+					//console.log(resp);
 					this.reqReportList(this.status_value, this.search_state, this.curPage);
 				}, (err)=>{
 					Utils.err_process.call(this, err, '实验报告发布失败');
@@ -324,7 +324,7 @@
   					'id': row.id
   				}
 				this.$http.post(api, data).then((resp)=>{
-					console.log(resp);
+					//console.log(resp);
 					Utils.lalert('关闭考试成功');
 					this.reqReportList(this.status_value, this.search_state, this.curPage);
 				}, (err)=>{
@@ -363,7 +363,7 @@
 	}
 </script>
 
-<style type="text/css">
+<style type="text/css" scoped>
 .pick-status-title {
 	display: inline-block; 
 	line-height: 60px;
