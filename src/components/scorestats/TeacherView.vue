@@ -54,11 +54,12 @@
 			    <el-table
 			      class="score_table"
 			      ref="scoretable"
+			      height="350px"
 			      :highlight-current-row="true"
 			      :data="scorelist"
 			      @row-click="invokeShowRight"
 			      :row-class-name="row_name"
-			      style="width: 100%; height: 340px; overflow-y: scroll;">
+			      >
 
 			      <el-table-column
 			        prop="realname"
@@ -108,6 +109,7 @@
 
 
 			<div class="tablefooter">
+				<!--
 				<div class="rownum">
 					<span>显示 </span>
 						<select v-model="rowsPerPage" v-on:change="reqRecord()" style="width: 60px; height: 25px;">
@@ -116,14 +118,15 @@
 							</option>
 						</select>
 					<span> 条</span>
-				</div>
+				</div>-->
 
+				<!--
 				<div class="pages">
 		   		<NewPager v-bind:current_page='curPage' 
 		   	           	  v-bind:pages='totalPage'
 		   		          @setPage='loadPage'
 		   		></NewPager>		
-				</div>						
+				</div>-->						
 			</div>
 	
 
@@ -145,6 +148,7 @@
 			         v-on:rmRecord='reqRecord'
 			         style="margin-left: 42px;"></Records>
 		</div>
+
 		<div style="clear: both;"></div>
 		</div>
 
@@ -357,21 +361,17 @@
 		     }*/
 
 		     loadMore(){
-		     	let score_table = document.querySelector(".score_table"),
+		     	let score_table = document.querySelector(".score_table .el-table__body-wrapper"),
                 	scrollTop = score_table.scrollTop,
                 	scrollHeight = score_table.scrollHeight,
                 	viewHeight = score_table.offsetHeight;
-
-                console.log(scrollTop, scrollHeight, viewHeight);
-                /*
+                //console.log(score_table);
                 let _this = this;
 				this.mousewheel(score_table,
 					function(){
-	                	if(scrollTop + viewHeight === scrollHeight) {
-	                		if(viewHeight === scrollHeight) {
-	                		}
-
-	                		console.log('reached bottom', _this.curPage);
+	                	if(scrollTop > 0 && scrollTop + viewHeight === scrollHeight) {
+	                		//console.log(scrollTop, viewHeight, scrollHeight);
+	                		//console.log('reached bottom', _this.curPage);
 	                		if(_this.curPage < _this.totalPage) {
 	                			_this.loadPage(_this.curPage + 1);
 	                		}
@@ -380,16 +380,17 @@
 
 					function(){
 	 					if (scrollTop === 0) {
-	                		console.log('reached top', _this.curPage);
+	 						//console.log(scrollTop, viewHeight, scrollHeight);
+	                		//console.log('reached top', _this.curPage);
 	                		if(_this.curPage > 1) {
 	                			_this.loadPage(_this.curPage-1);
 	                		}
 	                	}
-					});*/
+					});
                 //console.log(scrollTop, viewHeight, scrollHeight);
 		     },
 
-			 mousewheel(obj,downfn,upfn) {
+			 mousewheel(obj, downfn, upfn) {
 		        obj.onmousewheel = fn;
 
 		        if (obj.addEventListener) {
@@ -401,18 +402,21 @@
 		            var b = true;
 		            if (ev.wheelDelta) {
 		                b = ev.wheelDelta > 0 ? true : false;
+
 		            } else {
 		                b = ev.detail < 0 ? true : false;
 		            }
 		            if(b) {
 		                upfn&&upfn();
+
 		            } else {
 		                downfn&&downfn();
 		            }
+		            /*
 		            if (ev.preventDefault) {
 		                ev.preventDefault();
-		            }
-		            return false;
+		            }*/
+		            return true;
 		        }
 			}
 		},
@@ -429,7 +433,7 @@
 			this.reqClassData('', '', 1);
 			
             let self = this;
-              $(".score_table").scroll(function(){
+              $(".score_table .el-table__body-wrapper").scroll(function(){
                 self.loadMore();
             });
 		}
@@ -453,8 +457,6 @@
 .leftpanel {
 	width: 100%; 
 	height: 100%;
-	display: inline-block;
-	/*float: left;*/
 	margin-right: 42px;
 	margin-top: 20px;
 }
@@ -462,8 +464,6 @@
 .rightpanel {
 	width: 100%;
 	height: 100%; 
-	/*float: left;*/ 
-	display: inline-block; 
 	border-left: 1px solid #d7d7d7;
 	margin-top: 20px;
 }
@@ -486,6 +486,14 @@
 	margin-left: 20px;
 }
 
+.score_table {
+	width: 100%; 
+	height: 350px; 
+	/*overflow-y: scroll;*/
+}
+
+.score_table >>> .el-table__body-wrapper{
+}
 /*
  @media screen and (min-width: 1200px) {
      #teacherview {

@@ -176,6 +176,11 @@
 	display: inline-block;
 }
 
+.analysis {
+	color: #5c9cec;
+	margin-top: 10px;
+}
+
 .accuracy {
 	margin-left: 30px;
 }

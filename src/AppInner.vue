@@ -212,7 +212,17 @@
 	            		userGroup: [
 	            			global_.school_admin_group, 
 	            			global_.teacher_group,
-	            			global_.student_group,
+	            		],
+	            		isSubShow:false,
+	            		subItems:[],
+	            		icon_highlight:require('@/assets/stats.png'),
+	            		icon: require('@/assets/stats_dark.png') 	                        		            			
+            		},
+             		{
+	            		name:'我的成绩',
+	            		url: "/studentstats",
+	            		userGroup: [
+	            			global_.student_group 
 	            		],
 	            		isSubShow:false,
 	            		subItems:[],
@@ -250,23 +260,17 @@
 					if(resp.body.group == global_.teacher_group) {
 						this.current_group = global_.teacher_group;
 						this.isTeacher = true;
-
-						this.menuList[5].url = '/teacherstats';
 					}
 
 					if(resp.body.group == global_.student_group) {
 						this.current_group = global_.student_group;
 						this.isStudent = true;
-
-						this.menuList[5].url = '/studentstats';
 					}
 
 					//for testing
 					if(resp.body.group == global_.school_admin_group) {
 						this.current_group = global_.school_admin_group;
 						this.isAdmin = true;
-
-						this.menuList[5].url = '/teacherstats';
 					}
 
 					//console.log(this.current_group);					

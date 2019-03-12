@@ -885,7 +885,7 @@ input:not(.checkbox) {
 	width:600px;
 	height:36px;
 	background:rgba(255,255,255,1);
-	border:1px solid rgba(153,153,153,1);
+	border:1px solid rgba(153,153,153,0.5);
 	border-radius:4px;
 }
 .checkicon {
@@ -1027,7 +1027,7 @@ div>.mchoice input {
 }
 
 #anls {
-	margin-left: 5px;
+	margin-left: 10px;
 }
 
 #quesbody {
