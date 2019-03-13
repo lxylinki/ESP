@@ -122,6 +122,7 @@
 	            		url: "/expmanage",
 	            		userGroup: [
 	            			global_.school_admin_group, 
+	            			global_.teacher_group
 	            		],
 	            		isSubShow:false,
 	            		subItems:[] ,
@@ -323,11 +324,10 @@
 					//delCookie('username');
 					this.$router.push('/login');
 				}, (err)=>{
-					console.log(err);
-					layer.alert('注销失败',
-						{title:'提示', area:['280px','190px']});
+					Utils.err_process.call(this, err, '注销失败');
 				});	      	
 		    },
+
 		    goPersonal(){
 		    	alert('个人中心');
 		    }

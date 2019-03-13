@@ -106,7 +106,7 @@
 		      	<el-button class="op" v-bind:disabled="scope.row.status != 1" type="text" @click="showDownload(scope.row)">
 		      		下载模板
 		      	</el-button>
-		      	<el-button class="op" v-bind:disabled="scope.row.status != 1" type="text" @click="showUpload(scope.row)">
+		      	<el-button class="op" v-bind:disabled="scope.row.status != 1 || scope.row.joined" type="text" @click="showUpload(scope.row)">
 		      		提交报告
 		      	</el-button>
 		      </template>
@@ -121,6 +121,7 @@
    		          	  @setPage='loadPage'
    		       ></NewPager>
 <!------------------------------------------------------------------------------------------------------------------------------------------------->
+		<!--download-->
 		<div id="show-download-panel" v-show="false">
 			<div class="display-area">
 				<img class="thumbnail" src=""><br>
@@ -128,6 +129,27 @@
 				<el-button class="addbtn" v-on:click="downloadFile()">下载文件</el-button>
 			</div>			
 		</div>
+
+
+		<!--upload-->
+		<div id="show-upload-panel" v-show="false">
+			<div class="display-area">
+				<img class="upload-placeholder" src=""><br>
+				
+				<label for="upload-placeholder" class="img-label">
+					<i class="iconfont alert-sign" v-show="!valid_format">&#xe635;</i>
+					<span class="note-text" v-show="!this.upfile || !valid_format">文件上传支持Word，Excel，PDF</span>
+					<span class="upfile-name" v-show="this.upfile && valid_format">{{file_name}}</span>
+				</label><br>
+
+				<input class="real-upload-btn" type="file" id="upload-file" v-on:change="preUpload($event)" multiple>		
+				<el-button class="addbtn upload-btn">上传文件</el-button>
+				<el-button class="addbtn submit-btn" 
+						   v-bind:class="{disabled: !this.upfile || !valid_format}"
+						   v-on:click="ansSubmit(file_name)">提交报告</el-button>
+			</div>
+		</div>
+
 
 	</div>
 </template>
@@ -143,7 +165,6 @@
 
 		data(){
 			return {
-				study_stage: 0,
 				sep_sign: ' / ',
 				list: [],
 				tableData: [],
@@ -191,7 +212,11 @@
 				],
 				layer_idx: null,
 				file_name: null,
-				file_src: null
+				file_src: null,
+				upfile: null,
+				support_formats: ['doc', 'docx', 'xls', 'xlsx', 'pdf'],
+				valid_format: true,
+				exam_id: null
 			}
 		},
 
@@ -258,23 +283,42 @@
 				this.reqMyList(this.status_value, this.search_state, page);
 			},
 
-			//upload only when not joined yet
-			joinStudy(row){
-				asyncReq.call(this);
-				async function asyncReq(){
-					let profile = await Utils.page_check_status.call(this),
-						api = global_.report_join;
-						data = {
-						'exam_id': row.id,
-						'class_id': profile.body.class_id
-					}
-					this.$http.post(api, data).then((resp)=>{
-						//record_id
-						console.log(resp.body.id);
+			//
+			joinStudy(){
+				return new Promise((resolve, reject)=>{
+					asyncReq.call(this);
+					async function asyncReq(){
+						let profile = await Utils.page_check_status.call(this),
+							api = global_.report_join,
+							data = {
+							'exam_id': this.exam_id,
+							'class_id': profile.body.class_id
+						};
+						this.$http.post(api, data).then((resp)=>{
+							//record_id
+							//console.log(resp.body.id);
+							resolve(resp);
+						}, (err)=>{
+							Utils.err_process.call(this, err, '学习实验报告失败');
+						});
+					}					
+				});
+			},
+
+			uploadFile(name, file){
+				return new Promise((resolve, reject)=>{
+					let api = global_.report_upload,
+						formData = new FormData();
+
+					formData.append('resource', file);
+					formData.append('name', name);
+
+					this.$http.post(api, formData).then((resp)=>{
+						resolve(resp);
 					}, (err)=>{
-						Utils.err_process.call(this, err, '学习实验报告失败');
-					});
-				}
+						Utils.err_process.call(this, err, '上传文件失败');
+					});					
+				});
 			},
 
 			reqQuesInfo(exam_id) {
@@ -285,10 +329,6 @@
 							'mode': 2
 					};
 					this.$http.post(api, data).then((resp)=>{
-						//let type = resp.body._list.main[0].type,
-						//	qid = resp.body._list.main[0].question_id;
-						//console.log(type, qid, resp.body._list.questions[type][qid].fid);
-						//resolve(resp.body._list.questions[type][qid].fid);
 						resolve(resp);
 					}, (err)=>{
 						Utils.err_process.call(this, err, '请求问题信息失败')
@@ -318,7 +358,9 @@
 						type = resp.body._list.main[0].type,
 						qid = resp.body._list.main[0].question_id,
 						fid = resp.body._list.questions[type][qid].fid;
-						
+
+					//console.log(resp.body._list.main[0].order);
+					//console.log(resp.body._list.main[0].type_order);
 					this.file_src = global_.report_rec_load + '/' + fid;
 					
 					this.file_name = fid;
@@ -344,13 +386,123 @@
 				window.open(this.file_src);
 			},
 
-			showUpload(row) {
+		    decorFileInp(){
+				let upbtn = document.querySelector(".upload-btn"),
+				    upfile = document.querySelector("#upload-file");
+				 
+				upbtn.addEventListener("click", function(e) {
+					if (upfile) {
+						upfile.click();
+					}
+					// prevent navigation to "#"
+					e.preventDefault();
+					}, false
+				);
+		    },
+
+			//set the image in upload panel
+			setThumbnail(format){
+				if(this.support_formats.includes(format)){
+					this.valid_format = true;
+					if(format === 'xls' || format ==='xlsx') {
+						$('.upload-placeholder').attr('src', require('@/assets/excel.svg'));
+
+					} else if(format === 'doc' || format ==='docx') {
+						$('.upload-placeholder').attr('src', require('@/assets/word.svg'));
+
+					} else if(format === 'pdf') {
+						$('.upload-placeholder').attr('src', require('@/assets/pdf.svg'));
+					}
+
+				} else {
+					$('.upload-placeholder').attr('src', require('@/assets/upload.svg'));
+					this.valid_format = false;
+					return;					
+				}
 			},
+
+			showUpload(row) {
+				this.reInit();				
+				this.exam_id = row.id;
+				$('.upload-placeholder').attr('src', require('@/assets/upload.svg'));
+				this.layer_idx = layer.open({
+					type: 1,
+					area: ['700px', '400px'],
+					title: '',
+					content: $('#show-upload-panel')
+				});			
+			},
+
+			preUpload(event){
+				//save the file
+				if(event.srcElement.files.length>0) {
+					this.upfile = event.srcElement.files[0];	
+					let format = this.upfile.name.split('.').pop();
+					this.setThumbnail(format);
+					this.file_name = this.upfile.name;
+
+				} else {
+					Utils.lalert('未选择文件');
+					return;
+				}
+			},
+
+			//answer and submit
+			ansSubmit(name){
+				asyncReq.call(this);
+				async function asyncReq(){
+					let upload_resp = await this.uploadFile(name, this.upfile),
+						ques_resp = await this.reqQuesInfo(this.exam_id),
+						join_resp = await this.joinStudy();
+
+					let record_id = join_resp.body.id,
+						order = ques_resp.body._list.main[0].order,
+						type_order = ques_resp.body._list.main[0].type_order,
+						answer = upload_resp.body.id;
+
+					let api = global_.report_answer,
+						data = {
+							'record_id': record_id,
+							'order': order,
+							'type_order': type_order,
+							'answer': answer
+						}
+					this.$http.post(api, data).then((resp)=>{
+						this.submit(record_id);
+
+					}, (err)=>{
+						Utils.err_process.call(this, err, '回答考卷失败')
+					});
+
+				}
+			},
+
+			// join upload questions answer submit
+			submit(record_id){
+				//console.log(this.file_name);
+				let api = global_.report_submit,
+					data = {
+						'id': record_id
+					};
+				this.$http.post(api, data).then((resp)=>{
+					Utils.lalert('提交答卷成功');
+					layer.close(this.layer_idx);
+
+				}, (err)=>{
+					Utils.err_process.call(this, err, '提交答卷失败');
+				});
+			},
+
+			reInit(){
+				this.upfile = null;
+				this.valid_format = true;
+			}
 		},
 
 		mounted(){
-			Utils.page_check_status.call(this).then();
+			Utils.page_check_status.call(this);
 			this.reqMyList(null, null, 1);
+			this.decorFileInp();
 		}
 	}
 </script>
@@ -374,7 +526,7 @@
 	text-align: center;
 }
 
-.thumbnail {
+.thumbnail, .upload-placeholder {
 	position: relative;
 	top: 100px;
 }
@@ -387,5 +539,24 @@
 .addbtn {
 	position: relative;
 	top: 120px;
+}
+
+#upload-file {
+	display: none;
+}
+
+.alert-sign {
+	font-size: 150%;
+	color: red;
+	vertical-align: middle;
+}
+.disabled {
+	background: #d7d7d7;
+	border-color: #d7d7d7;
+	pointer-events: none;
+}
+
+.note-text, .upfile-name {
+	font-size: 14px;
 }
 </style>

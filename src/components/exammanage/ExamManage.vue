@@ -230,6 +230,7 @@
 			reqExamList(page){
 				var api = global_.exam_list + '?page=1';
 				this.$http.post(api, {}).then((resp)=>{
+					console.log(resp);
 					this.totalRow = resp.body.total;
 					var full_list_api = api + '&pagesize='+ this.totalRow;
 

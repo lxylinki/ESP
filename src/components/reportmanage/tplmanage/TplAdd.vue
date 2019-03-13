@@ -42,7 +42,7 @@
 
 		<div class="tpl-up-group">
 			<div class="tpl-up-label">模板上传</div>
-			<input class="real-upload-btn" type="file" id="upload-file" v-on:change="up_preCheck($event)" multiple>		
+			<input class="real-upload-btn" type="file" id="upload-file" v-on:change="up_preCheck($event)">		
 			<el-button class="addbtn upload-btn" >上传文件</el-button>
 			<p class="addbtn-limit">仅支持word, excel</p>
 			<p class="addbtn-warn" v-show="wrong_format">文件格式错误</p>
@@ -82,6 +82,7 @@
 				support_formats: ['doc', 'docx', 'xls', 'xlsx']
 			}
 		},
+		
 		methods:{
 			pre_upload(file) {
 				return new Promise((resolve, reject)=>{
@@ -170,7 +171,6 @@
 						_this.$router.go(-1);
 
 					}, (err)=>{
-						//TODO: add precheck
 						Utils.err_process.call(_this, err, '模板创建失败');
 					});
 				}

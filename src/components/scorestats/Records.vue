@@ -345,7 +345,7 @@
 		                	show: false
 		                },
 		                data: [
-		                    {name: '扣除', value: deduct, itemStyle:{normal:{color: '#ededed'}}},
+		                    {name: '扣除', value: deduct, itemStyle:{normal:{color: '#ededed'}, emphasis: {color: '#f7f7f7'}}},
 		                    {name: '得分', value: score, itemStyle:{normal:{color: '#9dd3fa'}}},
 		                ]
 		            }
