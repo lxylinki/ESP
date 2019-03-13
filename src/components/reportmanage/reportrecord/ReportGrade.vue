@@ -116,7 +116,8 @@
 						'record_id': this.record_id
 					}		
 					this.$http.post(api, data).then((resp)=>{
-						this.paper_id = resp.body[0][0].paper_id;
+						//this.paper_id = resp.body[0][0].paper_id;
+						//console.log('reqPaperCard', resp);
 						resolve(resp);
 
 					}, (err)=>{

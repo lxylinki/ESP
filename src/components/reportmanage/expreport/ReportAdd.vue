@@ -283,7 +283,7 @@
 					'note': this.report_note
 				}
 				this.$http.post(api, data).then((resp)=>{
-					console.log(resp);
+					//console.log(resp);
 					Utils.lalert('实验报告创建成功');
 					this.$router.go(-1);
 

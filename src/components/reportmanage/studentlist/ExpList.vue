@@ -78,12 +78,23 @@
 		    </el-table-column>-->
 
 		    <el-table-column
-		      prop="status"
+		      prop=""
 		      label="状态"
 		      min-width="100">
 		      <template slot-scope="scope">
 		      	<span v-if="scope.row.status == 1">进行中</span>
-		      	<span v-if="scope.row.status == 2" >已关闭</span>
+		      	<span v-else-if="scope.row.status == 2" >已关闭</span>
+		      	<span class="unknown-label" v-else>未知</span>
+		      </template>
+		    </el-table-column>
+
+		    <el-table-column
+		      prop=""
+		      label="状态"
+		      min-width="100">
+		      <template slot-scope="scope">
+		      	<span v-if="scope.row.joined">已参加</span>
+		      	<span v-if="!scope.row.joined" >未参加</span>
 		      </template>
 		    </el-table-column>
 
@@ -91,15 +102,12 @@
 		      label="操作"
 		      min-width="200">
 
-		      <template slot-scope="scope">
-		      	<el-button class="op" v-bind:disabled="scope.row.status != 1" type="text" v-if="!scope.row.joined" @click="joinStudy(scope.row)">
-		      		前往答题
+		      <template slot-scope="scope">	      	
+		      	<el-button class="op" v-bind:disabled="scope.row.status != 1" type="text" @click="showDownload(scope.row)">
+		      		下载模板
 		      	</el-button>
-		      	<el-button class="op" v-bind:disabled="scope.row.status != 1" type="text" v-if="scope.row.joined" @click="submitReport(scope.row)">
+		      	<el-button class="op" v-bind:disabled="scope.row.status != 1" type="text" @click="showUpload(scope.row)">
 		      		提交报告
-		      	</el-button>
-		      	<el-button class="op" v-bind:disabled="scope.row.status != 1" type="text" v-if="scope.row.joined" @click="downloadReport(scope.row)">
-		      		下载报告
 		      	</el-button>
 		      </template>
 		    </el-table-column>		    
@@ -112,6 +120,15 @@
    	           	  	  v-bind:pages='totalPage'
    		          	  @setPage='loadPage'
    		       ></NewPager>
+<!------------------------------------------------------------------------------------------------------------------------------------------------->
+		<div id="show-download-panel" v-show="false">
+			<div class="display-area">
+				<img class="thumbnail" src=""><br>
+				<label for="thumbnail" class="img-label">{{file_name}}</label><br>
+				<el-button class="addbtn" v-on:click="downloadFile()">下载文件</el-button>
+			</div>			
+		</div>
+
 	</div>
 </template>
 
@@ -172,6 +189,9 @@
 						value: 1
 					}
 				],
+				layer_idx: null,
+				file_name: null,
+				file_src: null
 			}
 		},
 
@@ -238,24 +258,94 @@
 				this.reqMyList(this.status_value, this.search_state, page);
 			},
 
+			//upload only when not joined yet
 			joinStudy(row){
 				asyncReq.call(this);
 				async function asyncReq(){
-					let profile = await Utils.page_check_status.call(this);
-					console.log(profile.body.class_id);
-					let api = global_.report_join;
-					let data = {
+					let profile = await Utils.page_check_status.call(this),
+						api = global_.report_join;
+						data = {
 						'exam_id': row.id,
 						'class_id': profile.body.class_id
 					}
-
 					this.$http.post(api, data).then((resp)=>{
-
+						//record_id
+						console.log(resp.body.id);
 					}, (err)=>{
 						Utils.err_process.call(this, err, '学习实验报告失败');
 					});
 				}
-			}
+			},
+
+			reqQuesInfo(exam_id) {
+				return new Promise((resolve, reject)=>{
+					let api = global_.report_rec_ques,
+						data = {
+							'id': exam_id,
+							'mode': 2
+					};
+					this.$http.post(api, data).then((resp)=>{
+						//let type = resp.body._list.main[0].type,
+						//	qid = resp.body._list.main[0].question_id;
+						//console.log(type, qid, resp.body._list.questions[type][qid].fid);
+						//resolve(resp.body._list.questions[type][qid].fid);
+						resolve(resp);
+					}, (err)=>{
+						Utils.err_process.call(this, err, '请求问题信息失败')
+					});
+				});
+			},
+
+			fileIsExcel(){
+				return this.file_type === 'sheet';
+			},
+
+			fileIsWord(){
+				return this.file_type === 'document';
+			},
+
+			showDownload(row) {
+				this.layer_idx = layer.open({
+					type: 1,
+					area: ['700px', '400px'],
+					title: '',
+					content: $('#show-download-panel')
+				});	
+
+				asyncReq.call(this);
+				async function asyncReq(){
+					let resp = await this.reqQuesInfo(row.id),
+						type = resp.body._list.main[0].type,
+						qid = resp.body._list.main[0].question_id,
+						fid = resp.body._list.questions[type][qid].fid;
+						
+					this.file_src = global_.report_rec_load + '/' + fid;
+					
+					this.file_name = fid;
+
+					this.$http.get(this.file_src).then((resp)=>{
+						let content_type = resp.headers.map['content-type'][0].split(/[^a-z]+/g);
+						this.file_type = content_type.pop();
+
+						if(this.fileIsExcel()) {
+							$('.thumbnail').attr('src', require('@/assets/excel.svg'));
+
+						} else if(this.fileIsWord()) {
+							$('.thumbnail').attr('src', require('@/assets/word.svg'));
+						}
+
+					}, (err)=>{
+						Utils.err_process.call(this, err, '获取文件信息失败');
+					});
+				}
+			},
+
+			downloadFile(){
+				window.open(this.file_src);
+			},
+
+			showUpload(row) {
+			},
 		},
 
 		mounted(){
@@ -274,5 +364,28 @@
 .student-report-searchwindow {
     position: relative;
     top: -7px;
+}
+
+.unknown-label {
+	color: #d7d7d7;
+}
+
+.display-area {
+	text-align: center;
+}
+
+.thumbnail {
+	position: relative;
+	top: 100px;
+}
+
+.img-label {
+	position: relative;
+	top: 100px;
+}
+
+.addbtn {
+	position: relative;
+	top: 120px;
 }
 </style>

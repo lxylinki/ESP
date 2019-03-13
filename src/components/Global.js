@@ -112,8 +112,8 @@
 	const report_rec_card = url_prefix + 'exam/paper-card/view';
 	const report_rec_ques = url_prefix + 'exam/exam/questions';
 	const report_rec_load = url_prefix + 'resources/resource/load';
-	const report_mark = url_prefix + 'exam/paper-card/mark';
-	const report_rec_mark = url_prefix + 'exam/exam-record/mark';
+	const report_mark = url_prefix + 'exam/paper-card/mark'; //分数
+	const report_rec_mark = url_prefix + 'exam/exam-record/mark'; //评语，最终
 
 	//
 	const report_stats_list = url_prefix + 'exam/exam-stats/user-list';
