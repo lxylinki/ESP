@@ -226,15 +226,6 @@
 		},
 
 		methods: {
-
-			row_name({row, rowIndex}){
-				row.ridx = rowIndex;
-			},
-			
-			formatter(row, column ,cellValue) {
-				return this.rowsPerPage * (this.curPage - 1)  + (1+ row.ridx);
-			},
-
 			
 			fillExpSelect(keyword, ugroup){
 				asyncReq.call(this);
