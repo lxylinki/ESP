@@ -90,7 +90,7 @@
 
 		    <el-table-column
 		      prop=""
-		      label="状态"
+		      label="是否参加"
 		      min-width="100">
 		      <template slot-scope="scope">
 		      	<span v-if="scope.row.joined">已参加</span>

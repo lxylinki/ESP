@@ -85,7 +85,6 @@
 				<Records v-if="right_panel"
 						 v-bind:class_id = 'class_value'
 				         v-bind:records='records'
-				         v-bind:exam_records='exam_records'
 				         v-bind:isTeacher='isTeacher'
 				         style="margin-left: 42px;"></Records>
 			</div>			
@@ -148,8 +147,12 @@
 				async function asyncReq(){
 					let resp = await Utils.reqExpList.call(this, keyword, ugroup);
 			    	this.exp_options = resp.body._list;
-			    	this.exp_options.unshift({'name': '所有实验', 'eid': null});
-			    	this.exp_value = this.exp_options[0].eid;
+			    	if(!this.exp_options) {
+			    		layer.close(this.loading);
+			    	} else {
+				    	this.exp_options.unshift({'name': '所有实验', 'eid': null});
+				    	this.exp_value = this.exp_options[0].eid;			    		
+			    	}
 			    	this.reqRecord();
 				}
 			},
@@ -217,7 +220,9 @@
 		     	this.$http.post(api, data).then((resp)=>{
 		     		this.right_panel = true;
 		     		this.records = resp.body;
+		     		layer.close(this.loading);
 
+		     		/*
 		     		let api = global_.exp_exam_list;
 		     		let data = {
 		     			"record_id": row.id
@@ -229,7 +234,7 @@
 
 		     		}, (err)=>{
 		     			Utils.err_process.call(this, err, '请求实验考核记录失败');
-		     		});
+		     		});*/
 
 		     	}, (err)=>{
 		     		Utils.err_process.call(this, err, '请求实验考核记录失败');

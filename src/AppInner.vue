@@ -204,6 +204,7 @@
 			            		isSubShow: false,
 			            		subItems:[]
 	            			},
+
 	            			//student only 
 	            			{
 	            				name: '实验报告列表',
@@ -216,7 +217,7 @@
 	            			},	
 	            			{
 	            				name: '实验报告成绩',
-	            				url: '',
+	            				url: '/expscore',
 			            		userGroup: [
 			            			global_.student_group, 
 			            		],

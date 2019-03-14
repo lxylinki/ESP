@@ -143,7 +143,6 @@
 					 v-bind:expr_id = 'row_exp_value'
 					 v-bind:user_id = 'user_value'
 			         v-bind:records='records'
-			         v-bind:exam_records='exam_records'
 			         v-bind:isTeacher = 'isTeacher'
 			         v-on:rmRecord='reqRecord'
 			         style="margin-left: 42px;"></Records>
@@ -299,6 +298,7 @@
 		     },
 
 		     showRight(row, idx){
+		     	console.log(row);
 
 		     	this.$refs.scoretable.setCurrentRow(this.$refs.scoretable.data[idx]);
 		     	//this.$refs.scoretable.toggleRowSelection(this.$refs.scoretable.data[0],true);
@@ -327,20 +327,23 @@
 		     			
 		     		} else {
 		     			this.right_panel = true;
+		     			layer.close(this.loading);
 		     		}
 
+		     		/*
+		     		//row.id仅为最近一次record_id
 		     		let api = global_.exp_exam_list;
 		     		let data = {
 		     			"record_id": row.id
 		     		}		 
 		     		this.$http.post(api, data).then((resp)=>{
 		     			this.exam_records = resp.body;
-		     			//console.log(this.exam_records);
 		     			layer.close(this.loading);
 
 		     		}, (err)=>{
 		     			Utils.err_process.call(this, err, '请求实验考核记录失败');
-		     		});
+		     		});*/
+
 
 		     	}, (err)=>{
 		     		Utils.err_process.call(this, err, '请求实验考核记录失败');

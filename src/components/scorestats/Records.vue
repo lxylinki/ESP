@@ -150,7 +150,7 @@
 
 	export default {
 		props: ['records', 
-				'exam_records', 
+				//'exam_records', 
 				'class_id', 
 				'expr_id', 
 				'user_id', 
@@ -176,7 +176,8 @@
 				selectThree: false,
 				selectFour: false,
 				selectFive: false,
-				record_id: this.records[0].record_id
+				record_id: this.records[0].record_id,
+				exam_records: []
 			}
 		},
 
@@ -184,7 +185,7 @@
 			setCurrent(idx) {
 				this.current_record = this.records[idx];
 				this.record_id = this.current_record.record_id;
-				//console.log(this.record_id);
+
 				switch(idx+1) {
 					case 1:
 						this.selectOne = true;
@@ -254,6 +255,20 @@
 
 			third_toggle(){
 				this.showThirdToggle = !this.showThirdToggle;
+			},
+
+			showExams() {
+	     		let api = global_.exp_exam_list;
+	     		let data = {
+	     			"record_id": this.record_id
+	     		}		 
+	     		this.$http.post(api, data).then((resp)=>{
+	     			this.exam_records = resp.body;
+	     			//layer.close(this.loading);
+
+	     		}, (err)=>{
+	     			Utils.err_process.call(this, err, '请求实验考核记录失败');
+	     		});				
 			},
 
 			showDetails(row) {
@@ -372,25 +387,16 @@
 			records(newVal, oldVal) {
 				if(this.records.length>0) {
 					this.initButtons();
-					this.current_record = this.records[0];
+					this.setCurrent(0);
 				}
-			},
-
-			exam_records(newVal, oldVal) {
-				// clean detail list
-				if(this.exam_records.length == 0) {
-					this.detail_list = [];
-					this.exam_name = '';
-				}
-				this.setCurrent(0);
 			},
 
 			current_record(newVal, oldVal) {
 				this.showSecondToggle = false;
 				this.showThirdToggle = false;
 				this.detail_list = [];
-				//update pie charts
 				this.drawPies(newVal);
+				this.showExams();
 			}
 		},
 
@@ -399,16 +405,12 @@
 				$(this).addClass("highlight").siblings().removeClass("highlight");
 			});
 
-			//console.log(document.querySelector('.pie-exam-score').offsetWidth);
-
 			if(this.records.length > 0) {
-				//console.log(this.records);
-				//default value
-				this.current_record = this.records[0];
-				this.selectOne = true;
+				this.setCurrent(0);
 				this.initButtons();
 				this.drawPies(this.current_record);
-				
+				this.showExams();
+
 			} else {
 				Utils.lalert('无记录');
 			}
