@@ -292,8 +292,8 @@
 				});
 			},
 
-			//only at mounted
-			showFirstDetails(resp){
+			//not only at mounted: tab switch
+			showFirstExamDetails(resp){
 				if(resp.body.length > 0) {
 					let scorefig_lis = $('.scorefigli');
 					scorefig_lis.first().addClass('highlight').siblings().removeClass('highlight');
@@ -405,8 +405,7 @@
 
 			current_record(newVal, oldVal) {
 				this.drawPies(newVal);
-				this.showExams();
-				this.showDetails(this.exam_records[0]);
+				this.showExams().then(this.showFirstExamDetails);
 			}
 			/*
 			exam_records(newVal, oldVal) {
@@ -431,7 +430,7 @@
 				this.setCurrent(0);
 				this.initButtons();
 				this.drawPies(this.current_record);
-				this.showExams().then(this.showFirstDetails);
+				this.showExams().then(this.showFirstExamDetails);
 
 			} else {
 				Utils.lalert('无记录');

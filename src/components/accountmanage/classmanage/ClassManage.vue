@@ -41,7 +41,15 @@
 		<template>
 		  <el-table
 		    :data="list"
-		    style="width: 100%;">
+		    style="width: 100%;"
+		    :row-class-name="row_name">
+
+			<el-table-column
+			  label="序号"
+			  :formatter="formatter"
+			  min-width="50">
+			</el-table-column>	
+				    
 	    	<el-table-column
 		      prop="class_name"
 		      label="班级名称"
@@ -177,6 +185,14 @@
 		     		this.reqClassData('', this.search_state, 1);
 		     	}
 		    },
+
+			row_name({row, rowIndex}){
+				row.ridx = rowIndex;
+			},
+			
+			formatter(row, column ,cellValue) {
+				return this.rowsPerPage * (this.curPage - 1)  + (1+ row.ridx);
+			},
 
 			//teacher name, class name
 			reqClassData(tkeyword, ckeyword, page){

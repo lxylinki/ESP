@@ -50,7 +50,15 @@
 		<template>
 		  <el-table
 		    :data="list"
-		    style="width: 100%;">
+		    style="width: 100%;"
+		    :row-class-name="row_name">
+
+			<el-table-column
+			  label="序号"
+			  :formatter="formatter"
+			  min-width="50">
+			</el-table-column>
+
 		    <el-table-column
 		      prop="name"
 		      label="实验名称"
@@ -245,6 +253,14 @@
 		methods: {
 			addExp(){
 				this.$router.push('/expadd');
+			},
+			
+			row_name({row, rowIndex}){
+				row.ridx = rowIndex;
+			},
+			
+			formatter(row, column ,cellValue) {
+				return this.rowsPerPage * (this.curPage - 1)  + (1+ row.ridx);
 			},
 
 			grantTeachers(row){

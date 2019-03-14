@@ -55,13 +55,14 @@
 		  <el-table
 		    class="mytable"
 		    :data="list"
-		    style="width: 100%;">
-		    <!--
+		    style="width: 100%;"
+		    :row-class-name="row_name">
+
 			<el-table-column
 			  label="序号"
-			  type="index"
-			  min-width="100">
-			</el-table-column>-->
+			  :formatter="formatter"
+			  min-width="50">
+			</el-table-column>
 		    
 		    <el-table-column
 		      prop="name"
@@ -170,6 +171,14 @@
 				if(e.keyCode == 13) {
 					this.reqTplList(this.search_state, 1);
 				}
+			},
+
+			row_name({row, rowIndex}){
+				row.ridx = rowIndex;
+			},
+			
+			formatter(row, column ,cellValue) {
+				return this.rowsPerPage * (this.curPage - 1)  + (1+ row.ridx);
 			},
 
 			searchReq(){
