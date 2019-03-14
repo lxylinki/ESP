@@ -486,6 +486,8 @@
 					};
 				this.$http.post(api, data).then((resp)=>{
 					Utils.lalert('提交答卷成功');
+					//re init
+					this.reqMyList(null, null, 1);
 					layer.close(this.layer_idx);
 
 				}, (err)=>{

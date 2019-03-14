@@ -61,6 +61,12 @@
 			      :row-class-name="row_name"
 			      >
 
+					<el-table-column
+					  label="序号"
+					  :formatter="formatter"
+					  min-width="50">
+					</el-table-column>			      
+
 			      <el-table-column
 			        prop="realname"
 			        label="学生名称"
@@ -220,6 +226,10 @@
 			row_name({row, rowIndex}){
 				row.ridx = rowIndex;
 			},
+			
+			formatter(row, column ,cellValue) {
+				return this.rowsPerPage * (this.curPage - 1)  + (1+ row.ridx);
+			},
 
 			invokeShowRight(row){
 				this.showRight(row, row.ridx);
@@ -277,7 +287,7 @@
 		     			this.right_panel = false;
 
 		     		} else {
-		     			this.showRight(this.scorelist[0]);
+		     			this.showRight(this.scorelist[0], this.scorelist[0].ridx);
 		     		}
 		     		
 		     		this.totalPage = resp.body.total_page;
@@ -298,7 +308,7 @@
 		     },
 
 		     showRight(row, idx){
-		     	console.log(row);
+		     	//console.log(row);
 
 		     	this.$refs.scoretable.setCurrentRow(this.$refs.scoretable.data[idx]);
 		     	//this.$refs.scoretable.toggleRowSelection(this.$refs.scoretable.data[0],true);

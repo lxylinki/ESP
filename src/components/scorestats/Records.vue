@@ -225,15 +225,15 @@
 				}
 			},
 
-			add0(m){
-				return m<10?'0'+m:m 
-			},
-			convEndTime(ntime) {
-				var unixTime = new Date(ntime * 1000);
-				var commonTime = this.add0(unixTime.getHours()) + ':'
-							   + this.add0(unixTime.getMinutes()) + ':'
-							   + this.add0(unixTime.getSeconds());
 
+			convEndTime(ntime) {
+				function add0(m){
+					return m<10?'0'+m:m 
+				}
+				var unixTime = new Date(ntime * 1000);
+				var commonTime = add0(unixTime.getHours()) + ':'
+							   + add0(unixTime.getMinutes()) + ':'
+							   + add0(unixTime.getSeconds());
 				return commonTime;
 			},
 
@@ -258,17 +258,20 @@
 			},
 
 			showExams() {
-	     		let api = global_.exp_exam_list;
-	     		let data = {
-	     			"record_id": this.record_id
-	     		}		 
-	     		this.$http.post(api, data).then((resp)=>{
-	     			this.exam_records = resp.body;
-	     			//layer.close(this.loading);
+				return new Promise((resolve, reject)=>{
+		     		let api = global_.exp_exam_list;
+		     		let data = {
+		     			"record_id": this.record_id
+		     		}		 
+		     		this.$http.post(api, data).then((resp)=>{
+		     			this.exam_records = resp.body;
+		     			//layer.close(this.loading);
+		     			resolve(resp);
 
-	     		}, (err)=>{
-	     			Utils.err_process.call(this, err, '请求实验考核记录失败');
-	     		});				
+		     		}, (err)=>{
+		     			Utils.err_process.call(this, err, '请求实验考核记录失败');
+		     		});	
+				});		
 			},
 
 			showDetails(row) {
@@ -287,6 +290,15 @@
 				}, (err)=>{
 					Utils.err_process.call(this, err, '请求考核明细失败');
 				});
+			},
+
+			//only at mounted
+			showFirstDetails(resp){
+				if(resp.body.length > 0) {
+					let scorefig_lis = $('.scorefigli');
+					scorefig_lis.first().addClass('highlight').siblings().removeClass('highlight');
+					this.showDetails(resp.body[0]);
+				}			
 			},
 
 			//delete currrent record
@@ -392,16 +404,26 @@
 			},
 
 			current_record(newVal, oldVal) {
-				this.showSecondToggle = false;
-				this.showThirdToggle = false;
-				this.detail_list = [];
 				this.drawPies(newVal);
 				this.showExams();
+				this.showDetails(this.exam_records[0]);
 			}
+			/*
+			exam_records(newVal, oldVal) {
+				if(this.exam_records.length>0) {
+					this.showDetails(this.exam_records[0]);
+				}
+			},*/
 		},
 
+		/*
+		updated(){
+			let scorefig_lis = $('.scorefigli');
+			scorefig_lis.first().addClass("highlight").siblings().removeClass("highlight");
+		},*/
+
 		mounted(){
-			$(document).on('click', 'li.scorefigli', function(){
+			$(document).on('click', '.scorefigli', function(){
 				$(this).addClass("highlight").siblings().removeClass("highlight");
 			});
 
@@ -409,7 +431,7 @@
 				this.setCurrent(0);
 				this.initButtons();
 				this.drawPies(this.current_record);
-				this.showExams();
+				this.showExams().then(this.showFirstDetails);
 
 			} else {
 				Utils.lalert('无记录');

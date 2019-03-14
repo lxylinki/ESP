@@ -32,6 +32,16 @@
 			</div>			
 		</div>
 
+		<div style="display: inline-block; float: right; margin: 10px;">
+			<span>显示 </span>
+				<select v-model="rowsPerPage" v-on:change="filterReport()" style="width: 60px; height: 25px;">
+					<option v-for="item in row_nums" v-bind:value="item.value">
+						{{item.label}}
+					</option>
+				</select>
+			<span> 条</span>
+		</div>
+
 		<template>
 			<el-table
 		    :data="list"
@@ -91,7 +101,7 @@
 		      label="操作"
 		      min-width="100">
 			  <template slot-scope="scope">
-				<el-button class="op" type="text" @click="">
+				<el-button class="op" type="text" @click="viewReport(scope.row)">
 					查看
 				</el-button>
 			  </template>		 
@@ -100,21 +110,69 @@
 			</el-table>
 		</template>
 
+		
+		<div style="height: 40px;"></div>
+    		<NewPager v-bind:current_page='curPage' 
+   	           	  	  v-bind:pages='totalPage'
+   		          	  @setPage='loadPage'
+   		       ></NewPager>
 	</div>
 </template>
 
 <script type="text/javascript">
 	import global_ from '@/components/Global.js';
+	import NewPager from '@/components/NewPager.vue';
 	export default {
+		components: {
+			'NewPager': NewPager
+		},
+
 		data(){
 			return {
+				mod_name: 'student-exp-score',
 				list: [],
 				tableData: [],
 				status_value: '',
 				search_state: '',
-				status_options: [],
+				row_nums: [
+					{
+						label: '5',
+						value: 5
+					},
+					{
+						label: '10',
+						value: 10
+					},
+					{
+						label: '15',
+						value: 15
+					},
+					{
+						label: '20',
+						value: 20
+					},
+					{
+						label:'50',
+						value: 50
+					}
+				],				
+				status_options: [
+					{
+						label: '全部状态',
+						value: null
+					},
+					{
+						label: '已通过',
+						value: 0
+					},
+					{
+						label: '未通过',
+						value: 1
+					}
+				],
 				curPage: 1,
-				rowsPerPage: 10
+				rowsPerPage: 10,
+				totalPage: 0
 			}
 		},
 
@@ -127,15 +185,22 @@
 				return this.rowsPerPage * (this.curPage - 1)  + (1+ row.ridx);
 			},
 
-			reqScoreList(page){
+			reqScoreList(failed, page){
 				let api = global_.report_myscore
      				   + '?page='
      				   + page
      				   + '&pagesize='
-     				   + this.rowsPerPage;	
+     				   + this.rowsPerPage;
+
+     			let data = {
+     				'match': {
+     					'failed': failed
+     				}
+     			}	
      				   			
-				this.$http.post(api, {}).then((resp)=>{
+				this.$http.post(api, data).then((resp)=>{
 					this.tableData = resp.body._list;
+					this.totalPage = resp.body.total_page;
 					for(let item of this.tableData) {
 						item.report_name = resp.body.exams[item.exam_id].name;
 						item.full_score = resp.body.exams[item.exam_id].full_score;
@@ -150,11 +215,29 @@
 			filterData(page) {
 				this.list = this.tableData;
 				this.curPage = page;
+			},
+
+			filterReport(){
+				this.loadPage(1);
+			},
+
+			loadPage(page) {
+				this.reqScoreList(this.status_value, page);
+			},
+
+			viewReport(row) {
+				//console.log(row);
+				this.$store.commit('sign', this.mod_name);
+				this.$store.commit('setEdit', true);
+				this.$store.commit('pickRow', row);
+				this.$store.commit('setCurPage', this.curPage);
+				this.$store.commit('setCurSearch', this.search_state);
+				this.$router.push('/viewgrade');
 			}
 		},
 
 		mounted(){
-			this.reqScoreList(1);
+			this.reqScoreList(null, 1);
 		}
 	}
 </script>

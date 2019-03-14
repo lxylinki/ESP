@@ -58,6 +58,7 @@ const ReportScore = ()=>import('@/components/reportmanage/reportscore/ReportScor
 
 const ExpList = ()=> import('@/components/reportmanage/studentlist/ExpList.vue');
 const ExpScore = ()=> import('@/components/reportmanage/studentscore/ExpScore.vue');
+const viewGrade = ()=> import('@/components/reportmanage/studentscore/viewGrade.vue');
 
 //Experiment Report
 //const ReportManage = ()=> import('@/components/reportmanage/ReportManage.vue');
@@ -123,6 +124,7 @@ const myRoutes = [
 
 		{path: '/explist', meta:{title: '实验报告'}, component: ExpList},
 		{path: '/expscore', meta:{title: '实验报告'}, component: ExpScore},
+		{path: '/viewgrade', meta:{tiitle: '报告成绩'}, component: viewGrade},
 		//{path: '/updatenote', meta: {title: '版本更新'}, component: UpdateNote},
 		//{path: '/downloadupdate', meta: {title: '版本更新'}, component: DownloadUpdate},
 
