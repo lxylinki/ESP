@@ -94,7 +94,16 @@
 				<template>
 				  <el-table
 				    :data="qlist"
-				    style="width: 100%; margin-top: 10px;">
+				    style="width: 100%; margin-top: 10px;"
+				    :row-class-name="row_name">
+
+					<el-table-column
+					  label="序号"
+					  :formatter="formatter"
+					  min-width="50">
+					</el-table-column>
+
+
 				    <el-table-column
 				      prop="question"
 				      label="试题名称"
@@ -167,12 +176,13 @@
 				  <el-table
 				    class="mytable"
 				    :data="list"
-				    style="width: 100%; margin-top: 10px;">
+				    style="width: 100%; margin-top: 10px;"
+				    :row-class-name="row_name">
 
 					<el-table-column
 					  label="序号"
-					  type="index"
-					  min-width="100">
+					  :formatter="formatter"
+					  min-width="50">
 					</el-table-column>
 				    
 				    <el-table-column
@@ -303,6 +313,14 @@
 		methods:{
 			showToggle(){
 				this.showQbank = !this.showQbank;
+			},
+
+			row_name({row, rowIndex}){
+				row.ridx = rowIndex;
+			},
+			
+			formatter(row, column ,cellValue) {
+				return this.rowsPerPage * (this.curPage - 1)  + (1+ row.ridx);
 			},
 
 			invokeQSearch(e) {
