@@ -1,13 +1,13 @@
 <template>
-	<div id="reportgrade">
+	<div id="viewgrade">
 		<div class="record-title">
-			<span>{{exam_record.exam_name}}</span>
+			<span>{{exam_record.report_name}}</span>
 		</div>
-
+		<!--
 		<div class="student-class">
 			<span>{{exam_record.student_name}}</span>
 			<span>{{exam_record.class_name}}</span>
-		</div>
+		</div>-->
 
 		<div class="start-end-time">
 			<span>{{start_time}}</span>&nbsp;
@@ -25,15 +25,15 @@
 			<div class="display-area" v-show="!fileIsPdf()">
 				<img class="thumbnail" src=""><br>
 				<label for="thumbnail" class="img-label">{{file_name}}</label><br>
-				<label for="thumbnail" class="img-label">文件阅读后在此页面进行批阅</label><br>
+				<!--<label for="thumbnail" class="img-label">文件阅读后在此页面进行批阅</label><br>-->
 				<el-button class="addbtn" v-show="!fileIsPdf()" v-on:click="downloadFile()">下载文件</el-button>
 			</div>
 		</div>
 
 		<div class="grade-group">
 			<div class="graded-div">
-				<i class="iconfont unchecked-box" v-show="!graded" v-on:click="toggleGraded()">&#xe63c;</i>
-				<i class="iconfont checked-box" v-show="graded" v-on:click="toggleGraded()">&#xe63e;</i>
+				<i class="iconfont unchecked-box" v-show="!graded">&#xe63c;</i>
+				<i class="iconfont checked-box" v-show="graded">&#xe63e;</i>
 				<span class="graded-title">已批阅</span>
 			</div>
 
@@ -44,8 +44,12 @@
 
 			<div class="grade-inp-div">
 				<span class="grade-title">批改</span>
-				<input class="grade-inp" type="text" v-model="graded_score">
+				<input class="grade-inp" type="text" v-model="graded_score" readonly="readonly">
 				<span class="grade-title">分</span>				
+			</div>
+
+			<div class="btn-group">
+				<el-button class="goback" v-on:click="goBack()">返回</el-button>
 			</div>
 
 		</div>
@@ -54,10 +58,9 @@
 			<textarea class="comment" placeholder="请填写评语..." v-model="comment"></textarea>
 		</div>
 
-		<div class="btn-group">
-			<el-button class="confirm" v-on:click="submitGrade()">确定</el-button>
+		<!--<div class="btn-group">
 			<el-button class="goback" v-on:click="goBack()">返回</el-button>
-		</div>
+		</div>-->
 
 
 	</div>
@@ -88,10 +91,6 @@
 		},
 
 		methods: {
-			toggleGraded(){
-				this.graded = !this.graded;
-			},
-
 			downloadFile(){
 				window.open(this.file_src);
 			},
@@ -130,7 +129,12 @@
 			reqFileInfo(){
 				asyncReq.call(this);
 				async function asyncReq(){
-					let resp = await this.reqPaperCard();				
+					let resp = await this.reqPaperCard();	
+					if(!resp.body[0][0].answer) {
+						//answer is null
+						return;
+					}
+
 					let fid = resp.body[0][0].answer.split('-')[1];
 					//this.paper_id = resp.body[0][0].paper_id;
 					this.file_name = fid;
@@ -192,45 +196,6 @@
 				});
 			},
 
-			//submit the graded score number
-			subScore(){
-				//this.reqRecQues().then(resp=>{console.log(resp)});
-				return new Promise((resolve, reject)=>{
-					asyncReq.call(this);
-					async function asyncReq(){
-						let resp = await this.reqRecQues(),
-							api = global_.report_mark,
-							data = {
-								'order': resp.order,
-								'type_order': resp.type_order,
-								'record_id': this.record_id,
-								'score': this.graded_score
-							};
-						this.$http.post(api, data).then((resp)=>{
-							Utils.lalert('提交分数成功');
-							resolve(resp);
-						}, (err)=>{
-							Utils.err_process.call(this, err, '提交分数失败');
-						});
-					}
-				});
-			},
-
-			//final step to graded
-			subText(){
-				let api = global_.report_rec_mark;
-				let data = {
-					'id': this.record_id,
-					'mark_text': this.comment,
-					'has_marked': this.graded?1:0
-				}
-				this.$http.post(api, data).then((resp)=>{
-					Utils.lalert('提交评语成功');
-				}, (err)=>{
-					Utils.err_process.call(this, err, '提交评语失败');
-				});
-			},
-
 			displayNote(){
 				let content = document.querySelector('.note-text');
 				//console.log(content.offsetHeight);
@@ -243,11 +208,6 @@
 
 			goBack(){
 				this.$router.go(-1);
-			},
-
-			submitGrade(){
-				this.graded = true;
-				this.subScore().then(this.subText);
 			}
 		},
 
@@ -262,15 +222,14 @@
 				this.exam_record = this.$store.state.row;
 				//console.log(this.exam_record);
 
-				this.record_id = this.exam_record.id;
+				this.record_id = this.exam_record.record_id;
 				this.exam_id = this.exam_record.exam_id;
-				this.start_time = Utils.convTime(this.exam_record.joined_at);
+				this.start_time = Utils.convTime(this.exam_record.created_at);
 				this.end_time = Utils.convTime(this.exam_record.updated_at);
 				this.graded_score = this.exam_record.score;
-				this.graded = this.exam_record.has_marked == 1?true:false;
+				this.graded = this.exam_record.score > 0? true: false;
 				this.comment = this.exam_record.mark_text;
-
-			
+							
 				this.reqRecView().then(this.displayNote);
 				this.reqFileInfo();
 			}			
@@ -347,7 +306,6 @@
 }
 .unchecked-box, .checked-box {
 	color: #5c9cec;
-	cursor: pointer;
 	font-size: 180%;
 	vertical-align: middle;
 }
@@ -397,13 +355,11 @@
 }
 
 .btn-group {
-	position: absolute;
-	top: 930px;
+	margin-left: 660px;
 }
 
 .comment {
 	padding: 15px;
 	box-sizing: border-box;
 }
-
 </style>

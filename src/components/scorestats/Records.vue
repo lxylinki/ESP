@@ -72,62 +72,22 @@
 			<div class="exam-score">
 				<div class="pie-exam-score"></div>
 				<div class="exam-score-title chart-title">最终得分</div>	
-				<div class="chart-note"><p>得{{current_record.exam_score}}分，总分{{current_record.total_exam_score}}分</p></div>			
+				<div class="chart-note">得{{current_record.exam_score}}分，总分{{current_record.total_exam_score}}分</div>			
 			</div>
 
 
 			<div class="opt-score">
 				<div class="pie-opt-score"></div>
 				<div class="opt-score-title chart-title">测试题</div>
-				<div class="chart-note"><p>得{{current_record.opt_score}}分，总分{{current_record.total_score}}分</p></div>		
+				<div class="chart-note">得{{current_record.opt_score}}分，总分{{current_record.total_score}}分</div>		
 			</div>
 			
 			<div class="resc-score">
 				<div class="pie-resc-score"></div>
 				<div class="resc-score-title chart-title">抢救治疗</div>
-				<div class="chart-note"><p>得{{current_record.rescue_score}}分，总分{{current_record.total_rescue_score}}分</p></div>	
+				<div class="chart-note">得{{current_record.rescue_score}}分，总分{{current_record.total_rescue_score}}分</div>	
 			</div>
-			
-			<!--
-			<el-container class="records-container">
-  				<el-aside class="records-container" width="150px">
-  					
-					<el-progress class="progress-circle" 
-								 :width="110"
-								 type="circle" 
-								 :percentage="Math.min((current_record.exam_score / current_record.total_exam_score * 100), 100)"
-								 status="text" 
-								 :stroke-width="9"
-								 color="#333333">{{current_record.exam_score}}</el-progress>
-					
 
-					<div class="innerText" style="text-align: center;">最终得分</div>	
-
-  				</el-aside>
-  				<el-main class="records-container" style="background: transparent;"> 
-
-  					<div style="width: 400px; text-align: right;">
-	  					<div>
-		  					<div style="display: inline-block; 
-		  								margin-right: 10px;"
-		  						 class="innerText">测试题</div>
-							<el-progress class="progress-bar" :text-inside="true" :stroke-width="18" 
-										:percentage="Math.min((current_record.opt_score / current_record.total_score * 100), 100)" 
-										color="#333333"></el-progress>  	
-							<div style="display: inline-block; margin-right: 10px;"><span class="innerText">{{current_record.opt_score}}分 （总{{current_record.total_score}}分)</span></div>					
-	  					</div>
-
-	  					<div>
-							<div style="display: inline-block; margin-right: 10px;"
-							     class="innerText">抢救治疗</div>
-							<el-progress class="progress-bar" :text-inside="true" :stroke-width="18" 
-										:percentage="Math.min((current_record.rescue_score / current_record.total_rescue_score * 100), 100)" 
-										color="#333333"></el-progress>	
-							<div style="display: inline-block; margin-right: 10px;"><span class="innerText">{{current_record.rescue_score}}分 （总{{current_record.total_rescue_score}}分)</span></div>		  						
-	  					</div>  						
-  					</div>
-  				</el-main>
-			</el-container> -->
 		</div><!--end score fig-->
 
 		<div style="height: 20px;"></div>
@@ -190,7 +150,7 @@
 
 	export default {
 		props: ['records', 
-				'exam_records', 
+				//'exam_records', 
 				'class_id', 
 				'expr_id', 
 				'user_id', 
@@ -216,7 +176,8 @@
 				selectThree: false,
 				selectFour: false,
 				selectFive: false,
-				record_id: this.records[0].record_id
+				record_id: this.records[0].record_id,
+				exam_records: []
 			}
 		},
 
@@ -224,7 +185,7 @@
 			setCurrent(idx) {
 				this.current_record = this.records[idx];
 				this.record_id = this.current_record.record_id;
-				//console.log(this.record_id);
+
 				switch(idx+1) {
 					case 1:
 						this.selectOne = true;
@@ -264,15 +225,15 @@
 				}
 			},
 
-			add0(m){
-				return m<10?'0'+m:m 
-			},
-			convEndTime(ntime) {
-				var unixTime = new Date(ntime * 1000);
-				var commonTime = this.add0(unixTime.getHours()) + ':'
-							   + this.add0(unixTime.getMinutes()) + ':'
-							   + this.add0(unixTime.getSeconds());
 
+			convEndTime(ntime) {
+				function add0(m){
+					return m<10?'0'+m:m 
+				}
+				var unixTime = new Date(ntime * 1000);
+				var commonTime = add0(unixTime.getHours()) + ':'
+							   + add0(unixTime.getMinutes()) + ':'
+							   + add0(unixTime.getSeconds());
 				return commonTime;
 			},
 
@@ -296,6 +257,23 @@
 				this.showThirdToggle = !this.showThirdToggle;
 			},
 
+			showExams() {
+				return new Promise((resolve, reject)=>{
+		     		let api = global_.exp_exam_list;
+		     		let data = {
+		     			"record_id": this.record_id
+		     		}		 
+		     		this.$http.post(api, data).then((resp)=>{
+		     			this.exam_records = resp.body;
+		     			//layer.close(this.loading);
+		     			resolve(resp);
+
+		     		}, (err)=>{
+		     			Utils.err_process.call(this, err, '请求实验考核记录失败');
+		     		});	
+				});		
+			},
+
 			showDetails(row) {
 				this.showThirdToggle = true;
 				this.exam_name = row.name;
@@ -312,6 +290,15 @@
 				}, (err)=>{
 					Utils.err_process.call(this, err, '请求考核明细失败');
 				});
+			},
+
+			//not only at mounted: tab switch
+			showFirstExamDetails(resp){
+				if(resp.body.length > 0) {
+					let scorefig_lis = $('.scorefigli');
+					scorefig_lis.first().addClass('highlight').siblings().removeClass('highlight');
+					this.showDetails(resp.body[0]);
+				}			
 			},
 
 			//delete currrent record
@@ -335,9 +322,7 @@
 
 			deleteAll(){
 				var _this = this;
-				var sure = layer.confirm("确定清空学习记录？",
-					{title:'提示', area:['280px','190px']},
-					function(){_this.delAll()});				
+				Utils.lconfirm("确定清空学习记录？", function(){_this.delAll()});				
 			},
 
 			//清空5次记录
@@ -378,8 +363,8 @@
 		            series: {
 		            	name: chart_name,
 		                type: 'pie',
-		                radius : '65px',
-		                center: ['60%', '50%'],
+		                radius : '60px',
+		                center: ['50%', '50%'],
 		                labelLine: {
 		                	show: false
 		                },
@@ -387,7 +372,7 @@
 		                	show: false
 		                },
 		                data: [
-		                    {name: '扣除', value: deduct, itemStyle:{normal:{color: '#ededed'}}},
+		                    {name: '扣除', value: deduct, itemStyle:{normal:{color: '#ededed'}, emphasis: {color: '#f7f7f7'}}},
 		                    {name: '得分', value: score, itemStyle:{normal:{color: '#9dd3fa'}}},
 		                ]
 		            }
@@ -414,40 +399,39 @@
 			records(newVal, oldVal) {
 				if(this.records.length>0) {
 					this.initButtons();
-					this.current_record = this.records[0];
+					this.setCurrent(0);
 				}
-			},
-
-			exam_records(newVal, oldVal) {
-				// clean detail list
-				if(this.exam_records.length == 0) {
-					this.detail_list = [];
-					this.exam_name = '';
-				}
-				this.setCurrent(0);
 			},
 
 			current_record(newVal, oldVal) {
-				this.showSecondToggle = false;
-				this.showThirdToggle = false;
-				//update pie charts
 				this.drawPies(newVal);
+				this.showExams().then(this.showFirstExamDetails);
 			}
+			/*
+			exam_records(newVal, oldVal) {
+				if(this.exam_records.length>0) {
+					this.showDetails(this.exam_records[0]);
+				}
+			},*/
 		},
 
+		/*
+		updated(){
+			let scorefig_lis = $('.scorefigli');
+			scorefig_lis.first().addClass("highlight").siblings().removeClass("highlight");
+		},*/
+
 		mounted(){
-			$(document).on('click', 'li.scorefigli', function(){
+			$(document).on('click', '.scorefigli', function(){
 				$(this).addClass("highlight").siblings().removeClass("highlight");
 			});
 
 			if(this.records.length > 0) {
-				//console.log(this.records);
-				//default value
-				this.current_record = this.records[0];
-				this.selectOne = true;
+				this.setCurrent(0);
 				this.initButtons();
 				this.drawPies(this.current_record);
-				
+				this.showExams().then(this.showFirstExamDetails);
+
 			} else {
 				Utils.lalert('无记录');
 			}
@@ -459,10 +443,13 @@
 
 .scorefigli {
 	cursor: pointer;
+	height: 40px;
+	line-height: 40px;
 }
 
 .highlight {
-	background: #f7f8fc;
+	/*background: #f7f8fc;*/
+	background: #f0f7ff;
 }
 
 /*
@@ -617,34 +604,37 @@
 
 .scorefig.pie-charts {
 	width: 100%;
-	height: 300px; 
+	height: 240px; 
 	display: flex; 
-	justify-content: space-between;
+	justify-content: space-around;
 }
 
 .pie-exam-score, .pie-opt-score, .pie-resc-score {
-	width: 100%;
+	width: 250px;
 	height: 100%;
+	display: flex;
+	justify-content: center;
 }
 
 .exam-score, .opt-score, .resc-score {
 	width: 100%;
 	height: 100%;
 	text-align: center;
+	/*border: 1px solid red;*/
 }
 
 .chart-title {
 	font-size: 14px;
 	color: #666666;
 	position: relative;
-	bottom: 60px;
+	bottom: 50px;
 }
 
 .chart-note {
 	font-size: 14px;
 	color: #666666;
 	position: relative;
-	bottom: 70px;	
+	bottom: 50px;
 }
 
 .progress-circle {

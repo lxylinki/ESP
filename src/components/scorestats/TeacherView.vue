@@ -1,8 +1,8 @@
 <template>
-	<div id="teacherview-old">
-		<div style="width: 100%; height: 35px; border-bottom: 2px solid #eee">
-			<span style="color: #1281b2; font-weight: bold; font-size: 20px;">|</span> 
-			<span class="pagetitle">成绩统计</span>
+	<div id="teacherview">
+		<div style="width: 100%; height: 35px;">
+			<span style="color: #1890ff; font-weight: bold">|</span> 
+			成绩统计
 		</div>
 		<div style="height: 20px;"></div>
 
@@ -52,12 +52,20 @@
 		<div class="leftpanel">
 			<template>
 			    <el-table
+			      class="score_table"
 			      ref="scoretable"
+			      height="350px"
 			      :highlight-current-row="true"
 			      :data="scorelist"
 			      @row-click="invokeShowRight"
 			      :row-class-name="row_name"
-			      style="width: 100%">
+			      >
+
+					<el-table-column
+					  label="序号"
+					  :formatter="formatter"
+					  min-width="50">
+					</el-table-column>			      
 
 			      <el-table-column
 			        prop="realname"
@@ -107,6 +115,7 @@
 
 
 			<div class="tablefooter">
+				<!--
 				<div class="rownum">
 					<span>显示 </span>
 						<select v-model="rowsPerPage" v-on:change="reqRecord()" style="width: 60px; height: 25px;">
@@ -115,14 +124,15 @@
 							</option>
 						</select>
 					<span> 条</span>
-				</div>
+				</div>-->
 
+				<!--
 				<div class="pages">
 		   		<NewPager v-bind:current_page='curPage' 
 		   	           	  v-bind:pages='totalPage'
 		   		          @setPage='loadPage'
 		   		></NewPager>		
-				</div>						
+				</div>-->						
 			</div>
 	
 
@@ -139,11 +149,11 @@
 					 v-bind:expr_id = 'row_exp_value'
 					 v-bind:user_id = 'user_value'
 			         v-bind:records='records'
-			         v-bind:exam_records='exam_records'
 			         v-bind:isTeacher = 'isTeacher'
 			         v-on:rmRecord='reqRecord'
 			         style="margin-left: 42px;"></Records>
 		</div>
+
 		<div style="clear: both;"></div>
 		</div>
 
@@ -216,6 +226,10 @@
 			row_name({row, rowIndex}){
 				row.ridx = rowIndex;
 			},
+			
+			formatter(row, column ,cellValue) {
+				return this.rowsPerPage * (this.curPage - 1)  + (1+ row.ridx);
+			},
 
 			invokeShowRight(row){
 				this.showRight(row, row.ridx);
@@ -227,10 +241,10 @@
 				}
 			},
 
-			reqExpData(keyword, page) {
+			reqExpData(keyword, ugroup) {
 				asyncReq.call(this);
 				async function asyncReq(){
-					let resp = await Utils.reqExpList.call(this, keyword, page);
+					let resp = await Utils.reqExpList.call(this, keyword, ugroup);
 			    	this.exp_options = resp.body._list;
 			    	this.exp_options.unshift({'name': '所有实验', 'eid': null});
 			    	this.exp_value = this.exp_options[0].eid;
@@ -266,14 +280,14 @@
 		     	};
 
 		     	this.$http.post(record_api, req_data).then((resp)=>{
-		     		this.scorelist = resp.body._list;
-		     		//console.log(this.scorelist);
-		     		//console.log(resp);
+		     		if(resp.body) {
+		     			this.scorelist = resp.body._list;
+		     		}
 		     		if (this.scorelist.length == 0) {
 		     			this.right_panel = false;
 
 		     		} else {
-		     			this.showRight(this.scorelist[0]);
+		     			this.showRight(this.scorelist[0], this.scorelist[0].ridx);
 		     		}
 		     		
 		     		this.totalPage = resp.body.total_page;
@@ -294,6 +308,7 @@
 		     },
 
 		     showRight(row, idx){
+		     	//console.log(row);
 
 		     	this.$refs.scoretable.setCurrentRow(this.$refs.scoretable.data[idx]);
 		     	//this.$refs.scoretable.toggleRowSelection(this.$refs.scoretable.data[0],true);
@@ -322,25 +337,26 @@
 		     			
 		     		} else {
 		     			this.right_panel = true;
+		     			layer.close(this.loading);
 		     		}
 
+		     		/*
+		     		//row.id仅为最近一次record_id
 		     		let api = global_.exp_exam_list;
 		     		let data = {
 		     			"record_id": row.id
 		     		}		 
 		     		this.$http.post(api, data).then((resp)=>{
 		     			this.exam_records = resp.body;
-		     			//console.log(this.exam_records);
 		     			layer.close(this.loading);
 
 		     		}, (err)=>{
 		     			Utils.err_process.call(this, err, '请求实验考核记录失败');
-		     		});
+		     		});*/
+
 
 		     	}, (err)=>{
-		     		layer.alert('请求详情失败',
-		     			{title:'提示', area:['280px','190px']});
-		     		console.log(err);
+		     		Utils.err_process.call(this, err, '请求实验考核记录失败');
 		     	});
 		     },
 
@@ -356,13 +372,80 @@
 		     		this.$refs.recordPanel.delAll();
 		     	}
 		     }*/
+
+		     loadMore(){
+		     	let score_table = document.querySelector(".score_table .el-table__body-wrapper"),
+		     		jq_score_table = $(".score_table .el-table__body-wrapper"),
+                	scrollTop = score_table.scrollTop,
+                	scrollHeight = score_table.scrollHeight,
+                	viewHeight = score_table.offsetHeight;
+
+                //console.log(score_table);
+                let _this = this;
+				this.mousewheel(score_table,
+					function(){
+	                	if(scrollTop > 0 && scrollTop + viewHeight === scrollHeight) {
+	                		if(_this.curPage < _this.totalPage) {
+	                			_this.loadPage(_this.curPage + 1);
+	                		}
+	                	}
+					},
+
+					function(){
+	 					if (scrollTop === 0) {
+	                		if(_this.curPage > 1) {
+	                			_this.loadPage(_this.curPage-1);
+	                		}
+	                	}
+					});
+                //console.log(scrollTop, viewHeight, scrollHeight);
+		     },
+
+			 mousewheel(obj, downfn, upfn) {
+		        obj.onmousewheel = fn;
+
+		        if (obj.addEventListener) {
+		            obj.addEventListener('DOMMouseScroll', fn, false);
+		        }
+
+		        function fn(ev) {
+		            var ev = ev || event;
+		            var b = true;
+		            if (ev.wheelDelta) {
+		                b = ev.wheelDelta > 0 ? true : false;
+
+		            } else {
+		                b = ev.detail < 0 ? true : false;
+		            }
+		            if(b) {
+		                upfn&&upfn();
+
+		            } else {
+		                downfn&&downfn();
+		            }
+		            /*
+		            if (ev.preventDefault) {
+		                ev.preventDefault();
+		            }*/
+		            return true;
+		        }
+			}
 		},
+
 		beforeMount(){
 			this.loading = layer.load(1, {shade: false});
 		},
+
 		mounted(){
-			this.reqExpData('', 1);
+			Utils.page_check_status.call(this).then(resp=>{
+				this.reqExpData(null, resp.body.group);
+			});
 			this.reqClassData('', '', 1);
+			
+            let self = this;
+              $(".score_table .el-table__body-wrapper").scroll(function(){
+                self.loadMore();
+            });
 		}
 	}
 </script>
@@ -384,8 +467,6 @@
 .leftpanel {
 	width: 100%; 
 	height: 100%;
-	display: inline-block;
-	/*float: left;*/
 	margin-right: 42px;
 	margin-top: 20px;
 }
@@ -393,8 +474,6 @@
 .rightpanel {
 	width: 100%;
 	height: 100%; 
-	/*float: left;*/ 
-	display: inline-block; 
 	border-left: 1px solid #d7d7d7;
 	margin-top: 20px;
 }
@@ -417,6 +496,14 @@
 	margin-left: 20px;
 }
 
+.score_table {
+	width: 100%; 
+	height: 350px; 
+	/*overflow-y: scroll;*/
+}
+
+.score_table >>> .el-table__body-wrapper{
+}
 /*
  @media screen and (min-width: 1200px) {
      #teacherview {

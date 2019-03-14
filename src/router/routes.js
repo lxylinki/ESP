@@ -39,7 +39,7 @@ const QuesManage = ()=> import('@/components/questionmanage/QuesManage.vue');
 const QuesAdd = ()=> import('@/components/questionmanage/QuesAdd.vue');
 const QuesEdit = ()=> import('@/components/questionmanage/QuesEdit.vue');
 
-//Score Statistics
+//Score Statistics: updated
 const TeacherStat = ()=> import('@/components/scorestats/TeacherView.vue');
 const StudentStat = ()=> import('@/components/scorestats/StudentView.vue');
 
@@ -55,6 +55,10 @@ const ReportRec = ()=> import('@/components/reportmanage/reportrecord/ReportRec.
 const ReportGrade = ()=>import('@/components/reportmanage/reportrecord/ReportGrade.vue');
 
 const ReportScore = ()=>import('@/components/reportmanage/reportscore/ReportScore.vue');
+
+const ExpList = ()=> import('@/components/reportmanage/studentlist/ExpList.vue');
+const ExpScore = ()=> import('@/components/reportmanage/studentscore/ExpScore.vue');
+const viewGrade = ()=> import('@/components/reportmanage/studentscore/viewGrade.vue');
 
 //Experiment Report
 //const ReportManage = ()=> import('@/components/reportmanage/ReportManage.vue');
@@ -117,6 +121,10 @@ const myRoutes = [
 		{path: '/reportgrade', meta:{tiitle: '实验报告记录'}, component: ReportGrade},
 
 		{path: '/reportscore', meta:{title: '报告成绩'}, component: ReportScore},
+
+		{path: '/explist', meta:{title: '实验报告'}, component: ExpList},
+		{path: '/expscore', meta:{title: '实验报告'}, component: ExpScore},
+		{path: '/viewgrade', meta:{tiitle: '报告成绩'}, component: viewGrade},
 		//{path: '/updatenote', meta: {title: '版本更新'}, component: UpdateNote},
 		//{path: '/downloadupdate', meta: {title: '版本更新'}, component: DownloadUpdate},
 

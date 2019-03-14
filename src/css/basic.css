@@ -63,14 +63,14 @@ select {
   bottom: 0px;
   left: 230px;
   top: 100px;
-  width: 84%;
+  width: 88%;
   border-left: 20px solid #f0f2f5;
+  overflow: auto;
 }
 
 .el-container:not(.records-container)  {
   position: absolute;
   height: 100%;
-  min-height: 100%;
   width: 100%;
   border-bottom: 10px solid #f0f2f5;
 }
@@ -240,7 +240,7 @@ input[type="radio"]:checked + label::before {
   width:1000px;
   height:160px;
   background:rgba(255,255,255,1);
-  border:1px solid rgba(153,153,153,1);
+  border:1px solid rgba(153,153,153,0.5);
   border-radius:4px;
 }
 

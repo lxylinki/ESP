@@ -64,12 +64,13 @@
 		data(){
 			return {
 				hellotext: '',
+				//only the outmost items have highlight(for icon display)
 				menuList:[
 					{
 	            		name:'账户管理',
-	            		//url: "/accmanage",
 	            		url: "",
 	            		isSubShow: false,
+	            		highlight: false,
 	            		//show to these users only
 	            		userGroup: [
 	            			global_.school_admin_group,
@@ -96,8 +97,7 @@
 	            				name: '学生管理',
 	            				url: "/studentmanage",
 	            				userGroup: [
-	            					global_.school_admin_group,
-	            					global_.teacher_group
+	            					global_.school_admin_group,  
 	            				],
 	            				isSubShow: false,
 	            				subItems: []
@@ -108,7 +108,6 @@
 			            		url: "/classmanage",
 			            		userGroup: [
 			            			global_.school_admin_group, 
-			            			global_.teacher_group
 			            		],
 			            		isSubShow:false,
 			            		subItems:[]          			
@@ -127,6 +126,7 @@
 	            			global_.teacher_group
 	            		],
 	            		isSubShow:false,
+	            		highlight:false,
 	            		subItems:[] ,
 	            		icon_highlight:require('@/assets/exp.png'),
 	            		icon: require('@/assets/exp_dark.png')          		            			
@@ -136,10 +136,11 @@
 	            		name:'公共题库管理',
 	            		url: "/questionmanage",
 	            		userGroup: [
-	            			global_.school_admin_group, 
-	            			global_.teacher_group
+	            			global_.school_admin_group,
+	            			global_.teacher_group 
 	            		],
 	            		isSubShow:false,
+	            		highlight:false,
 	            		subItems:[],
 	            		icon_highlight:require('@/assets/ques.png'),
 	            		icon: require('@/assets/ques_dark.png') 	                  		            			
@@ -153,6 +154,7 @@
 	            			global_.teacher_group
 	            		],
 	            		isSubShow:false,
+	            		highlight:false,
 	            		subItems:[],
 	            		icon_highlight:require('@/assets/exam.png'),
 	            		icon: require('@/assets/exam_dark.png')              		            			
@@ -162,17 +164,17 @@
 	            		url: "",
 	            		userGroup: [
 	            			global_.school_admin_group, 
-	            			global_.teacher_group,
+	            			global_.student_group
 	            			
 	            		],
 	            		isSubShow:false,
+	            		highlight:false,
 	            		subItems:[
 	            			{
 	            				name: '模板管理',
 	            				url: '/tplmanage',
 			            		userGroup: [
 			            			global_.school_admin_group, 
-			            			global_.teacher_group,
 			            		],
 			            		isSubShow: false,
 			            		subItems:[]
@@ -182,7 +184,6 @@
 	            				url: '/expreport',
 			            		userGroup: [
 			            			global_.school_admin_group, 
-			            			global_.teacher_group,
 			            			
 			            		],
 			            		isSubShow: false,
@@ -193,7 +194,6 @@
 	            				url: '/reportrec',
 			            		userGroup: [
 			            			global_.school_admin_group, 
-			            			global_.teacher_group,
 			            			
 			            		],
 			            		isSubShow: false,
@@ -204,12 +204,31 @@
 	            				url: '/reportscore',
 			            		userGroup: [
 			            			global_.school_admin_group, 
-			            			global_.teacher_group,
 			          
 			            		],
 			            		isSubShow: false,
 			            		subItems:[]
-	            			}	            				            		            		
+	            			},
+
+	            			//student only 
+	            			{
+	            				name: '实验报告列表',
+	            				url: '/explist',
+			            		userGroup: [
+			            			global_.student_group, 
+			            		],
+			            		isSubShow: false,
+			            		subItems:[]
+	            			},	
+	            			{
+	            				name: '实验报告成绩',
+	            				url: '/expscore',
+			            		userGroup: [
+			            			global_.student_group, 
+			            		],
+			            		isSubShow: false,
+			            		subItems:[]
+	            			}
 	            		],
 	            		icon_highlight:require('@/assets/report.png'),
 	            		icon: require('@/assets/report_dark.png') 	                        		            			
@@ -220,12 +239,24 @@
 	            		userGroup: [
 	            			global_.school_admin_group, 
 	            			global_.teacher_group,
-	            			global_.student_group,
 	            		],
 	            		isSubShow:false,
+	            		highlight:false,
 	            		subItems:[],
 	            		icon_highlight:require('@/assets/stats.png'),
 	            		icon: require('@/assets/stats_dark.png') 	                        		            			
+            		},
+             		{
+	            		name:'我的成绩',
+	            		url: "/studentstats",
+	            		userGroup: [
+	            			global_.student_group 
+	            		],
+	            		isSubShow:false,
+	            		highlight:false,
+	            		subItems:[],
+	            		icon_highlight:require('@/assets/stats.png'),
+	            		icon: require('@/assets/stats_dark.png') 	                        		           	
             		},
             		/*
              		{
@@ -258,23 +289,17 @@
 					if(resp.body.group == global_.teacher_group) {
 						this.current_group = global_.teacher_group;
 						this.isTeacher = true;
-
-						this.menuList[5].url = '/teacherstats';
 					}
 
 					if(resp.body.group == global_.student_group) {
 						this.current_group = global_.student_group;
 						this.isStudent = true;
-
-						this.menuList[5].url = '/studentstats';
 					}
 
 					//for testing
 					if(resp.body.group == global_.school_admin_group) {
 						this.current_group = global_.school_admin_group;
 						this.isAdmin = true;
-
-						this.menuList[5].url = '/teacherstats';
 					}
 
 					//console.log(this.current_group);					
@@ -307,11 +332,10 @@
 					//delCookie('username');
 					this.$router.push('/login');
 				}, (err)=>{
-					console.log(err);
-					layer.alert('注销失败',
-						{title:'提示', area:['280px','190px']});
+					Utils.err_process.call(this, err, '注销失败');
 				});	      	
 		    },
+
 		    goPersonal(){
 		    	alert('个人中心');
 		    }

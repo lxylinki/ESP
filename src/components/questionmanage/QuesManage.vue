@@ -68,7 +68,15 @@
 		<template>
 		  <el-table
 		    :data="list"
-		    style="width: 100%;">
+		    style="width: 100%;"
+		    :row-class-name="row_name">
+
+			<el-table-column
+			  label="序号"
+			  :formatter="formatter"
+			  min-width="50">
+			</el-table-column>
+
 		    <el-table-column
 		      prop="question"
 		      label="试题名称"
@@ -200,6 +208,15 @@
 		},
 
 		methods: {
+
+			row_name({row, rowIndex}){
+				row.ridx = rowIndex;
+			},
+			
+			formatter(row, column ,cellValue) {
+				return this.rowsPerPage * (this.curPage - 1)  + (1+ row.ridx);
+			},
+			
 			invokeSearch(e) {
 				if(e.keyCode == 13) {
 					this.filterSearchData(1);
@@ -213,10 +230,10 @@
 				this.filterSearchData(1);
 			},
 
-			reqQuesList(page){
+			reqQuesList(page, profile){
 				asyncReq.call(this);
 				async function asyncReq(){
-					let resp = await Utils.reqExpList.call(this, null, 1);
+					let resp = await Utils.reqExpList.call(this, null, profile.body.group);
 					this.exp_options = resp.body._list;
 					this.exp_options.unshift({'name': '所有实验', 'id': null});
 
@@ -359,7 +376,9 @@
 		},
 
 		mounted(){
-			Utils.page_check_status.call(this);
+			Utils.page_check_status.call(this).then(resp=>{
+				this.reqQuesList(1, resp);
+			});
 			var name = this.$store.state.last_author;
 
 			if(name === this.mod_name) {
@@ -386,9 +405,9 @@
 				} else if(curpage > 0) {
 					this.curPage = curpage;
 				} */
-				this.curPage = 1;				
+				//this.curPage = 1;				
 			}
-			this.reqQuesList(this.curPage);
+			//this.reqQuesList(this.curPage);
 		}
 	}
 </script>

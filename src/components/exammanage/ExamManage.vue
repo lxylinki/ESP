@@ -69,7 +69,15 @@
 		<template>
 		  <el-table
 		    :data="list"
-		    style="width: 100%;">
+		    style="width: 100%;"
+		    :row-class-name="row_name">
+
+			<el-table-column
+			  label="序号"
+			  :formatter="formatter"
+			  min-width="50">
+			</el-table-column>
+
 		    <el-table-column
 		      prop="name"
 		      label="考核名称"
@@ -167,6 +175,8 @@
 		},
 		data(){
 			return {
+				mod_name: 'exp-manage',
+				user_group: 0,
 				list: [],
 				tableData: [],
 				exp_value: '',
@@ -216,15 +226,12 @@
 		},
 
 		methods: {
-			fillExpSelect(){
+			
+			fillExpSelect(keyword, ugroup){
 				asyncReq.call(this);
 				async function asyncReq(){
-					let resp = await Utils.reqExpList.call(this, '', 1);
+					let resp = await Utils.reqExpList.call(this, keyword, ugroup);
 					this.exp_options = resp.body._list;
-					/*
-					for(let item of this.exp_options) {
-						console.log(item);
-					}*/
 					this.exp_options.unshift({'name': '所有实验', 'id': null});
 				}
 			},
@@ -232,6 +239,12 @@
 			reqExamList(page){
 				var api = global_.exam_list + '?page=1';
 				this.$http.post(api, {}).then((resp)=>{
+					//console.log(resp.body);
+					if(resp.body.length === 0) {
+						layer.close(this.loading);
+						return;
+					}
+					
 					this.totalRow = resp.body.total;
 					var full_list_api = api + '&pagesize='+ this.totalRow;
 
@@ -382,7 +395,9 @@
 		},
 
 		mounted(){
-			Utils.page_check_status.call(this);
+			Utils.page_check_status.call(this).then(resp=>{
+				this.fillExpSelect(null, resp.body.group);
+			});
 			var name = this.$store.state.last_author;
 
 			if(name === this.mod_name) {
@@ -411,7 +426,7 @@
 				}*/				
 			}
 			//console.log(before, after, pagesize, keyword, curpage);
-			this.fillExpSelect();
+			
 			this.reqExamList(1);
 		}
 	}

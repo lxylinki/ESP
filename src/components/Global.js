@@ -29,6 +29,7 @@
 	const exp_list = url_prefix + 'esp_admin/experiment-assign/assign-list';
 	const exp_slist = url_prefix + 'esp_admin/experiment-assign/list';
 	const exp_tlist = url_prefix + 'esp_admin/experiment-assign/teacher-list';
+	
 	const exp_teacher_add = url_prefix + 'esp_admin/experiment-auth/add-teachers';
 	const exp_teacher_list = url_prefix + 'esp_admin/experiment-auth/list';
 	const exp_teacher_delete = url_prefix + 'esp_admin/experiment-auth/del-teachers';
@@ -59,16 +60,12 @@
 	const class_update = url_prefix + 'user/school-class/update';
 	const class_delete = url_prefix + 'user/school-class/delete';
 
+
 	const class_list = url_prefix + 'user/school-class/search';
-	//const record_list = url_prefix + 'esp_admin/exper-record/list';
 	const record_list = url_prefix + 'esp_admin/experiment-record/list';
-	//const more_records = url_prefix + 'esp_admin/exper-record/get-records';
 	const more_records = url_prefix + 'esp_admin/experiment-record/get-records';
-	//const exp_exam_list = url_prefix + 'esp_admin/exper-record/exam-list';
 	const exp_exam_list = url_prefix + 'esp_admin/experiment-record/exam-list';
-	//const exam_details = url_prefix + 'esp_admin/exper-record/exam-detail';
 	const exam_details = url_prefix + 'esp_admin/experiment-record/exam-detail';	
-	//const record_delete = url_prefix + 'esp_admin/exper-record/clear-record';
 	const record_delete = url_prefix + 'esp_admin/experiment-record/clear-record';
 
 	const download_url = url_prefix + 'esp/esp-software/download';
@@ -100,16 +97,25 @@
 	const report_score_pub = url_prefix + 'exam/exam/release-score';
 	const report_class_list = url_prefix + 'exam/exam-stats/class-list';
 
+	//student
+	const report_mylist = url_prefix + 'exam/exam/my-list';
+	const report_slist = url_prefix + 'exam/exam/list';
+	const report_myscore = url_prefix + 'exam/exam-stats/user-list';
+	const report_join = url_prefix + 'exam/exam-record/join';
+	const report_upload = url_prefix + 'resources/resource/upload';
+	const report_answer = url_prefix + 'exam/paper-card/answer';
+	const report_submit = url_prefix + 'exam/exam-record/submit';
+
 	//exp report record
 	const report_rec_list = url_prefix + 'exam/exam-record/list';
 	const report_rec_view = url_prefix + 'exam/exam/view';
 	const report_rec_card = url_prefix + 'exam/paper-card/view';
 	const report_rec_ques = url_prefix + 'exam/exam/questions';
 	const report_rec_load = url_prefix + 'resources/resource/load';
-	const report_mark = url_prefix + 'exam/paper-card/mark';
-	const report_rec_mark = url_prefix + 'exam/exam-record/mark';
+	const report_mark = url_prefix + 'exam/paper-card/mark'; //分数
+	const report_rec_mark = url_prefix + 'exam/exam-record/mark'; //评语，最终
 
-	//
+	// exp report score
 	const report_stats_list = url_prefix + 'exam/exam-stats/user-list';
 
 	export default {
@@ -205,5 +211,13 @@
 		report_mark,
 		report_rec_mark,
 
-		report_stats_list
+		report_stats_list,
+
+		report_mylist,
+		report_slist,
+		report_myscore,
+		report_join,
+		report_upload,
+		report_answer,
+		report_submit
 	}

@@ -860,19 +860,22 @@
 				this.$router.go(-1);
 			},
 
-			fillExpSelect(){
+			fillExpSelect(profile){
 				asyncReq.call(this);
 				async function asyncReq(){
-					let resp = await Utils.reqExpList.call(this);
+					//let profile = await Utils.page_check_status.call(this);	
+					let resp = await Utils.reqExpList.call(this, null, profile.body.group);
 					this.exp_options = resp.body._list;
 					this.exp_options.unshift({'name': '所有实验', 'id': null});
 				}				
 			}
 		},
 		mounted(){		
-			Utils.page_check_status.call(this);	
+			Utils.page_check_status.call(this).then(resp=>{
+				this.fillExpSelect(resp);
+			});	
 			this.type = 1;
-			this.fillExpSelect();
+			//this.fillExpSelect();
 		}
 	}
 </script>
@@ -882,7 +885,7 @@ input:not(.checkbox) {
 	width:600px;
 	height:36px;
 	background:rgba(255,255,255,1);
-	border:1px solid rgba(153,153,153,1);
+	border:1px solid rgba(153,153,153,0.5);
 	border-radius:4px;
 }
 .checkicon {
@@ -1024,7 +1027,7 @@ div>.mchoice input {
 }
 
 #anls {
-	margin-left: 5px;
+	margin-left: 10px;
 }
 
 #quesbody {

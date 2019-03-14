@@ -71,15 +71,20 @@
 		    	    
 		    <el-table-column
 		      prop="start_time"
-		      label="开始时间"
-		      min-width="100">
+		      label="开始 / 截止时间"
+		      min-width="180">
+		      <template slot-scope="scope">
+		      	{{scope.row.start_time}}{{sep_sign}}
+		      	{{scope.row.end_time}}
+		      </template>
 		    </el-table-column>
 
+		    <!--
 		    <el-table-column
 		      prop="end_time"
 		      label="截止时间"
 		      min-width="100">
-		    </el-table-column>
+		    </el-table-column>-->
 
 		    <el-table-column
 		      prop="full_score"
@@ -212,7 +217,8 @@
 						label: '成绩公示',
 						value: 3
 					},
-				]
+				],
+				sep_sign: ' / '
 			}
 		},
 
@@ -286,7 +292,7 @@
 					'exam_id': row.id
 				}
 				this.$http.post(api, data).then((resp)=>{
-					console.log(resp);
+					//console.log(resp);
 					this.reqReportList(this.status_value, this.search_state, this.curPage);
 				}, (err)=>{
 					Utils.err_process.call(this, err, '实验报告发布失败');
@@ -318,7 +324,7 @@
   					'id': row.id
   				}
 				this.$http.post(api, data).then((resp)=>{
-					console.log(resp);
+					//console.log(resp);
 					Utils.lalert('关闭考试成功');
 					this.reqReportList(this.status_value, this.search_state, this.curPage);
 				}, (err)=>{
@@ -357,7 +363,7 @@
 	}
 </script>
 
-<style type="text/css">
+<style type="text/css" scoped>
 .pick-status-title {
 	display: inline-block; 
 	line-height: 60px;
