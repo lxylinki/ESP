@@ -59,20 +59,7 @@
 		      label="报告名称"
 		      min-width="100"
 		      :show-overflow-tooltip="true">
-		    </el-table-column> 
-		    
-		    <!--
-		    <el-table-column
-		      prop=""
-		      label="提交时间"
-		      min-width="100">
-		    </el-table-column>    
-
-		    <el-table-column
-		      prop=""
-		      label="批改时间"
-		      min-width="100">
-		    </el-table-column>-->  
+		    </el-table-column>
 
 		    <el-table-column
 		      prop="full_score"

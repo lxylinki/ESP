@@ -64,12 +64,13 @@
 		data(){
 			return {
 				hellotext: '',
+				//only the outmost items have highlight(for icon display)
 				menuList:[
 					{
 	            		name:'账户管理',
-	            		//url: "/accmanage",
 	            		url: "",
 	            		isSubShow: false,
+	            		highlight: false,
 	            		//show to these users only
 	            		userGroup: [
 	            			global_.school_admin_group,
@@ -125,6 +126,7 @@
 	            			global_.teacher_group
 	            		],
 	            		isSubShow:false,
+	            		highlight:false,
 	            		subItems:[] ,
 	            		icon_highlight:require('@/assets/exp.png'),
 	            		icon: require('@/assets/exp_dark.png')          		            			
@@ -138,6 +140,7 @@
 	            			global_.teacher_group 
 	            		],
 	            		isSubShow:false,
+	            		highlight:false,
 	            		subItems:[],
 	            		icon_highlight:require('@/assets/ques.png'),
 	            		icon: require('@/assets/ques_dark.png') 	                  		            			
@@ -151,6 +154,7 @@
 	            			global_.teacher_group
 	            		],
 	            		isSubShow:false,
+	            		highlight:false,
 	            		subItems:[],
 	            		icon_highlight:require('@/assets/exam.png'),
 	            		icon: require('@/assets/exam_dark.png')              		            			
@@ -164,6 +168,7 @@
 	            			
 	            		],
 	            		isSubShow:false,
+	            		highlight:false,
 	            		subItems:[
 	            			{
 	            				name: '模板管理',
@@ -236,6 +241,7 @@
 	            			global_.teacher_group,
 	            		],
 	            		isSubShow:false,
+	            		highlight:false,
 	            		subItems:[],
 	            		icon_highlight:require('@/assets/stats.png'),
 	            		icon: require('@/assets/stats_dark.png') 	                        		            			
@@ -247,6 +253,7 @@
 	            			global_.student_group 
 	            		],
 	            		isSubShow:false,
+	            		highlight:false,
 	            		subItems:[],
 	            		icon_highlight:require('@/assets/stats.png'),
 	            		icon: require('@/assets/stats_dark.png') 	                        		           	

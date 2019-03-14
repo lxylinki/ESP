@@ -10,8 +10,8 @@
 	                   		  height: 100%;
 	                   		  margin-top: 10px;"
 	                   v-on:click.self.prevent='showPage(item.url)'>
-	                	<img class="start-icon" :src=item.icon_highlight v-show="false">
-	                	<img class="start-icon" :src=item.icon v-show="true">{{item.name}}
+	                	<img class="start-icon" :src=item.icon_highlight v-show="item.highlight">
+	                	<img class="start-icon" :src=item.icon v-show="!item.highlight">{{item.name}}
 	                </a> 
 
                 	<div class="navbtn"
@@ -44,11 +44,13 @@
 		},
 		methods:{
 	      showToggle(item, idx){
+	      	item.highlight = true;
 	        item.isSubShow = !item.isSubShow;
 	        //close others
 	        for(let i in this.menuList) {
 	        	if(i != idx) {
 	        		this.menuList[i].isSubShow = false;
+	        		this.menuList[i].highlight = false;
 	        	}
 	        }
 	      },

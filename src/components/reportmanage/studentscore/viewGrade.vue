@@ -229,7 +229,7 @@
 				this.graded_score = this.exam_record.score;
 				this.graded = this.exam_record.score > 0? true: false;
 				this.comment = this.exam_record.mark_text;
-			
+							
 				this.reqRecView().then(this.displayNote);
 				this.reqFileInfo();
 			}			
