@@ -20,12 +20,12 @@
 
 		<div style="height: 20px;"></div>
 
-		<div  style="display: inline-block;">
+		<div  style="display: inline-block;" v-if="!isTeacher()">
 			<el-button class="addbtn" v-on:click="addClass()">添加</el-button>
 		</div>
 
 		<!--choose rows per page-->
-		<div style="display: inline-block; float: right; margin: 0px;">
+		<div style="display: inline-block; float: right; margin-bottom: 20px;">
 			<span>显示 </span>
 				<select v-model="rowsPerPage" v-on:change="pageSizeChange()" style="width: 60px; height: 28px;">
 					<option v-for="item in row_nums" v-bind:value="item.value">
@@ -82,7 +82,7 @@
 		    <el-table-column
 		      prop="operation"
 		      label="操作"
-		      min-width="200">
+		      min-width="200"  v-if="!isTeacher()">
 
 		      <template slot-scope="scope">
 		      	<el-button class="op" type="text" @click="editRow(scope.row)">
@@ -174,7 +174,8 @@
 				class_teachers: [],
 				show_teachers: false,
 				show_editable_teachers: false,
-				loading: null
+				loading: null,
+				user_group: 0
 			}
 		},
 
@@ -184,6 +185,10 @@
 		     		//this.searchReq(this.curPage);
 		     		this.reqClassData('', this.search_state, 1);
 		     	}
+		    },
+
+		    isTeacher(){
+		    	return this.user_group == global_.teacher_group;
 		    },
 
 			row_name({row, rowIndex}){
@@ -294,7 +299,10 @@
 		},
 
 		mounted(){
-			Utils.page_check_status.call(this);
+			Utils.page_check_status.call(this).then(resp=>{
+				this.user_group = resp.body.group
+			});
+
 			this.reqClassData('','', 1);
 		},
 	}

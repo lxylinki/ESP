@@ -74,7 +74,7 @@
 		     <el-table-column
 		      label="老师"
 		       min-width="100"
-		       :show-overflow-tooltip="true">
+		       :show-overflow-tooltip="true" v-if="!isTeacher()">
 		       <template slot-scope="scope">
 		       	<span v-for="teacher in scope.row.teachers">{{teacher.realname}}&nbsp;</span>
 		       </template>
@@ -96,10 +96,10 @@
 		    <el-table-column
 		      prop="operation"
 		      label="操作"
-		      min-width="100">
+		      min-width="100"  v-if="!isTeacher()">
 
 		      <template slot-scope="scope">
-		      	<el-button  class="op" type="text" @click="grantTeachers(scope.row)">
+		      	<el-button class="op" type="text" @click="grantTeachers(scope.row)">
 		      		授权老师
 		      	</el-button>
 		      </template>
@@ -246,11 +246,16 @@
 				t_search_state: '',
 				focus_tids: [],
 				orig_tids: [],
-				t_rowsPerPage: 10																		
+				t_rowsPerPage: 10,
+				user_group: 0																		
 			}
 		},
 
 		methods: {
+			isTeacher(){
+				return this.user_group == global_.teacher_group;
+			},
+
 			addExp(){
 				this.$router.push('/expadd');
 			},
@@ -264,13 +269,6 @@
 			},
 
 			grantTeachers(row){
-				/*
-				this.$store.commit('sign', this.mod_name);
-				this.$store.commit('setEdit', true);
-				this.$store.commit('pickRow', row);
-				this.$store.commit('setCurPage', this.curPage);
-				this.$store.commit('setCurSearch', this.search_state);
-				this.$router.push('/expconfig');*/
 				this.exp_name = row.name;
 				this.exp_id = row.eid;
 				this.focus_tids = [];
@@ -383,6 +381,7 @@
 				async function asyncReq(){
 					let resp = await Utils.page_check_status.call(this);
 					let ugroup = resp.body.group;
+					this.user_group = resp.body.group;
 					this.reqData(cid, keyword, page, ugroup);
 				}		     	
 		     },
@@ -562,6 +561,11 @@
 			this.loading = layer.load(1, {shade: false});
 		},
 
+		/*
+		updated(){
+			console.log(this.user_group, global_.teacher_group, this.isTeacher());
+		},*/
+
 		mounted(){
 			Utils.page_check_status.call(this);
 			let name = this.$store.state.last_author;
@@ -597,7 +601,6 @@
 
 			this.reqCatagList();
 			this.reqList(null, '', this.curPage);
-			//this.reqTeacherData(null, 1);
 		}
 	}
 </script>

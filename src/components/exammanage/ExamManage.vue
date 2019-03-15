@@ -235,6 +235,14 @@
 					this.exp_options.unshift({'name': '所有实验', 'id': null});
 				}
 			},
+			
+			row_name({row, rowIndex}){
+				row.ridx = rowIndex;
+			},
+			
+			formatter(row, column ,cellValue) {
+				return this.rowsPerPage * (this.curPage - 1)  + (1+ row.ridx);
+			},
 
 			reqExamList(page){
 				var api = global_.exam_list + '?page=1';
@@ -270,12 +278,10 @@
 					}, (err)=>{
 						layer.close(this.loading);
 						Utils.err_process.call(this, err, '请求考核列表失败');
-						console.log(err);
 					});
 				}, (err)=>{
 					layer.close(this.loading);
 					Utils.err_process.call(this, err, '请求考核列表失败');
-					console.log(err);
 				});			
 			},
 
@@ -319,7 +325,7 @@
 					this.list = search_res.slice(this.rowsPerPage*(page-1), this.rowsPerPage*page);
 
 				} else {
-					console.log(this.exp_value);
+					//console.log(this.exp_value);
 					var	search_exp_res = search_res.filter(item => item.eid == this.exp_value);
 					this.list = search_exp_res.slice(this.rowsPerPage*(page-1), this.rowsPerPage*page);
 					this.totalRow = search_exp_res.length;
