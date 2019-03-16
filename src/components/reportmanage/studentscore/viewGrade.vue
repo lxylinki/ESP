@@ -131,7 +131,7 @@
 				async function asyncReq(){
 					let resp = await this.reqPaperCard();	
 					if(!resp.body[0][0].answer) {
-						//answer is null
+						//answer is null: have not answered yet?
 						return;
 					}
 

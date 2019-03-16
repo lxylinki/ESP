@@ -65,11 +65,12 @@
 			  min-width="50">
 			</el-table-column>
 
+			<!--
 		    <el-table-column
 		      prop="user_id"
 		      label="ID"
 		      min-width="100">
-		    </el-table-column>
+		    </el-table-column>-->
 
 		    <el-table-column
 		      prop="school_name"

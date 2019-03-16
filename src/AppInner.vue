@@ -98,6 +98,7 @@
 	            				url: "/studentmanage",
 	            				userGroup: [
 	            					global_.school_admin_group,  
+	            					global_.teacher_group
 	            				],
 	            				isSubShow: false,
 	            				subItems: []
@@ -108,6 +109,7 @@
 			            		url: "/classmanage",
 			            		userGroup: [
 			            			global_.school_admin_group, 
+			            			global_.teacher_group
 			            		],
 			            		isSubShow:false,
 			            		subItems:[]          			

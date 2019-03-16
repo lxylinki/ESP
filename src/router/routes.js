@@ -124,7 +124,7 @@ const myRoutes = [
 
 		{path: '/explist', meta:{title: '实验报告'}, component: ExpList},
 		{path: '/expscore', meta:{title: '实验报告'}, component: ExpScore},
-		{path: '/viewgrade', meta:{tiitle: '报告成绩'}, component: viewGrade},
+		{path: '/viewgrade', meta:{title: '报告成绩'}, component: viewGrade},
 		//{path: '/updatenote', meta: {title: '版本更新'}, component: UpdateNote},
 		//{path: '/downloadupdate', meta: {title: '版本更新'}, component: DownloadUpdate},
 
