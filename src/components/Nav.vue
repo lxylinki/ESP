@@ -1,27 +1,24 @@
 <template>
 	<div class="nav">
       	<li  class="asideMenu" v-for="(item, index) in menuList" v-show="item.userGroup.includes(curGroup)">
-
 			<div class="oneMenu" v-on:click="showToggle(item, index)">
                 <a class="oneMenuText" v-on:click.self.prevent='showPage(item.url)'>
                 	<img class="start-icon" :src=item.icon_highlight v-show="item.highlight">
-                	<img class="start-icon" :src=item.icon v-show="!item.highlight">{{item.name}}
+                	<img class="start-icon" :src=item.icon v-show="!item.highlight">
+                	{{item.name}}
                 </a> 
 
             	<div class="navbtn" v-if="item.subItems.length>0">
             		<i class="iconfont">&#xe601;</i>
-            		<!--<i v-show="item.isSubShow" class="iconfont">&#xe600;</i>-->
 				</div>
 			</div>	
 
 			<transition name="sub-items">
-				<Nav class="sub-items-nav"
-					 v-if="item.subItems.length>0 && item.isSubShow"
+				<Nav v-if="item.subItems.length>0 && item.isSubShow"
 					 v-bind:menuList='item.subItems'
 					 v-bind:curGroup='curGroup'>	 	
 				</Nav>
 			</transition>
-
       	</li>
 	</div>
 </template>

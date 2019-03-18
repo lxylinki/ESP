@@ -582,7 +582,7 @@
 			},
 
 			mvDownA(){
-				console.log('this.showB', this.showB);
+				//console.log('this.showB', this.showB);
 				if(this.showB) {
 					var a = this.aval;
 					this.aval = this.bval;
