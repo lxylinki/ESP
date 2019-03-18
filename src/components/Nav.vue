@@ -8,7 +8,7 @@
                 	{{item.name}}
                 </a> 
 
-            	<div class="navbtn" v-if="item.subItems.length>0">
+            	<div class="navbtn" v-bind:class="{unclicked: !item.isSubShow, clicked: item.isSubShow}" v-if="item.subItems.length>0">
             		<i class="iconfont">&#xe601;</i>
 				</div>
 			</div>	
@@ -32,7 +32,6 @@
 		    showToggle(item, idx){
 		      	item.highlight = true;
 		        item.isSubShow = !item.isSubShow;
-
 		        //close others
 		        for(let i in this.menuList) {
 		        	if(i != idx) {
@@ -51,14 +50,6 @@
 					$(this).addClass("highlight").parent().siblings().find('.oneMenu').removeClass("highlight");
 					$(this).find('.oneMenuText').addClass('focused');
 					$(this).parent().siblings().find('.oneMenuText').removeClass('focused');
-
-					let navbtn = $(this).find('.navbtn');
-					if(navbtn.hasClass('clicked')) {
-						navbtn.first().removeClass('clicked').addClass('unclicked');
-
-					} else {
-						navbtn.removeClass('unclicked').addClass('clicked');
-					}
 				});
 		    }
 		},
@@ -76,11 +67,17 @@
 }
 
 .clicked {
-	transform: rotate(-180deg);
+	transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	-webkit-transform: rotate(180deg);
 }
 
 .unclicked {
-	transform: rotate(-360deg);
+	transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-webkit-transform: rotate(0deg);
 }
 
 .start-icon {
