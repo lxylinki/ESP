@@ -2,7 +2,7 @@
 	<div id='expmanage'>
 		<div style="width: 100%; height: 35px;">
 			<span style="color: #1890ff; font-weight: bold">|</span> 
-			实验管理
+			实验项目管理
 		</div>
 
 		<div style="height: 20px;"></div>
