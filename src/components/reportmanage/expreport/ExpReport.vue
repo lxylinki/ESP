@@ -310,7 +310,7 @@
   					'exam_id': row.id
   				}
 				this.$http.post(api, data).then((resp)=>{
-					console.log(resp);
+					//console.log(resp);
 					Utils.lalert('删除实验报告成功');
 					this.reqReportList(this.status_value, this.search_state, this.curPage);
 				}, (err)=>{
@@ -338,7 +338,7 @@
   					'id': row.id
   				}
 				this.$http.post(api, data).then((resp)=>{
-					console.log(resp);
+					//console.log(resp);
 					Utils.lalert('成绩公布成功');
 					this.reqReportList(this.status_value, this.search_state, this.curPage);
 				}, (err)=>{
