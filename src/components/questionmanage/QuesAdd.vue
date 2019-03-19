@@ -290,8 +290,7 @@
 					    oldTextName = newTextName;
 					}
 					//update
-					_this.opts_num = _this.rows_num();
-					console.log(_this.opts_num);				
+					_this.opts_num = _this.rows_num();			
 				});
 
 			},
@@ -334,11 +333,12 @@
                         $li.eq(i).find(".opt-label").text(oldTextName);
                         oldTextName = newTextName;
                     }	
-                    _this.opts_num = _this.rows_num();				
+                    _this.opts_num = _this.rows_num();	
 				});
 			},
 
 			prepUp(){
+				let _this = this;
 				$('.opt-up').on('click', function(e){
                 	let $this = $(this),
                         $parent = $this.parents(".ans-opt"),
@@ -371,6 +371,7 @@
 			},
 
 			prepDown(){
+				let _this = this;
 				$('.opt-down').on('click', function(e){
                     let $this = $(this),
                         $parent = $this.parents(".ans-opt"),
@@ -396,7 +397,7 @@
                         $next.after($parent);
                         $next.find(".opt-label").text(currName);
                         $parent.find(".opt-label").text(nextName);
-                    });					
+                    });				
 				});
 			},
 
