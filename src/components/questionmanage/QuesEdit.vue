@@ -244,6 +244,24 @@
             	return $show.length;
 			},		
 
+			//only minimum num of options are showed at the beginning
+			initShow(){
+				let $opts = $('.opts-div');
+				let	opt_c = $opts.find('.answer-c'),
+					opt_d = $opts.find('.answer-d'),
+					opt_e = $opts.find('.answer-e');
+
+				if(!this.options[2]) {
+					opt_c.hide();
+				}
+				if(!this.options[3]) {
+					opt_d.hide();
+				}
+				if(!this.options[4]) {
+					opt_e.hide();
+				}
+			},
+
 			prepAdd(){
 				let _this = this;
 				$('.opt-add').on('click', function(e){
@@ -527,6 +545,7 @@
 					this.options[4] = row.option_e;
 				}
 
+				this.initShow();
 				this.answer = row.answer;
 
 				if(row.answer.indexOf('A') != -1) {
