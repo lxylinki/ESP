@@ -244,6 +244,17 @@
             	return $show.length;
 			},
 
+			//only minimum num of options are showed at the beginning
+			initShow(){
+				let $opts = $('.opts-div');
+				let	opt_c = $opts.find('.answer-c'),
+					opt_d = $opts.find('.answer-d'),
+					opt_e = $opts.find('.answer-e');
+				opt_c.hide();
+				opt_d.hide();
+				opt_e.hide();
+			},
+
 			prepAdd(){
 				let _this = this;
 				$('.opt-add').on('click', function(e){
@@ -279,7 +290,8 @@
 					    oldTextName = newTextName;
 					}
 					//update
-					_this.opts_num = _this.rows_num();				
+					_this.opts_num = _this.rows_num();
+					console.log(_this.opts_num);				
 				});
 
 			},
@@ -507,6 +519,7 @@
 				this.prepUp();
 				this.prepDown();
 				this.prepCorrect();		
+				this.initShow();
 				this.opts_num = this.rows_num();	
 			}			
 		}
