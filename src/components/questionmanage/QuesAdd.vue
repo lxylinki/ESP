@@ -478,13 +478,19 @@
 			Utils.page_check_status.call(this).then(resp=>{
 				this.fillExpSelect(resp);
 			});	
-			
-			this.type = 1;
-			this.prepDel();
-			this.prepAdd();
-			this.prepUp();
-			this.prepDown();
-			this.prepCorrect();
+
+			let edit = this.$store.state.edit;
+			if(!edit) {
+				this.$router.go(-1);
+
+			} else {
+				this.type = 1;
+				this.prepDel();
+				this.prepAdd();
+				this.prepUp();
+				this.prepDown();
+				this.prepCorrect();				
+			}			
 		}
 	}
 </script>
@@ -618,7 +624,7 @@ div>.mchoice input {
 
 .opt-up, .opt-down {
 	color: #333333;
-	font-size: 150%;
+	font-size: 160%;
 }
 
 .opt-label {

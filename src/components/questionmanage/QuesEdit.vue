@@ -1,5 +1,5 @@
 <template>
-	<div id="quesadd">
+	<div id="quesedit">
 		<div style="width: 100%; height: 35px;">
 			<span style="color: #1890ff; font-weight: bold">|</span> 
 			公共题库管理
@@ -391,7 +391,7 @@
 						Utils.lalert('请输入选项');
 						return;								
 					}
-
+					//only one can be selected
 					if(opt.checked && _this.type == 1){
 						for(let i in _this.choices) {
 							if(i == index) {
@@ -413,7 +413,65 @@
 						_this.answer = _this.answer.replace(ans, '');
 					}
 				});
-			}
+			},
+
+			preCheck(){
+				if(!this.exp_value) {
+					Utils.lalert('请选择所属实验');
+					return;
+
+				} else if(!this.question) {
+					Utils.lalert('请输入题干');
+					return;
+
+				} else if((!this.options[0]) || (!this.options[1])) {
+					Utils.lalert('请输入选项');
+					return;
+
+				} else if(!(this.choices[0] || this.choices[1] || this.choices[2] || this.choices[3] || this.choices[4])) {
+					Utils.lalert('请选择正确选项');
+					return;
+				} else {
+					this.saveEdit();
+				}
+			},
+
+			saveEdit(){
+				let api = global_.ques_update,
+				    ans = this.answer,
+					data = {
+					id: this.id,
+					eid: this.exp_value,
+					type: this.type,
+					question: this.question,
+					answer: this.answer,
+					option_a: this.options[0],
+					option_b: this.options[1],
+					analysis: this.analyze
+				}
+
+				if(this.options[2]) {
+					data.option_c = this.cval;
+				}
+
+				if(this.options[3]) {
+					data.option_d = this.dval;
+				}
+				
+				if(this.options[4]) {
+					data.option_e = this.eval;
+				}
+
+				this.$http.post(api, data).then((resp)=>{
+					//console.log(resp);
+					Utils.lalert('试题编辑成功');
+					this.$router.go(-1);
+
+				}, (err)=>{
+					Utils.err_process.call(this, err, '试题编辑失败');
+				});
+			},
+
 		},
 
 		mounted(){		
@@ -421,12 +479,65 @@
 				this.fillExpSelect(resp);
 			});	
 
-			this.type = 1;
-			this.prepDel();
-			this.prepAdd();
-			this.prepUp();
-			this.prepDown();
-			this.prepCorrect();
+			let edit = this.$store.state.edit;
+			
+			if(!edit) {
+				this.$router.go(-1);
+
+			} else {			
+				this.type = 1;
+				this.prepDel();
+				this.prepAdd();
+				this.prepUp();
+				this.prepDown();
+				this.prepCorrect();
+
+				//this.fillExpSelect();
+				let row = this.$store.state.row;
+				//console.log(row);
+				this.id = row.id;
+				this.type = row.type;
+				this.exp_value = row.eid;
+				this.question = row.question;
+				this.options[0] = row.option_a;
+				this.options[1] = row.option_b;
+				
+				if(row.option_c) {
+					this.options[2] = row.option_c;
+					//this.showC = true;
+				}
+
+				if(row.option_d) {
+					this.options[3] = row.option_d;
+					//this.showD = true;
+				}
+
+				if(row.option_e) {
+					this.options[4] = row.option_e;
+					//this.showE = true;
+				}
+
+				this.answer = row.answer;
+
+				if(row.answer.indexOf('A') != -1) {
+					this.choices[0] = true;
+				}
+
+				if(row.answer.indexOf('B') != -1) {
+					this.choices[1] = true;
+				}
+
+				if(row.answer.indexOf('C') != -1) {
+					this.choices[2] = true;
+				}
+				if(row.answer.indexOf('D') != -1) {
+					this.choices[3] = true;
+				}
+				if(row.answer.indexOf('E') != -1) {
+					this.choices[4] = true;
+				}
+				this.analyze = row.analysis;
+			}
 		}
 	}
 </script>
@@ -560,7 +671,7 @@ div>.mchoice input {
 
 .opt-up, .opt-down {
 	color: #333333;
-	font-size: 150%;
+	font-size: 160%;
 }
 
 .opt-label {
