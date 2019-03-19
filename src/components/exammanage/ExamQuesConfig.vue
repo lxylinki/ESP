@@ -161,7 +161,7 @@
 						></NewPager>			
 					</div>				 	
 				</div>			
-			</div>
+			</div><!--end ltable-->
 
 			<div class="add-complete" v-on:click="showToggle()">
 				<i class="iconfont add-complete-icon" v-show="showQbank">&#xe659;</i><span v-show="showQbank" class="add-complete-text">添加完成</span>
@@ -540,6 +540,7 @@
 }
 
 #ltable, #rtable {
+	position: relative;
 	vertical-align: top;
 	display: inline-block;
 	width: 40%;

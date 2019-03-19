@@ -300,7 +300,7 @@
 	width:500px;
 	height:36px;
 	background:rgba(255,255,255,1);
-	border:1px solid rgba(153,153,153,1);
+	border:1px solid rgba(153,153,153,0.5);
 	border-radius:4px;
 }
 
@@ -320,7 +320,7 @@
 	width:500px;
 	height:100px;
 	background:rgba(255,255,255,1);
-	border:1px solid rgba(153,153,153,1);
+	border:1px solid rgba(153,153,153,0.5);
 	border-radius:4px;	
 	vertical-align: top;
 }
