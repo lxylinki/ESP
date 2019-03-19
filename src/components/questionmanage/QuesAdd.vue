@@ -61,12 +61,12 @@
 					<div class="opt-label">选项A</div>
 					<!--input-->
 					<div class="opt-input">
-						<input class="longinput" type="text" v-model="options[0]" placeholder="必填">
+						<input class="longinput" type="text" v-model="options[0]">
 					</div>				
 					<!--add-->
 					<div class="opt-add-del">
-						<i class="iconfont opt-add">&#xe62d;</i>
-						<i class="iconfont opt-del">&#xe6a9;</i>
+						<i class="iconfont opt-add" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
+						<i class="iconfont opt-del" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
 					</div>
 					
 					<!--correct one-->
@@ -85,12 +85,12 @@
 					<div class="opt-label">选项B</div>
 					<!--input-->
 					<div class="opt-input">
-						<input class="longinput" type="text" v-model="options[1]" placeholder="必填">
+						<input class="longinput" type="text" v-model="options[1]">
 					</div>				
 					<!--add-->
 					<div class="opt-add-del">
-						<i class="iconfont opt-add">&#xe62d;</i>
-						<i class="iconfont opt-del">&#xe6a9;</i>
+						<i class="iconfont opt-add" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
+						<i class="iconfont opt-del" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
 					</div>
 					
 					<!--correct one-->
@@ -114,8 +114,8 @@
 					</div>				
 					<!--add-->
 					<div class="opt-add-del">
-						<i class="iconfont opt-add">&#xe62d;</i>
-						<i class="iconfont opt-del">&#xe6a9;</i>
+						<i class="iconfont opt-add" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
+						<i class="iconfont opt-del" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
 					</div>
 					
 					<!--correct one-->
@@ -138,8 +138,8 @@
 					</div>				
 					<!--add-->
 					<div class="opt-add-del">
-						<i class="iconfont opt-add">&#xe62d;</i>
-						<i class="iconfont opt-del">&#xe6a9;</i>
+						<i class="iconfont opt-add" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
+						<i class="iconfont opt-del" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
 					</div>
 					
 					<!--correct one-->
@@ -162,8 +162,8 @@
 					</div>				
 					<!--add-->
 					<div class="opt-add-del">
-						<i class="iconfont opt-add">&#xe62d;</i>
-						<i class="iconfont opt-del">&#xe6a9;</i>
+						<i class="iconfont opt-add" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
+						<i class="iconfont opt-del" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
 					</div>
 					
 					<!--correct one-->
@@ -220,12 +220,9 @@
 
 				exp_options:[],
 				exp_value: '',
-				answer: ''
+				answer: '',
+				opts_num: 0
 			}
-		},
-
-		updated(){
-
 		},
 		
 		methods: {
@@ -241,8 +238,14 @@
 					this.exp_options.unshift({'name': '所有实验', 'id': null});
 				}				
 			},
+			
+			rows_num(){
+            	let	$show = $(".opts-div").find('.ans-opt:visible');
+            	return $show.length;
+			},
 
 			prepAdd(){
+				let _this = this;
 				$('.opt-add').on('click', function(e){
                     let $this = $(this),
                         $option = [],
@@ -261,9 +264,12 @@
                         return false;
                     }
 
-                    $parent.after($hide.eq(0));
+                    let $first_hide = $hide.eq(0);
+                    $parent.after($first_hide);
                     len = $show.length + 1;
-                    $hide.eq(0).show();
+                    $first_hide.show();
+
+
                     oldTextName = $hide.eq(0).find(".opt-label").text();
                     $li = $list.find(".ans-opt");
 
@@ -271,11 +277,15 @@
 					    newTextName = $li.eq(i).find(".opt-label").text();
 					    $li.eq(i).find(".opt-label").text(oldTextName);
 					    oldTextName = newTextName;
-					}				
+					}
+					//update
+					_this.opts_num = _this.rows_num();				
 				});
+
 			},
 
 			prepDel(){
+				let _this = this;
 				$('.opt-del').on('click', function(e){
                    	let $this = $(this),
                         $option = [],
@@ -296,7 +306,14 @@
 
                     $show.eq($show.length - 1).after($parent);
                     len = $show.length;
+
+                   	//内外都清空数据
+                    $parent.find('.checkbox').prop('checked', false);
+                    $parent.find('.opt-input').find('input').val('');
+                    _this.options[index] = null;
+                    _this.choices[index] = false;
                     $parent.hide();
+                  
                     oldTextName = $parent.find(".opt-label").text();
                     $li = $list.find(".ans-opt");
 
@@ -304,7 +321,8 @@
                         newTextName = $li.eq(i).find(".opt-label").text();
                         $li.eq(i).find(".opt-label").text(oldTextName);
                         oldTextName = newTextName;
-                    }					
+                    }	
+                    _this.opts_num = _this.rows_num();				
 				});
 			},
 
@@ -326,11 +344,10 @@
 
                     $prev = $li.eq(index - 1);                    
                     $prev.css("marginTop", ($parent.height() + liMarginTop) + "px");
-
                     
                     $parent.stop().animate({
                         "top": "-" + (liMarginBottom + $prev.height() + liMarginTop + $parent.height()) + "px"
-                    }, 400, function () {
+                    }, 500, function () {
                         $parent.css("top", "0px");
                         $prev.css("marginTop", liMarginTop + "px");
                         prevName = $prev.find(".opt-label").text();
@@ -355,14 +372,14 @@
                     if (index >= $li.length - 1) {
                         return false;
                     }
+
                     $next = $li.eq(index + 1);
                     $next.css("marginBottom", ($parent.height() + liMarginBottom) + "px");
                     $parent.stop().animate({
                         "top": liMarginBottom + $next.height() + liMarginBottom + $parent.height() + "px"
-                    }, 400, function () {
+                    }, 500, function () {
                         $parent.css("top", "0px");
                         $next.css("marginBottom", liMarginBottom + "px");
-
                         nextName = $next.find(".opt-label").text();
                         $next.after($parent);
                         $next.find(".opt-label").text(currName);
@@ -489,7 +506,8 @@
 				this.prepAdd();
 				this.prepUp();
 				this.prepDown();
-				this.prepCorrect();				
+				this.prepCorrect();		
+				this.opts_num = this.rows_num();	
 			}			
 		}
 	}

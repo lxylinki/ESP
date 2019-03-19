@@ -65,8 +65,8 @@
 					</div>				
 					<!--add-->
 					<div class="opt-add-del">
-						<i class="iconfont opt-add">&#xe62d;</i>
-						<i class="iconfont opt-del">&#xe6a9;</i>
+						<i class="iconfont opt-add" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
+						<i class="iconfont opt-del" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
 					</div>
 					
 					<!--correct one-->
@@ -89,8 +89,8 @@
 					</div>				
 					<!--add-->
 					<div class="opt-add-del">
-						<i class="iconfont opt-add">&#xe62d;</i>
-						<i class="iconfont opt-del">&#xe6a9;</i>
+						<i class="iconfont opt-add" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
+						<i class="iconfont opt-del" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
 					</div>
 					
 					<!--correct one-->
@@ -114,8 +114,8 @@
 					</div>				
 					<!--add-->
 					<div class="opt-add-del">
-						<i class="iconfont opt-add">&#xe62d;</i>
-						<i class="iconfont opt-del">&#xe6a9;</i>
+						<i class="iconfont opt-add" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
+						<i class="iconfont opt-del" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
 					</div>
 					
 					<!--correct one-->
@@ -138,8 +138,8 @@
 					</div>				
 					<!--add-->
 					<div class="opt-add-del">
-						<i class="iconfont opt-add">&#xe62d;</i>
-						<i class="iconfont opt-del">&#xe6a9;</i>
+						<i class="iconfont opt-add" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
+						<i class="iconfont opt-del" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
 					</div>
 					
 					<!--correct one-->
@@ -162,8 +162,8 @@
 					</div>				
 					<!--add-->
 					<div class="opt-add-del">
-						<i class="iconfont opt-add">&#xe62d;</i>
-						<i class="iconfont opt-del">&#xe6a9;</i>
+						<i class="iconfont opt-add" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
+						<i class="iconfont opt-del" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
 					</div>
 					
 					<!--correct one-->
@@ -220,12 +220,9 @@
 
 				exp_options:[],
 				exp_value: '',
-				answer: ''
+				answer: '',
+				opts_num: 0
 			}
-		},
-
-		updated(){
-
 		},
 		
 		methods: {
@@ -242,7 +239,13 @@
 				}				
 			},
 
+			rows_num(){
+            	let	$show = $(".opts-div").find('.ans-opt:visible');
+            	return $show.length;
+			},		
+
 			prepAdd(){
+				let _this = this;
 				$('.opt-add').on('click', function(e){
                     let $this = $(this),
                         $option = [],
@@ -271,11 +274,13 @@
 					    newTextName = $li.eq(i).find(".opt-label").text();
 					    $li.eq(i).find(".opt-label").text(oldTextName);
 					    oldTextName = newTextName;
-					}				
+					}	
+					_this.opts_num = _this.rows_num();				
 				});
 			},
 
 			prepDel(){
+				let _this = this;
 				$('.opt-del').on('click', function(e){
                    	let $this = $(this),
                         $option = [],
@@ -296,6 +301,13 @@
 
                     $show.eq($show.length - 1).after($parent);
                     len = $show.length;
+
+                    //内外都清空数据
+                    $parent.find('.checkbox').prop('checked', false);
+                    $parent.find('.opt-input').find('input').val('');
+                    _this.options[index] = null;
+                    _this.choices[index] = false;
+                    
                     $parent.hide();
                     oldTextName = $parent.find(".opt-label").text();
                     $li = $list.find(".ans-opt");
@@ -304,7 +316,8 @@
                         newTextName = $li.eq(i).find(".opt-label").text();
                         $li.eq(i).find(".opt-label").text(oldTextName);
                         oldTextName = newTextName;
-                    }					
+                    }	
+                    _this.opts_num = _this.rows_num();					
 				});
 			},
 
@@ -391,6 +404,7 @@
 						Utils.lalert('请输入选项');
 						return;								
 					}
+
 					//only one can be selected
 					if(opt.checked && _this.type == 1){
 						for(let i in _this.choices) {
@@ -451,15 +465,15 @@
 				}
 
 				if(this.options[2]) {
-					data.option_c = this.cval;
+					data.option_c = this.options[2];
 				}
 
 				if(this.options[3]) {
-					data.option_d = this.dval;
+					data.option_d = this.options[3];
 				}
 				
 				if(this.options[4]) {
-					data.option_e = this.eval;
+					data.option_e = this.options[4];
 				}
 
 				this.$http.post(api, data).then((resp)=>{
@@ -491,10 +505,9 @@
 				this.prepUp();
 				this.prepDown();
 				this.prepCorrect();
+				this.opts_num = this.rows_num();
 
-				//this.fillExpSelect();
 				let row = this.$store.state.row;
-				//console.log(row);
 				this.id = row.id;
 				this.type = row.type;
 				this.exp_value = row.eid;
@@ -504,17 +517,14 @@
 				
 				if(row.option_c) {
 					this.options[2] = row.option_c;
-					//this.showC = true;
 				}
 
 				if(row.option_d) {
 					this.options[3] = row.option_d;
-					//this.showD = true;
 				}
 
 				if(row.option_e) {
 					this.options[4] = row.option_e;
-					//this.showE = true;
 				}
 
 				this.answer = row.answer;
@@ -522,11 +532,9 @@
 				if(row.answer.indexOf('A') != -1) {
 					this.choices[0] = true;
 				}
-
 				if(row.answer.indexOf('B') != -1) {
 					this.choices[1] = true;
 				}
-
 				if(row.answer.indexOf('C') != -1) {
 					this.choices[2] = true;
 				}
