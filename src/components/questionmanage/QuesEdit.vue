@@ -377,12 +377,15 @@
 
                         //update answer after move
                         let new_index = index-1,
-                        	old_ans = currName.split('').pop(),
-                        	new_ans = prevName.split('').pop();
+                        	new_ans = currName.split('').pop(),
+                        	old_ans = prevName.split('').pop();
 
                         _this.exchange(_this.options, index, new_index);
                         _this.exchange(_this.choices, index, new_index);
                         _this.answer = _this.answer.replace(old_ans, new_ans);
+
+                        console.log(old_ans, new_ans);
+                        console.log('up', _this.options, _this.choices, _this.answer);
 
                         $prev.find(".opt-label").text(currName);
                         $parent.find(".opt-label").text(prevName);
@@ -417,13 +420,15 @@
                         $next.after($parent);
 
                         //update answer
-                        let new_index = index-1,
+                        let new_index = index+1,
                         	old_ans = currName.split('').pop(),
                         	new_ans = nextName.split('').pop();
 
+                        console.log(old_ans, new_ans);
                         _this.exchange(_this.options, index, new_index);
                         _this.exchange(_this.choices, index, new_index);
                         _this.answer = _this.answer.replace(old_ans, new_ans);
+                        console.log('down', _this.options, _this.choices, _this.answer);
 
                         $next.find(".opt-label").text(currName);
                         $parent.find(".opt-label").text(nextName);
@@ -535,7 +540,12 @@
 
 		},
 
+		updated(){
+			console.log('updated', this.options, this.choices, this.answer);
+		},
+
 		mounted(){		
+			console.log('mounted');
 			Utils.page_check_status.call(this).then(resp=>{
 				this.fillExpSelect(resp);
 			});	
@@ -593,6 +603,7 @@
 					this.choices[4] = true;
 				}
 				this.analyze = row.analysis;
+				console.log(this.options, this.choices, this.answer);
 			}
 		}
 	}
