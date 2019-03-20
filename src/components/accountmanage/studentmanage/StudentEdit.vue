@@ -10,23 +10,20 @@
 		<div>
 			<div class='texts'>
 				<div> 用户名： 
-					<input class="longinput" type="text" v-model="username">
-					<!--<el-input class="usrenter" v-model="username" placeholder=""></el-input>-->
+					<input class="longinput" type="text" v-model="username" disabled="true">
 					<span class="redalert" v-show="!username">*</span>
 					<span class="whitedefault"v-show="username">*</span>
 					<!---->
 				</div>
 				<div style="height: 30px;"></div>
 				<div> 密码： 
-					<input class="longinput" type="text" v-model="password">
-					<!--<el-input class="usrenter" v-model="password" placeholder=""></el-input>-->
-					<span class="redalert" v-show="!password">*</span>
-					<span class="whitedefault" v-show="password">*</span>
+					<input class="longinput" type="password" v-model="password">
+					<!--<span class="redalert" v-show="!password">*</span>-->
+					<span class="whitedefault">*</span>
 				</div>
 				<div style="height: 30px;"></div>
 				<div> 姓名： 
 					<input class="longinput" type="text" v-model="realname">
-					<!--<el-input class="usrenter" v-model="name" placeholder=""></el-input>-->
 					<span class="redalert" v-show="!realname">*</span>
 					<span class="whitedefault" v-show="realname">*</span>
 				</div>
@@ -120,15 +117,18 @@
 			saveEdit(){
 				asyncReq.call(this);
 				async function asyncReq(){
-					this.epassword = await Utils.encrypt.call(this, this.password);
-					var api = global_.student_update;
+					let api = global_.student_update;
 					let data = {
 						'user_id': this.user_id,
 						'class_id': this.class_value,
-						'password': this.epassword,
+						//'password': this.epassword,
 						'realname': this.realname,
 						'gender': this.gender,
 						'status': this.status,
+					}
+					
+					if(this.password) {
+						data.password = await Utils.encrypt.call(this, this.password);
 					}
 
 					this.$http.post(api, data).then((resp)=>{

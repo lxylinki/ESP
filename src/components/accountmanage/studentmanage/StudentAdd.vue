@@ -18,7 +18,7 @@
 				</div>
 				<div style="height: 30px;"></div>
 				<div> 密码： 
-					<input class="longinput" type="text" v-model="password">
+					<input class="longinput" type="password" v-model="password">
 					<!--<el-input class="usrenter" v-model="password" placeholder=""></el-input>-->
 					<span class="redalert" v-show="!password">*</span>
 					<span class="whitedefault" v-show="password">*</span>
@@ -113,7 +113,7 @@
 				asyncReq.call(this);
 				async function asyncReq(){
 					this.epassword = await Utils.encrypt.call(this, this.password);
-					var api = global_.student_create;
+					let api = global_.student_create;
 					let data = {
 						'class_id': this.class_value,
 						'username': this.username,
@@ -127,8 +127,7 @@
 						//this.$store.commit('incRowNumAfter', 1);
 						this.$router.go(-1);
 					},(err)=>{
-						Utils.lalert('创建学生失败');
-						console.log(err);
+						Utils.err_process.call(this, err, '创建学生失败');
 					});
 				}
 

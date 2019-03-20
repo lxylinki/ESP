@@ -12,13 +12,10 @@
 
 					<div class='ctrl'>
 						<div class="setting">
-							<!--<i class="el-icon-setting" style="color: white"></i>-->
 							<i class="iconfont" style="color: white">&#xe606;</i>
-							<!--<el-button type="primary" icon="el-icon-search">搜索</el-button>-->
 							<el-button type="text" style="color: white;" v-on:click="goPersonal()">设置</el-button>
 						</div>
 						<div class="logoff">
-							<!--<i class="el-icon-delete" style="color: white;"></i>-->
 							<i class="iconfont" style="color: white;">&#xe62e;</i>
 							<el-button type="text" style="color: white" v-on:click="quit()">退出</el-button>
 						</div>

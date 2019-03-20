@@ -102,12 +102,11 @@
 					
 					this.$http.post(api, data).then((resp)=>{
 						Utils.lalert('添加教师成功');
-						this.$store.commit('sign', this.mod_name);
-						this.$store.commit('incRowNumAfter', 1);
+						//this.$store.commit('sign', this.mod_name);
+						//this.$store.commit('incRowNumAfter', 1);
 						this.$router.go(-1);
 					}, (err)=>{
-						Utils.lalert('添加教师失败');
-						console.log(err);
+						Utils.err_process.call(this, err, '添加教师失败');
 					});
 				}				
 			}

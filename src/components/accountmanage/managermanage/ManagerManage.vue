@@ -308,8 +308,8 @@
 		
 		mounted(){
 			Utils.page_check_status.call(this);
-			var name = this.$store.state.last_author;
-
+			//var name = this.$store.state.last_author;
+			/*
 			if(name === this.mod_name) {
 				var before = this.$store.state.row_num_before,
 					after = this.$store.state.row_num_after,
@@ -332,11 +332,8 @@
 				} else if(curpage > 0) {
 					this.curPage = curpage;
 				} 				
-			}
-
-			this.reqData('', '', '', this.curPage);
-			//layer.close(this.loading);
-
+			}*/
+			this.reqData('', '', '', 1);
 		}
 	}
 </script>

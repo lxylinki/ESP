@@ -226,11 +226,11 @@
 			},
 			
 			editRow(row){
-				this.$store.commit('sign', this.mod_name);
+				//this.$store.commit('sign', this.mod_name);
 				this.$store.commit('setEdit', true);
 				this.$store.commit('pickRow', row);
-				this.$store.commit('setCurPage', this.curPage);
-				this.$store.commit('setCurSearch', this.search_state);
+				//this.$store.commit('setCurPage', this.curPage);
+				//this.$store.commit('setCurSearch', this.search_state);
 				this.$router.push('/teacheredit');
 			},
 
@@ -261,8 +261,7 @@
 					this.reqData(this.search_state, this.curPage);
 
 				}, (err)=>{
-					Utils.lalert('删除教师失败');
-					console.log(err);
+					Utils.err_process.call(this, err, '删除教师失败');
 				});
 			},
 
@@ -288,8 +287,7 @@
 		      		Utils.lalert('批量导入成功');
 		      		
 		      	}, (err)=>{
-		      		Utils.lalert('批量导入失败');
-		      		console.log(err);
+		      		Utils.err_process.call(this, err, '批量导入失败');
 		      	});
 
 		     },
@@ -312,10 +310,13 @@
 
 			    this.$http.post(list_api, req_data).then((resp)=>{
 			    	//console.log(resp);
+			    	/*
 			    	this.$store.commit('sign', this.mod_name);
 			    	this.$store.commit('setRowNumBefore', resp.body.total);
 			    	this.$store.commit('setRowNumAfter', resp.body.total);
 			    	this.$store.commit('setRowsPerPage', this.rowsPerPage);
+			    	*/
+
 					this.tableData = resp.body._list;
 					this.totalPage = resp.body.total_page;
 			    	this.filterData(page);
@@ -345,8 +346,9 @@
 		},
 		mounted(){
 			Utils.page_check_status.call(this);
-			var name = this.$store.state.last_author;
 
+			/*
+			var name = this.$store.state.last_author;
 			if(name === this.mod_name) {
 				var before = this.$store.state.row_num_before,
 					after = this.$store.state.row_num_after,
@@ -369,9 +371,8 @@
 				} else if(curpage > 0) {
 					this.curPage = curpage;
 				} 				
-			}
-			this.reqData(this.search_state, this.curPage);
-			//layer.close(this.loading);
+			}*/
+			this.reqData(this.search_state, 1);
 		}
 	}
 </script>
@@ -404,28 +405,28 @@
 }*/
 
 /* operations text buttons */
- .op {
-  	position: relative;
-  	bottom: 8px;
-  	vertical-align: top;
-  	line-height: 0;
-  }  
+.op {
+	position: relative;
+	bottom: 8px;
+	vertical-align: top;
+	line-height: 0;
+}  
 
-  .box{
-  	position: relative;
-  }
+.box{
+	position: relative;
+}
 
-  #uploadfile {
-  	position: absolute;
-  	left: -9999px;
-  	opacity: 0;
-  }
+#uploadfile {
+	position: absolute;
+	left: -9999px;
+	opacity: 0;
+}
 
-  label {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	bottom: 0px;
-  	right: 0px;
-  }
+label {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+}
 </style>

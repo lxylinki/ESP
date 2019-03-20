@@ -10,7 +10,7 @@
 		<div>
 			<div class='texts'>
 				<div> 用户名： 
-					<input class="longinput" type="text" v-model="username">
+					<input class="longinput" type="text" v-model="username" disabled="true">
 					<!--<el-input class="usrenter" v-model="usrid" placeholder=""></el-input>-->
 					<span class="redalert" v-show="!username">*</span>
 					<span class="whitedefault"v-show="username">*</span>
@@ -20,8 +20,8 @@
 				<div> 密码： 
 					<input class="longinput" type="password" v-model="password">
 					<!--<el-input class="usrenter" v-model="password" placeholder=""></el-input>-->
-					<span class="redalert" v-show="!password">*</span>
-					<span class="whitedefault" v-show="password">*</span>
+					<!--<span class="redalert" v-show="!password">*</span>-->
+					<span class="whitedefault">*</span>
 				</div>
 				<div style="height: 30px;"></div>
 				<div> 姓名： 
@@ -75,7 +75,7 @@
 				realname: '',
 				status: 0,
 				username: '',
-				epassword: '',
+				//epassword: '',
 				gender: null
 			}
 		},
@@ -88,15 +88,18 @@
 			saveEdit(){
 				asyncReq.call(this);
 				async function asyncReq(){
-					this.epassword = await Utils.encrypt.call(this, this.password);
 					var api = global_.manager_update;
 					let data = {
 						'user_id': this.user_id,
 						'realname': this.realname,
 						'username': this.username,
-						'password': this.epassword,
+						//'password': this.epassword,
 						'status': this.status,
 						'gender': this.gender
+					}
+
+					if(this.password) {
+						data.password = await Utils.encrypt.call(this, this.password);
 					}
 
 					this.$http.post(api, data).then((resp)=>{
@@ -104,16 +107,16 @@
 						this.$router.go(-1);
 						
 					},(err)=>{
-						Utils.lalert('保存编辑失败');
-						console.log(err);
+						Utils.err_process.call(this, err, '编辑管理员失败')
 					});
 				}
 			}
 		},
+
 		mounted(){
 			Utils.page_check_status.call(this);
-			var edit = this.$store.state.edit;
-			
+
+			var edit = this.$store.state.edit;			
 			if(!edit) {
 				this.$router.go(-1);
 

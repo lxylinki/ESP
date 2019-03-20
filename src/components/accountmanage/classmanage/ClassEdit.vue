@@ -65,37 +65,16 @@
 
 			</div>
 
-		    <!-------------------------------------------------------------------------------------------->
-		    <!--
-			<el-select id="allteachers" v-model="value" filterable placeholder="请选择">
-				<el-option v-for="item in teachers" 
-						   :key="item.value" 
-						   :label="item.label" 
-						   :value="item.value">        	
-				</el-option>
-			</el-select>-->
-		    <!-------------------------------------------------------------------------------------------->
-		    <!--
-			<div id="example">
-				<select v-model='value' v-on:change="showChoice()">
-					<option v-for='item in teachers' :value='item.value'>
-						{{ item.label }}
-					</option>
-				</select>
-			</div>-->
-		    <!-------------------------------------------------------------------------------------------->
 		    <div id="allteachers" v-show="showSelect">
 
 		    	<div class="select-header select-header-normal" v-on:click="activate()">
 			    	<input type="text" class="select-header-text" placeholder="请搜索教师姓名" v-model="search_state"></input>
-
 					<i class="iconfont togglesign" v-on:click="toggleList()" v-show="!showToggle">&#xe607;</i>
 					<i class="iconfont togglesign" v-on:click="toggleList()" v-show="showToggle">&#xe608;</i>	
 		    	</div>
 
-
-				<div class="select-list" v-show="showToggle" style="overflow-y: scroll; height: 190px;">
-			    	<li class="select-item" v-for='item in filtered_teachers' v-on:click="makeChoice(item)">{{item.realname}}</li>				
+				<div class="select-list" v-show="showToggle" style="overflow-y: scroll; height: 120px;">
+			    	<li class="select-item" v-for='item in filtered_teachers' v-on:click="makeChoice(item)">{{item.realname}}</li>		
 				</div>
 		    </div>
 
@@ -138,15 +117,19 @@
 
 			toggleList(){
 				this.showToggle = !this.showToggle;
+				if(this.showToggle) {
+					this.filtered_teachers = this.teachers;
+				}				
 			},
 			
 			makeChoice(teacher) {
-				//document.querySelector('.select-header-text').value = teacher.realname;
 				this.search_state = teacher.realname;
 				this.teacher_value = teacher.user_id;
+				this.showToggle = false;
 			},
 
 			showAllTeachers(){
+				this.showToggle = true;
 				var _this = this;
 				layer.open({
 					type: 1,
@@ -159,15 +142,13 @@
 					},
 					btn2: function(){
 						//console.log('CANCEL');
+						_this.search_state = '';
+					},
+					end: function(){
+						_this.search_state = '';
 					}
-				  /*
-				  end: function(){
-				  	$('.teacherlist').css('display','none');
-				  }*/
 				});
 			},
-
-
 
 			reqTeacherData(keyword, page) {
 				asyncReq.call(this);
@@ -330,13 +311,13 @@
 }
 
 .select-header-normal {
-	border: 1px solid #cccccc;
-	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+	border: 1px solid rgba(204, 204, 204, 0.5);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 .select-header-active {
-	border: 1px solid #619cde;
-	box-shadow: 0 1px 6px rgba(97, 156, 222, 0.4);
+	border: 1px solid rgba(97, 156, 222, 0.8);
+	box-shadow: 0 1px 1px rgba(97, 156, 222, 0.2);
 }
 
 .select-list {
@@ -346,8 +327,8 @@
 	margin-top: 5px;
 	width: 210px;
 	height: 100%;
-	border: 1px solid #cccccc;
-	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+	border: 1px solid rgba(204, 204, 204, 0.5);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 .highlight, .select-item:hover {

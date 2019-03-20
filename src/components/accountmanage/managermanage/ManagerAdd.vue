@@ -94,7 +94,6 @@
 			addCreate(){
 				asyncReq.call(this);
 				async function asyncReq(){
-					//this.epassword = await this.encrypt(this.password);
 					this.epassword = await Utils.encrypt.call(this, this.password);
 					var api = global_.manager_create;
 					let data = {
@@ -104,16 +103,15 @@
 						'status': this.status,
 						'gender': this.gender
 					}
-					//var schid = await this.getSchId.call(this);					
+
 					this.$http.post(api, data).then((resp)=>{
 						Utils.lalert('添加校管理员成功');
-						this.$store.commit('sign', this.mod_name);
-						this.$store.commit('incRowNumAfter', 1);
+						// this.$store.commit('sign', this.mod_name);
+						// this.$store.commit('incRowNumAfter', 1);
 						this.$router.go(-1);
 
 					}, (err)=>{
-						Utils.lalert('添加校管理员失败');
-						console.log(err);
+						Utils.err_process.call(this, err, '添加校管理员失败');
 					});
 				}
 			}
