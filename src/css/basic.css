@@ -57,10 +57,9 @@ select {
   position: absolute;
 }
 
-.el-main:not(.records-container) {
+.el-main {
   position: absolute;
   height: 90%;
-  bottom: 0px;
   left: 230px;
   top: 100px;
   width: 88%;
@@ -68,15 +67,16 @@ select {
   overflow: auto;
 }
 
-.el-container:not(.records-container)  {
+.el-container  {
   position: absolute;
   height: 100%;
   width: 100%;
-  border-bottom: 10px solid #f0f2f5;
+  border-bottom: 20px solid #f0f2f5;
 }
 
-.el-aside:not(.records-container)  {
+.el-aside {
   position: absolute;
+  width: 230px !important;
   top: 100px;
   overflow: hidden;
 }

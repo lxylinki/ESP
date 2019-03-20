@@ -3,9 +3,9 @@
 		<div class='navigation'>
 
 			<el-container>
+
 				<el-header style="background: #20222d; height: 100px; overflow: hidden;">
-					<img src="./assets/esplogo.png" class="logo">
-					
+					<img src="./assets/esplogo.png" class="logo">					
 					<div class="welcometext" v-show="isAdmin">{{hellotext}}： 管理员</div>
 					<div class="welcometext" v-show="isTeacher">{{hellotext}}： 老师</div>
 					<div class="welcometext" v-show="isStudent">{{hellotext}}： 同学</div>
@@ -23,19 +23,17 @@
 				</el-header>
 
 
-				<el-container>
-        			<el-aside>
-        				<!--<div style="height: 110px; background: #31313c"></div>-->
-        				<Nav v-bind:menuList='menuList'
-        				     v-bind:curGroup='current_group'></Nav>
-        				<!--<div class="navbg"></div>-->
-        			</el-aside>
-        
-        			<el-main>
-        				<!--main content area-->
-        				<router-view></router-view>
-        			</el-main>
-      			</el-container>
+    			<el-aside>
+    				<!--<div style="height: 110px; background: #31313c"></div>-->
+    				<Nav v-bind:menuList='menuList'
+    				     v-bind:curGroup='current_group'></Nav>
+    				<!--<div class="navbg"></div>-->
+    			</el-aside>
+    
+    			<el-main>
+    				<!--main content area-->
+    				<router-view></router-view>
+    			</el-main>
 
 			</el-container>
 
