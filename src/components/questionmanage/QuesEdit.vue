@@ -245,7 +245,7 @@
 			},	
 
 			//helper functions
-			exchange(arr, i,  j) {
+			exchange(arr, i, j) {
 				let tmp = arr[i];
 				arr[i] = arr[j];
 				arr[j] = tmp;
@@ -373,16 +373,18 @@
                         $parent.css("top", "0px");
                         $prev.css("marginTop", liMarginTop + "px");
                         prevName = $prev.find(".opt-label").text();
-                        $prev.before($parent);
 
                         //update answer after move
                         let new_index = index-1,
-                        	new_ans = currName.split('').pop(),
-                        	old_ans = prevName.split('').pop();
+                        	old_ans = currName.split('').pop(),
+                        	new_ans = prevName.split('').pop();
 
                         _this.exchange(_this.options, index, new_index);
                         _this.exchange(_this.choices, index, new_index);
-                        _this.answer = _this.answer.replace(old_ans, new_ans);
+                        if(_this.answer.indexOf(new_ans) == -1){
+                        	_this.answer = _this.answer.replace(old_ans, new_ans);
+                        }
+                        $prev.before($parent);
 
                         console.log(old_ans, new_ans);
                         console.log('up', _this.options, _this.choices, _this.answer);
@@ -417,9 +419,8 @@
                         $next.css("marginBottom", liMarginBottom + "px");
 
                         nextName = $next.find(".opt-label").text();
-                        $next.after($parent);
-
-                        //update answer
+                      	
+                      	//update answer
                         let new_index = index+1,
                         	old_ans = currName.split('').pop(),
                         	new_ans = nextName.split('').pop();
@@ -427,7 +428,13 @@
                         console.log(old_ans, new_ans);
                         _this.exchange(_this.options, index, new_index);
                         _this.exchange(_this.choices, index, new_index);
-                        _this.answer = _this.answer.replace(old_ans, new_ans);
+                        if(_this.answer.indexOf(new_ans) == -1){
+                        	_this.answer = _this.answer.replace(old_ans, new_ans);
+                        }
+
+                        $next.after($parent);
+
+                        console.log(old_ans, new_ans);
                         console.log('down', _this.options, _this.choices, _this.answer);
 
                         $next.find(".opt-label").text(currName);
@@ -540,8 +547,27 @@
 
 		},
 
+		beforeUpdate(){
+			//console.log('before update', this.options, this.choices, this.answer);
+		},
 		updated(){
-			console.log('updated', this.options, this.choices, this.answer);
+			//console.log('updated', this.options, this.choices, this.answer);
+		},
+
+		watch: {
+			options(newVal, oldVal) {
+				console.log('options old:', oldVal);
+				console.log('options new:', newVal);
+			},
+
+			choices(newVal, oldVal) {
+				console.log('choices old:', oldVal);
+				console.log('choices new:', newVal);
+			},
+			answer(newVal, oldVal) {
+				console.log('answer old:', oldVal);
+				console.log('answer new:', newVal);
+			}
 		},
 
 		mounted(){		
