@@ -242,7 +242,14 @@
 			rows_num(){
             	let	$show = $(".opts-div").find('.ans-opt:visible');
             	return $show.length;
-			},		
+			},	
+
+			//helper functions
+			exchange(arr, i,  j) {
+				let tmp = arr[i];
+				arr[i] = arr[j];
+				arr[j] = tmp;
+			},	
 
 			//only minimum num of options are showed at the beginning
 			initShow(){
@@ -340,6 +347,7 @@
 			},
 
 			prepUp(){
+				let _this = this;
 				$('.opt-up').on('click', function(e){
                 	let $this = $(this),
                         $parent = $this.parents(".ans-opt"),
@@ -366,6 +374,16 @@
                         $prev.css("marginTop", liMarginTop + "px");
                         prevName = $prev.find(".opt-label").text();
                         $prev.before($parent);
+
+                        //update answer after move
+                        let new_index = index-1,
+                        	old_ans = currName.split('').pop(),
+                        	new_ans = prevName.split('').pop();
+
+                        _this.exchange(_this.options, index, new_index);
+                        _this.exchange(_this.choices, index, new_index);
+                        _this.answer = _this.answer.replace(old_ans, new_ans);
+
                         $prev.find(".opt-label").text(currName);
                         $parent.find(".opt-label").text(prevName);
                     });
@@ -373,6 +391,7 @@
 			},
 
 			prepDown(){
+				let _this = this;
 				$('.opt-down').on('click', function(e){
                     let $this = $(this),
                         $parent = $this.parents(".ans-opt"),
@@ -396,6 +415,16 @@
 
                         nextName = $next.find(".opt-label").text();
                         $next.after($parent);
+
+                        //update answer
+                        let new_index = index-1,
+                        	old_ans = currName.split('').pop(),
+                        	new_ans = nextName.split('').pop();
+
+                        _this.exchange(_this.options, index, new_index);
+                        _this.exchange(_this.choices, index, new_index);
+                        _this.answer = _this.answer.replace(old_ans, new_ans);
+
                         $next.find(".opt-label").text(currName);
                         $parent.find(".opt-label").text(nextName);
                     });					
