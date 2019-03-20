@@ -292,11 +292,11 @@
 			},
 
 			editRow(row){
-				this.$store.commit('sign', this.mod_name);
+				//this.$store.commit('sign', this.mod_name);
 				this.$store.commit('setEdit', true);
 				this.$store.commit('pickRow', row);
-				this.$store.commit('setCurPage', this.curPage);
-				this.$store.commit('setCurSearch', this.search_state);
+				//this.$store.commit('setCurPage', this.curPage);
+				//this.$store.commit('setCurSearch', this.search_state);
 				
 				this.$router.push('/studentedit');				
 			},

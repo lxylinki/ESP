@@ -222,8 +222,8 @@
 					this.filterSearchData(1);
 				}
 			},
+			
 			addQues(){
-				this.$store.commit('setEdit', true);
 				this.$router.push('/questionadd');
 			},
 

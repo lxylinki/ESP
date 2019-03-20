@@ -20,8 +20,8 @@
 				<div> 密码： 
 					<input class="longinput" type="password" v-model="password">
 					<!--<el-input class="usrenter" v-model="password" placeholder=""></el-input>-->
-					<span class="redalert" v-show="!password">*</span>
-					<span class="whitedefault" v-show="password">*</span>
+					<span class="redalert"  v-show="password.split('').length<6">*</span>
+					<span class="whitedefault" v-show="password.split('').length>=6">*</span>
 				</div>
 				<div style="height: 30px;"></div>
 				<div> 姓名： 
@@ -50,7 +50,7 @@
 				</div>
 				<div style="height: 30px;"></div>
 				<div class="btn-group">
-					<el-button class="confirm" v-on:click="addCreate()">确定</el-button>
+					<el-button class="confirm" v-on:click="preCheck()">确定</el-button>
 					<el-button class="goback" v-on:click="goBack()">返回</el-button>
 				</div>
 			</div>
@@ -84,6 +84,28 @@
 		methods:{
 			goBack(){
 				this.$router.go(-1);
+			},
+
+			preCheck(){
+				if(!this.username) {
+					Utils.lalert('请输入用户名');
+					return;
+
+				} else if(!this.password) {
+					Utils.lalert('请输入密码');
+					return;
+
+				} else if(this.password && this.password.split('').length<6){
+					Utils.lalert('密码长度不得小于6位');
+					return;					
+
+				} else if(!this.realname) {
+					Utils.lalert('请输入真实姓名');
+					return;
+
+				} else {
+					this.addCreate();
+				}
 			},
 
 			addCreate(){

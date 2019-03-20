@@ -536,20 +536,14 @@
 				this.fillExpSelect(resp);
 			});	
 
-			let edit = this.$store.state.edit;
-			if(!edit) {
-				this.$router.go(-1);
-
-			} else {
-				this.type = 1;
-				this.prepDel();
-				this.prepAdd();
-				this.prepUp();
-				this.prepDown();
-				this.prepCorrect();		
-				this.initShow();
-				this.opts_num = this.rows_num();	
-			}			
+			this.type = 1;
+			this.prepDel();
+			this.prepAdd();
+			this.prepUp();
+			this.prepDown();
+			this.prepCorrect();		
+			this.initShow();
+			this.opts_num = this.rows_num();			
 		}
 	}
 </script>

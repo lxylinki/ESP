@@ -254,11 +254,11 @@
 				asyncReq.call(this);
 				async function asyncReq(){
 					let resp = await this.reqMngList(usr_name, real_name, sch_name, page);
-
+					/*
 					this.$store.commit('sign', this.mod_name);
 			    	this.$store.commit('setRowNumBefore', resp.body.total);
 			    	this.$store.commit('setRowNumAfter', resp.body.total);
-			    	this.$store.commit('setRowsPerPage', this.rowsPerPage);
+			    	this.$store.commit('setRowsPerPage', this.rowsPerPage);*/
 
 					this.tableData = resp.body._list;
 					this.totalPage = resp.body.total_page;
@@ -268,11 +268,11 @@
 
 			editRow(row){
 				//console.log(row);
-				this.$store.commit('sign', this.mod_name);
+				//this.$store.commit('sign', this.mod_name);
 				this.$store.commit('setEdit', true);
 				this.$store.commit('pickRow', row);
-				this.$store.commit('setCurPage', this.curPage);
-				this.$store.commit('setCurSearch', this.search_state);
+				//this.$store.commit('setCurPage', this.curPage);
+				//this.$store.commit('setCurSearch', this.search_state);
 				this.$router.push('/manageredit');
 			},
 
