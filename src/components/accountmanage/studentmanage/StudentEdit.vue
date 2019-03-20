@@ -69,7 +69,7 @@
 
 				<div style="height: 30px;"></div>
 				<div class="btn-group">
-					<el-button class="confirm" v-on:click="saveEdit()">确定</el-button>
+					<el-button class="confirm" v-on:click="preCheck()">确定</el-button>
 					<el-button class="goback" v-on:click="goBack()">返回</el-button>
 				</div>
 			</div>
@@ -100,8 +100,23 @@
 			showClassVal(){
 				console.log(this.class_value);
 			},
+			
 			goBack(){
 				this.$router.go(-1);
+			},
+
+			preCheck(){
+				if(!this.realname) {
+					Utils.lalert('请输入真实姓名');
+					return;
+
+				} else if(this.password && this.password.split('').length<6) {
+					Utils.lalert('密码长度不得小于6位');
+					return;
+
+				} else {
+					this.saveEdit();
+				}
 			},
 
 			//teacher name, class name
@@ -168,6 +183,7 @@
 .longselect /deep/ .el-input__inner {
 	height: 34px;
 	width: 300px;
+	border-radius: 0;
 }
 
 .texts {

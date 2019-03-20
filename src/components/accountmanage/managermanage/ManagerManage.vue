@@ -242,9 +242,7 @@
 						resolve(resp);
 						
 					},(err)=>{
-						Utils.lalert('请求管理员列表失败');
-						console.log(err);
-						layer.close(this.loading);
+						Utils.err_process.call(this, err, '请求管理员列表失败');
 					});
 				});
 			},

@@ -43,7 +43,7 @@
 		
 		<div style="display: inline-block; margin-left: 30px;">
 			<div class='box'>
-				<input type="file" id="uploadfile" v-on:change="upFile($event)">
+				<input type="file" id="uploadfile" v-on:change="upData($event)">
 				<label for='uploadfile' style="cursor: pointer;"></label>
 				<el-button plain ><i class="iconfont">&#xe69c;</i>  批量导入</el-button>
 			</div>
@@ -261,7 +261,11 @@
 					this.reqData(this.search_state, this.curPage);
 
 				}, (err)=>{
-					Utils.err_process.call(this, err, '删除教师失败');
+					if(err.body.error.hasOwnProperty('id')){
+						Utils.err_process.call(this, err, '无法删除：已分配到班级');
+					} else {
+						Utils.err_process.call(this, err, '删除教师失败');
+					}
 				});
 			},
 
@@ -275,21 +279,46 @@
 			},
 
 		     upFile(event) {
-		      	this.ufile = event.target.files[0];
+		     	return new Promise((resolve, reject)=>{
+			      	this.ufile = event.target.files[0];
 
-		      	var formData = new FormData();
-		      	formData.append('batch-signup', this.ufile);
-		      	formData.append('group', global_.teacher_group);
+			      	let formData = new FormData();
+			      	formData.append('batch_signup', this.ufile);
+			      	formData.append('group', global_.teacher_group);
+			      	formData.append('overwrite', 1);
 
-		      	//upload request
-		      	var api = global_.batch_upload;
-		      	this.$http.post(api, formData).then((response)=>{
-		      		Utils.lalert('批量导入成功');
-		      		
-		      	}, (err)=>{
-		      		Utils.err_process.call(this, err, '批量导入失败');
-		      	});
+			      	//upload request
+			      	let api = global_.batch_upload;
+			      	this.$http.post(api, formData).then((resp)=>{
+			      		resolve(resp);
+			      		
+			      	}, (err)=>{
+			      		Utils.err_process.call(this, err, '上传文件失败');
+			      	});
+		     	});
+		     },
 
+		     upData(event) {
+		     	asyncReq.call(this);
+		     	async function asyncReq(){
+		     		let resp = await this.upFile(event),
+		     			teachers_data = resp.body,
+		     			api = global_.batch_upload;
+		     			
+			      	let data = {
+			      		'data': teachers_data,
+			      		'group': global_.teacher_group,
+			      		'overwrite': 1
+			      	};
+
+			      	this.$http.post(api, data).then((resp)=>{
+			      		Utils.lalert('批量导入成功');
+			      		this.loadPage(1);
+
+			      	}, (err)=>{
+			      		Utils.err_process.call(this, err, '批量导入失败');
+			      	});
+		     	}
 		     },
 
 		     reqData(keyword, page){
@@ -323,9 +352,7 @@
 			    	layer.close(this.loading);
 
 			    },(err)=>{
-			    	Utils.lalert('请求列表失败');
-			    	console.log(err);
-			    	layer.close(this.loading);
+			    	Utils.err_process.call(this, err, '请求列表失败');
 			    });
 		     },
 
