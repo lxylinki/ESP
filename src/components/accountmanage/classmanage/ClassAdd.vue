@@ -14,22 +14,20 @@
 			<div class='textinputs'>
 				<div> 班级名称： 
 					<input  class="longinput" type="text" v-model="classname">
-					<!--<el-input class="usrenter" v-model="classname" placeholder="必填"></el-input>-->
 					<span class="redalert" v-show="!classname">*</span>
 					<span class="whitedefault" v-show="classname">*</span>
-					<!---->
 				</div>
+
 				<div style="height: 30px;"></div>
 				<div> 专业： 
 					<input class="longinput" type="text" v-model="major">
-					<!--<el-input class="usrenter" v-model="major" placeholder=""></el-input>-->
-					<span class="redalert" v-show="!major">*</span>
-					<span class="whitedefault" v-show="major">*</span>
+					<!--<span class="redalert" v-show="!major">*</span>-->
+					<span class="whitedefault">*</span>
 				</div>
+
 				<div style="height: 30px;"></div>
 				<div> 年级： 
 					<input class="longinput" type="text" v-model="grade">
-					<!--<el-input class="usrenter" v-model="major" placeholder=""></el-input>-->
 					<span class="redalert" v-show="!grade">*</span>
 					<span class="whitedefault" v-show="grade">*</span>
 				</div>
@@ -53,7 +51,7 @@
 				<div style="height: 30px;"></div>
 
 				<div class="btn-group">
-					<el-button class="confirm" v-on:click="addCreate()">确定</el-button>
+					<el-button class="confirm" v-on:click="preCheck()">确定</el-button>
 					<el-button class="goback" v-on:click="goBack()">返回</el-button>
 				</div>
 
@@ -206,10 +204,18 @@
 				this.teachers_added.splice(key, 1);
 			},
 
-			addCreate(){
-				// 1. create class
-				// 2. add all teachers
-				this.createClass();
+			preCheck(){
+				if(!this.classname) {
+					Utils.lalert('请输入班级名称');
+					return;
+
+				} else if(!this.grade) {
+					Utils.lalert('请输入年级');
+					return;
+
+				} else {
+					this.createClass();
+				}
 			},
 
 			//back one step
@@ -272,6 +278,7 @@
 }
 
 .select-list {
+	color: #666666;
 	margin: auto;
 	padding-left: 5px;
 	padding-right: 5px;
