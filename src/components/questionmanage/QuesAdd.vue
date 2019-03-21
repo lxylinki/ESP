@@ -68,7 +68,9 @@
 					 v-on:select="select_opt"
 					 v-on:unselect="unselect_opt"
 					 v-on:mvup="mv_up"
-					 v-on:mvdown="mv_down"></Option>
+					 v-on:mvdown="mv_down"
+
+					 class='animated'></Option>
 			</div>
 		</div>
 			
@@ -122,21 +124,21 @@
 					{
 						id: 2,
 						name: '选项C',
-						show: true,
+						show: false,
 						text: '',
 						correct: false,
 					},
 					{
 						id: 3,
 						name: '选项D',
-						show: true,
+						show: false,
 						text: '',
 						correct: false,
 					},
 					{	
 						id: 4,
 						name: '选项E',
-						show: true,
+						show: false,
 						text: '',
 						correct: false,
 					},																				
@@ -343,7 +345,7 @@
 			Utils.page_check_status.call(this).then(resp=>{
 				this.fillExpSelect(resp);
 			});	
-			this.opts_num = this.active_rows().length;	
+			this.opts_num = this.active_rows().length;
 		}
 	}
 </script>
