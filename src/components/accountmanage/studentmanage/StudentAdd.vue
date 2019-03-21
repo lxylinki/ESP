@@ -11,22 +11,19 @@
 			<div class='texts'>
 				<div> 用户名： 
 					<input class="longinput" type="text" v-model="username">
-					<!--<el-input class="usrenter" v-model="username" placeholder=""></el-input>-->
 					<span class="redalert" v-show="!username">*</span>
 					<span class="whitedefault"v-show="username">*</span>
 					<!---->
 				</div>
 				<div style="height: 30px;"></div>
 				<div> 密码： 
-					<input class="longinput" type="text" v-model="password">
-					<!--<el-input class="usrenter" v-model="password" placeholder=""></el-input>-->
-					<span class="redalert" v-show="!password">*</span>
-					<span class="whitedefault" v-show="password">*</span>
+					<input class="longinput" type="password" v-model="password">
+					<span class="redalert" v-show="password.split('').length<6">*</span>
+					<span class="whitedefault" v-show="password.split('').length>=6">*</span>
 				</div>
 				<div style="height: 30px;"></div>
 				<div> 姓名： 
 					<input class="longinput" type="text" v-model="realname">
-					<!--<el-input class="usrenter" v-model="name" placeholder=""></el-input>-->
 					<span class="redalert" v-show="!realname">*</span>
 					<span class="whitedefault" v-show="realname">*</span>
 				</div>
@@ -71,7 +68,7 @@
 
 				<div style="height: 30px;"></div>
 				<div class="btn-group">
-					<el-button class="confirm" v-on:click="addCreate()">确定</el-button>
+					<el-button class="confirm" v-on:click="preCheck()">确定</el-button>
 					<el-button class="goback" v-on:click="goBack()">返回</el-button>
 				</div>
 			</div>
@@ -109,11 +106,37 @@
 				}
 			},
 
+			preCheck(){
+				if(!this.username) {
+					Utils.lalert('请输入用户名');
+					return;
+
+				} else if(!this.password) {
+					Utils.lalert('请输入密码');
+					return;
+
+				} else if(this.password && this.password.split('').length<6) {
+					Utils.lalert('密码长度不得小于6位');
+					return;
+
+				} else if(!this.realname) {
+					Utils.lalert('请输入真实姓名');
+					return;
+
+				} else if(!this.class_value){
+					Utils.lalert('请选择班级');
+					return;
+					
+				} else {
+					this.addCreate();
+				}
+			},
+
 			addCreate(){
 				asyncReq.call(this);
 				async function asyncReq(){
 					this.epassword = await Utils.encrypt.call(this, this.password);
-					var api = global_.student_create;
+					let api = global_.student_create;
 					let data = {
 						'class_id': this.class_value,
 						'username': this.username,
@@ -127,8 +150,7 @@
 						//this.$store.commit('incRowNumAfter', 1);
 						this.$router.go(-1);
 					},(err)=>{
-						Utils.lalert('创建学生失败');
-						console.log(err);
+						Utils.err_process.call(this, err, '创建学生失败');
 					});
 				}
 
@@ -146,6 +168,7 @@
 .longselect /deep/ .el-input__inner {
 	height: 34px;
 	width: 300px;
+	border-radius: 0;
 }
 
 .texts {

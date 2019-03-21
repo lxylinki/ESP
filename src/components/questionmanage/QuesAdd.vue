@@ -42,10 +42,10 @@
 				<el-input type="textarea"
 						  class="ques-body-input"
 						  v-model="question"
-						  placeholder="必填"></el-input>
+						  placeholder="必填">
+				</el-input>
 			</div>
 		</div>
-
 
 		<div class="opts">
 			<div class="ans-header">
@@ -56,178 +56,113 @@
 			</div>
 		
 			<div class="opts-div">
-<!------------------------------------------------------------------------------------------------------------------------>
-				<div class="answer-a ans-opt">
-					<div class="opt-label">选项A</div>
-					<!--input-->
-					<div class="opt-input">
-						<input class="longinput" type="text" v-model="options[0]">
-					</div>				
-					<!--add-->
-					<div class="opt-add-del">
-						<i class="iconfont opt-add" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
-						<i class="iconfont opt-del" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
-					</div>
-					
-					<!--correct one-->
-					<div class="checkicon opt-correct">
-						<input type="checkbox" v-model="choices[0]" class="checkbox" id="aCheck"><label for="aCheck"></label>
-					</div>
-					
-					<!--move up-->
-					<div class="opt-up-down">
-						<i class="iconfont opt-up">&#xe7c6;</i>
-						<i class="iconfont opt-down">&#xe8ed;</i>
-					</div>
-				</div>
-<!----------------------------------------------------------------------------------------------------------------------->
-				<div class="answer-b ans-opt">
-					<div class="opt-label">选项B</div>
-					<!--input-->
-					<div class="opt-input">
-						<input class="longinput" type="text" v-model="options[1]">
-					</div>				
-					<!--add-->
-					<div class="opt-add-del">
-						<i class="iconfont opt-add" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
-						<i class="iconfont opt-del" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
-					</div>
-					
-					<!--correct one-->
-					<div class="checkicon opt-correct">
-						<input type="checkbox" v-model="choices[1]" class="checkbox" id="bCheck"><label for="bCheck"></label>
-					</div>
-					
-					<!--move up-->
-					<div class="opt-up-down">
-						<i class="iconfont opt-up">&#xe7c6;</i>
-						<i class="iconfont opt-down">&#xe8ed;</i>
-					</div>
-				</div>
+				<Option v-for="(opt, idx) in opt_list" 
+					 
+					 v-bind:key="opt.id"
+					 v-bind:opts_num="opts_num"
+					 v-bind:idx="idx"
+					 v-bind:opt="opt"
 
-<!-------------------------------------------------------------------------------------------------------------------------->
-				<div class="answer-c ans-opt">
-					<div class="opt-label">选项C</div>
-					<!--input-->
-					<div class="opt-input">
-						<input class="longinput" type="text" v-model="options[2]">
-					</div>				
-					<!--add-->
-					<div class="opt-add-del">
-						<i class="iconfont opt-add" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
-						<i class="iconfont opt-del" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
-					</div>
-					
-					<!--correct one-->
-					<div class="checkicon opt-correct">
-						<input type="checkbox" v-model="choices[2]" class="checkbox" id="cCheck"><label for="cCheck"></label>
-					</div>
-					
-					<!--move up-->
-					<div class="opt-up-down">
-						<i class="iconfont opt-up">&#xe7c6;</i>
-						<i class="iconfont opt-down">&#xe8ed;</i>
-					</div>
-				</div>	
-<!-------------------------------------------------------------------------------------------------------------------------->
-				<div class="answer-d ans-opt">
-					<div class="opt-label">选项D</div>
-					<!--input-->
-					<div class="opt-input">
-						<input class="longinput" type="text" v-model="options[3]">
-					</div>				
-					<!--add-->
-					<div class="opt-add-del">
-						<i class="iconfont opt-add" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
-						<i class="iconfont opt-del" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
-					</div>
-					
-					<!--correct one-->
-					<div class="checkicon opt-correct">
-						<input type="checkbox" v-model="choices[3]" class="checkbox" id="dCheck"><label for="dCheck"></label>
-					</div>
-					
-					<!--move up-->
-					<div class="opt-up-down">
-						<i class="iconfont opt-up">&#xe7c6;</i>
-						<i class="iconfont opt-down">&#xe8ed;</i>
-					</div>
-				</div>	
-<!----------------------------------------------------------------------------------------------------------------------------->
-				<div class="answer-e ans-opt">
-					<div class="opt-label">选项E</div>
-					<!--input-->
-					<div class="opt-input">
-						<input class="longinput" type="text" v-model="options[4]">
-					</div>				
-					<!--add-->
-					<div class="opt-add-del">
-						<i class="iconfont opt-add" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
-						<i class="iconfont opt-del" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
-					</div>
-					
-					<!--correct one-->
-					<div class="checkicon opt-correct">
-						<input type="checkbox" v-model="choices[4]" class="checkbox" id="eCheck"><label for="eCheck"></label>
-					</div>
-					
-					<!--move up-->
-					<div class="opt-up-down">
-						<i class="iconfont opt-up">&#xe7c6;</i>
-						<i class="iconfont opt-down">&#xe8ed;</i>
-					</div>
-				</div>	
-<!----------------------------------------------------------------------------------------------------------------------->
-			</div><!--end opts-div-->
-		</div><!--end opts-->
+					 v-on:delete="del_opt"
+					 v-on:add="add_opt"
+					 v-on:select="select_opt"
+					 v-on:unselect="unselect_opt"
+					 v-on:mvup="mv_up"
+					 v-on:mvdown="mv_down"
+
+					 class='animated'></Option>
+			</div>
+		</div>
 			
-
 		<div class="anls">
 			<div class="anls-title">题目解析：</div>	
 			<div class="anls-body">
-				<el-input type="textarea" class="anals-body-input" v-model="analyze"></el-input>
+				<el-input type="textarea" class="anals-body-input" v-model="analysis"></el-input>
 			</div>
 		</div>
-		
 				
 		<div class="btn-group">
 			<el-button class="confirm" v-on:click="preCheck()">确定</el-button>
 			<el-button class="goback" v-on:click="goBack()">返回</el-button>
 		</div>
-
-
 	</div>
-
 </template>
 
 <script type="text/javascript">
-	import global_ from '../Global.js';
+	import Option from './Option.vue';
 	import Utils from '@/components/Utils.js';
-
+	import global_ from '@/components/Global.js';
 	export default {
+		components: {
+			'Option': Option
+		},
 		data(){
-			return{
-				mod_name: 'ques-manage',	
-				options: [null, null, null, null, null],
-				choices: [false, false, false, false, false],
-
-				//1 单选 2 多选
-				type:'',
-				question:'',
-				exam_id:'',
-				answer:'',
-				analyze:'',
-
-				exp_options:[],
-				exp_value: '',
+			return {
+				type: 1,
+				exp_value: null,
+				exp_options: [],
+				question: '',
 				answer: '',
-				opts_num: 0
+				analysis: '',
+				opts_num: 0,
+				//name as id
+				opt_list: [
+					{	
+						id: 0,
+						name: '选项A',
+						show: true,
+						text: '',
+						correct: false,
+					},
+					{	
+						id: 1,
+						name: '选项B',
+						show: true,
+						text: '',
+						correct: false,
+					},
+					{
+						id: 2,
+						name: '选项C',
+						show: false,
+						text: '',
+						correct: false,
+					},
+					{
+						id: 3,
+						name: '选项D',
+						show: false,
+						text: '',
+						correct: false,
+					},
+					{	
+						id: 4,
+						name: '选项E',
+						show: false,
+						text: '',
+						correct: false,
+					},																				
+				],
+				//for ease of final naming
+				opt_names: ['选项A', '选项B', '选项C', '选项D', '选项E']
 			}
 		},
-		
+
 		methods: {
+			active_rows(){
+				return this.opt_list.filter(item=>item.show);
+			},
+
+			inactive_rows(){
+				return this.opt_list.filter(item=>!item.show);
+			},
+
 			goBack(){
 				this.$router.go(-1);
+			},
+
+			exchange(arr, i, j) {
+				arr.splice(j,1,...arr.splice(i, 1 , arr[j]));
 			},
 
 			fillExpSelect(profile) {
@@ -238,214 +173,116 @@
 					this.exp_options.unshift({'name': '所有实验', 'id': null});
 				}				
 			},
-			
-			rows_num(){
-            	let	$show = $(".opts-div").find('.ans-opt:visible');
-            	return $show.length;
-			},
 
-			//only minimum num of options are showed at the beginning
-			initShow(){
-				let $opts = $('.opts-div');
-				let	opt_c = $opts.find('.answer-c'),
-					opt_d = $opts.find('.answer-d'),
-					opt_e = $opts.find('.answer-e');
-				opt_c.hide();
-				opt_d.hide();
-				opt_e.hide();
-			},
-
-			prepAdd(){
-				let _this = this;
-				$('.opt-add').on('click', function(e){
-                    let $this = $(this),
-                        $option = [],
-                        $parent = $this.parents(".ans-opt"),
-                        $list = $this.parents(".opts-div"),
-                        $li = $list.find(".ans-opt"),
-                        $show = $list.find(".ans-opt:visible"),
-                        $hide = $list.find(".ans-opt:hidden"),
-                        index = $li.index($parent[0]),
-                        oldTextName = "",
-                        newTextName = "",
-                        len = 0;
-
-                    if ($show.length >= 5) {
-                        layer.msg("最多5个答案选项");
-                        return false;
-                    }
-
-                    let $first_hide = $hide.eq(0);
-                    $parent.after($first_hide);
-                    len = $show.length + 1;
-                    $first_hide.show();
-
-
-                    oldTextName = $hide.eq(0).find(".opt-label").text();
-                    $li = $list.find(".ans-opt");
-
-					for (var i = len - 1; i > index; i--) {
-					    newTextName = $li.eq(i).find(".opt-label").text();
-					    $li.eq(i).find(".opt-label").text(oldTextName);
-					    oldTextName = newTextName;
+			//helper
+			findIdx(target_opt){
+				for(let i in this.opt_list) {
+					if(this.opt_list[i].id === target_opt.id) {
+						return Number(i);
 					}
-					//update
-					_this.opts_num = _this.rows_num();			
-				});
-
+				}
+				return -1;
 			},
 
-			prepDel(){
-				let _this = this;
-				$('.opt-del').on('click', function(e){
-                   	let $this = $(this),
-                        $option = [],
-                        $parent = $this.parents(".ans-opt"),
-                        $list = $this.parents(".opts-div"),
-                        $li = $list.find(".ans-opt"),
-                        $show = $list.find(".ans-opt:visible"),
-                        $hide = $list.find(".ans-opt:hidden"),
-                        index = $li.index($parent[0]),
-                        oldTextName = "",
-                        newTextName = "",
-                        len = 0;
+			//delete is hide
+			del_opt(opt) {
+				opt.show = false;
+				opt.text = '';
+				opt.correct= false;
 
-                    if ($show.length <= 2) {
-                        layer.msg("最少2个答案选项");
-                        return false;
-                    }
-
-                    $show.eq($show.length - 1).after($parent);
-                    len = $show.length;
-
-                   	//内外都清空数据
-                    $parent.find('.checkbox').prop('checked', false);
-                    $parent.find('.opt-input').find('input').val('');
-                    _this.options[index] = null;
-                    _this.choices[index] = false;
-                    $parent.hide();
-                  
-                    oldTextName = $parent.find(".opt-label").text();
-                    $li = $list.find(".ans-opt");
-
-                    for (var i = index; i < len; i++) {
-                        newTextName = $li.eq(i).find(".opt-label").text();
-                        $li.eq(i).find(".opt-label").text(oldTextName);
-                        oldTextName = newTextName;
-                    }	
-                    _this.opts_num = _this.rows_num();	
-				});
+				let active_opts = this.active_rows();
+				for(let i in active_opts) {
+					active_opts[i].name = this.opt_names[i];
+				}
+				this.opts_num = active_opts.length;
 			},
 
-			prepUp(){
-				let _this = this;
-				$('.opt-up').on('click', function(e){
-                	let $this = $(this),
-                        $parent = $this.parents(".ans-opt"),
-                        $li = $parent.parents(".opts-div").find(".ans-opt"),
-                        liMarginTop = parseInt($li.css("marginTop"), 10),
-                        liMarginBottom = parseInt($li.css("paddingBottom"), 10),
-                        index = $li.index($parent[0]),
-                        $prev = {},
-                        currName = $parent.find(".opt-label").text(),
-                        prevName = "";
+			//idx is orig index in list
+			add_opt(idx) {
+				let inactive_opts = this.inactive_rows(),
+					add_target = this.opt_list[idx];
 
-                    if (index <= 0) {
-                        return false;
-                    }
+				if(inactive_opts.length > 0) {
+					let i = this.findIdx(inactive_opts[0]);
+					let first_hidden = this.opt_list.splice(i, 1)[0];
+					let new_idx = this.findIdx(add_target);
+					this.opt_list.splice(new_idx+1, 0, first_hidden);
+					first_hidden.show = true;
+				}
 
-                    $prev = $li.eq(index - 1);                    
-                    $prev.css("marginTop", ($parent.height() + liMarginTop) + "px");
-                    
-                    $parent.stop().animate({
-                        "top": "-" + (liMarginBottom + $prev.height() + liMarginTop + $parent.height()) + "px"
-                    }, 500, function () {
-                        $parent.css("top", "0px");
-                        $prev.css("marginTop", liMarginTop + "px");
-                        prevName = $prev.find(".opt-label").text();
-                        $prev.before($parent);
-                        $prev.find(".opt-label").text(currName);
-                        $parent.find(".opt-label").text(prevName);
-                    });
-				});
+				let active_opts = this.active_rows();
+				for(let i in active_opts) {
+					active_opts[i].name = this.opt_names[i];
+				}
+				this.opts_num = active_opts.length;
 			},
 
-			prepDown(){
-				let _this = this;
-				$('.opt-down').on('click', function(e){
-                    let $this = $(this),
-                        $parent = $this.parents(".ans-opt"),
-                        $li = $parent.parents(".opts-div").find(".ans-opt"),
-                        liMarginBottom = parseInt($li.css("marginBottom"), 10),
-                        index = $li.index($parent[0]),
-                        $next = {},
-                        currName = $parent.find(".opt-label").text(),
-                        nextName = "";
-
-                    if (index >= $li.length - 1) {
-                        return false;
-                    }
-
-                    $next = $li.eq(index + 1);
-                    $next.css("marginBottom", ($parent.height() + liMarginBottom) + "px");
-                    $parent.stop().animate({
-                        "top": liMarginBottom + $next.height() + liMarginBottom + $parent.height() + "px"
-                    }, 500, function () {
-                        $parent.css("top", "0px");
-                        $next.css("marginBottom", liMarginBottom + "px");
-                        nextName = $next.find(".opt-label").text();
-                        $next.after($parent);
-                        $next.find(".opt-label").text(currName);
-                        $parent.find(".opt-label").text(nextName);
-                    });				
-				});
-			},
-
-			prepCorrect(){
-				let _this = this;
-				$('.checkbox').on('click', function(e){
-					let $this = $(this),
-						$parent = $this.parents(".ans-opt"),
-						$li = $parent.parents(".opts-div").find(".ans-opt"),
-						index = $li.index($parent[0]),
-						currName = $parent.find(".opt-label").text(),
-						ans = currName.split('').pop(),
-						id = ans.toLowerCase() + 'Check';
-
-					let opt = document.querySelector('#'+id);
-
-					//must enter option
-					if(!_this.options[index]) {
-						_this.choices[index] = false;
-						opt.checked = false;							
-						Utils.lalert('请输入选项');
-						return;								
-					}
-
-					if(opt.checked && _this.type == 1){
-						for(let i in _this.choices) {
-							if(i == index) {
-								_this.choices[i] = true;
-							} else {
-								_this.choices[i] = false;
-							}
+			select_opt(idx) {
+				if(this.type == 1) {
+					for(let i in this.opt_list) {
+						if(i == idx) {
+							this.opt_list[i].correct = true;
+						} else {
+							this.opt_list[i].correct = false;
 						}
-						_this.answer = ans;
+					}					
+				} else if(this.type == 2) {
+					this.opt_list[idx].correct = true;
+				}
+			},
 
-					} else if (opt.checked && _this.type == 2) {
-						_this.choices[index] = true;
-						if(_this.answer.indexOf(ans) == -1) {
-							_this.answer += ans;
-						}	
+			unselect_opt(opt) {
+				opt.correct = false;
+			},
 
-					} else {
-						_this.choices[index] = false;
-						_this.answer = _this.answer.replace(ans, '');
+			//exchange with the first active above
+			mv_up(idx) {
+				if(idx === 0) {
+					return;
+
+				} else {
+					for(let i=idx-1; i>=0; i--) {
+						if(this.opt_list[i].show) {
+							this.exchange(this.opt_list, idx, i);
+							break;
+						}
 					}
-				});
+					let active_opts = this.active_rows();
+					for(let i in active_opts) {
+						active_opts[i].name = this.opt_names[i];
+					}
+				}
+			},
+
+			//exchange with the first active below
+			mv_down(idx) {
+				if(idx === 4) {
+					return;
+
+				} else {
+					for(let i=idx+1; i<=4; i++) {
+						if(this.opt_list[i].show) {
+							this.exchange(this.opt_list, idx, i);
+							break;
+						}						
+					}
+					let active_opts = this.active_rows();
+					for(let i in active_opts) {
+						active_opts[i].name = this.opt_names[i];
+					}					
+				}
 			},
 
 			preCheck(){
+				let final_opts = this.active_rows();
+				
+				for(let opt of final_opts) {
+					if(opt.correct) {
+						this.answer += opt.name.split('').pop();
+					}
+				}
+				//console.log(this.answer);
+			
 				if(!this.exp_value) {
 					Utils.lalert('请选择所属实验');
 					return;
@@ -454,43 +291,43 @@
 					Utils.lalert('请输入题干');
 					return;
 
-				} else if((!this.options[0]) || (!this.options[1])) {
+				} else if((!final_opts[0].text) || (!final_opts[1].text)) {
 					Utils.lalert('请输入选项');
 					return;
 
-				} else if(!(this.choices[0] || this.choices[1] || this.choices[2] || this.choices[3] || this.choices[4])) {
+				} else if(this.answer.length === 0) {
 					Utils.lalert('请选择正确选项');
 					return;
+
 				} else {
 					this.addCreate();
 				}
 			},
 
 			addCreate(){
+				let final_opts = this.active_rows();
 				let api = global_.ques_create,
 					data = {
-					eid: this.exp_value,
-					type: this.type,
-					question: this.question,
-					answer: this.answer,
-					option_a: this.options[0],
-					option_b: this.options[1],
-					analysis: this.analyze
-				};
+						eid: this.exp_value,
+						type: this.type,
+						question: this.question,
+						answer: this.answer,
+						option_a: final_opts[0].text,
+						option_b: final_opts[1].text,
+						analysis: this.analysis
+					};	
 
-				if(this.options[2]) {
-					data.option_c = this.options[2];
+				if(final_opts[2]) {
+					data.option_c = final_opts[2].text;
 				}
 
-				if(this.options[3]) {
-					data.option_d = this.options[3];
+				if(final_opts[3]) {
+					data.option_d = final_opts[3].text;
 				}
 				
-				if(this.options[4]) {
-					data.option_e = this.options[4];
+				if(final_opts[4]) {
+					data.option_e = final_opts[4].text;
 				}
-
-				//console.log(data);
 
 				this.$http.post(api, data).then((resp)=>{
 					//console.log(resp);
@@ -499,30 +336,16 @@
 
 				}, (err)=>{
 					Utils.err_process.call(this, err, '试题创建失败')
-				});
-			},
+				});			
+			}
 
 		},
 
-		mounted(){		
+		mounted(){
 			Utils.page_check_status.call(this).then(resp=>{
 				this.fillExpSelect(resp);
 			});	
-
-			let edit = this.$store.state.edit;
-			if(!edit) {
-				this.$router.go(-1);
-
-			} else {
-				this.type = 1;
-				this.prepDel();
-				this.prepAdd();
-				this.prepUp();
-				this.prepDown();
-				this.prepCorrect();		
-				this.initShow();
-				this.opts_num = this.rows_num();	
-			}			
+			this.opts_num = this.active_rows().length;
 		}
 	}
 </script>
@@ -605,7 +428,6 @@ div>.mchoice input {
 	background: #f0f7ff;
 }
 
-
 .ans-opt-col {
 	display: inline-block;
 	margin-right: 640px;
@@ -615,16 +437,18 @@ div>.mchoice input {
 
 .add-del-col {
 	display: inline-block;
+	margin-left: 5px;
 	margin-right: 10px;
 }
 
 .right-opt-col {
 	display: inline-block;
-	margin-right: 10px;
+	margin-left: 10px;
 }
 
 .mv-updown-col {
 	display: inline-block;
+	margin-left: 20px;
 }
 
 .opts {
@@ -644,97 +468,6 @@ div>.mchoice input {
 	text-align: right;
 	width: 100%;
 	padding-bottom: 20px;
-}
-
-.opt-add, .opt-del {
-	font-size: 140%;  
-}
-
-.black {
-	color: #333333; 
-}
-
-.opt-up, .opt-down {
-	color: #333333;
-	font-size: 160%;
-}
-
-.opt-label {
-	 display: inline-block; 
-	 margin-right: 20px;
-}
-
-.opt-correct {
-	height: 24px; 
-	width: 24px; 
-	margin-right: 20px; 
-	margin-left: 30px;
-}
-
-.iconfont {
-	cursor: pointer;
-}
-
-input:not(.checkbox) {
-	width:600px;
-	height:36px;
-	background:rgba(255,255,255,1);
-	border:1px solid rgba(153,153,153,0.5);
-	border-radius:4px;
-}
-
-.checkicon {
-	position: relative;
-}
-
-.checkicon input[type="checkbox"] {
-	opacity: 0;
-}
-
-.checkicon label {
-	width: 20px;
-	height: 20px;
-	border: 2px solid #cccccc;
-	position: absolute;
-	left: 0px;
-	top: 0px;
-}
-
-.checkicon input[type="checkbox"]:checked + label {
-	/*
-	background: #0099ff;
-	border: 1px solid #0099ff;*/
-	background: #5c9cec;
-	border: 1px solid #5c9cec;
-	background-image: url("../../assets/white-correct.png");
-	background-repeat: no-repeat;
-}
-
-.opt-label {
-	 display: inline-block; 
-	 margin-right: 20px;
-}
-
-.opt-input {
-	display: inline-block; 
-	margin-right: 30px;
-}
-
-.opt-add-del, .opt-correct, .opt-up-down {
-	display: inline-block;
-}
-
-.checkicon {
-	width: 0px;
-	height: 0px;
-}
-
-.opt-up {
-	margin-left: 30px;
-}
-
-.opt-down {
-	margin-right: 60px;
 }
 
 .anls {

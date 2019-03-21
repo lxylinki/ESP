@@ -50,7 +50,7 @@
 		<div style="display: inline-block; margin-left: 30px;">
 	
 			<div class='box'>
-				<input type="file" id="uploadfile" v-on:change="upFile($event)">
+				<input type="file" id="uploadfile" v-on:change="upData($event)">
 				<label for='uploadfile' style="cursor: pointer;"></label>
 				<el-button plain ><i class="iconfont">&#xe69c;</i>  批量导入</el-button>
 			</div>
@@ -281,9 +281,7 @@
 					layer.close(this.loading);
 
 				}, (err)=>{
-					Utils.lalert('请求学生列表失败');
-					console.log(err);
-					layer.close(this.loading);
+					Utils.err_process.call(this, err, '请求学生列表失败');
 				});
 			},
 
@@ -292,11 +290,11 @@
 			},
 
 			editRow(row){
-				this.$store.commit('sign', this.mod_name);
+				//this.$store.commit('sign', this.mod_name);
 				this.$store.commit('setEdit', true);
 				this.$store.commit('pickRow', row);
-				this.$store.commit('setCurPage', this.curPage);
-				this.$store.commit('setCurSearch', this.search_state);
+				//this.$store.commit('setCurPage', this.curPage);
+				//this.$store.commit('setCurSearch', this.search_state);
 				
 				this.$router.push('/studentedit');				
 			},
@@ -332,8 +330,12 @@
 					this.loadPage(this.curPage);
 
 				}, (err)=>{
-					Utils.lalert('删除学生失败');
-					console.log(err);
+					if(err.body.error.hasOwnProperty('is_main')){
+						Utils.err_process.call(this, err, '无法删除：主班级');
+
+					} else {
+						Utils.err_process.call(this, err, '删除学生失败');
+					}
 				});
 				/*
 				var realIdx = idx + this.rowsPerPage*(this.curPage-1); 
@@ -352,20 +354,46 @@
 			},
 
 		     upFile(event) {
-		      	this.ufile = event.target.files[0];
+		     	return new Promise((resolve, reject)=>{
+			      	this.ufile = event.target.files[0];
 
-		      	var formData = new FormData();
-		      	formData.append('batch-signup', this.ufile);
-		      	formData.append('group', global_.student_group);
+			      	var formData = new FormData();
+			      	formData.append('batch_signup', this.ufile);
+			      	formData.append('group', global_.student_group);
+			      	formData.append('overwrite', 1);
 
-		      	var api = global_.batch_upload;
+			      	var api = global_.batch_upload;
 
-		      	this.$http.post(api, formData).then((response)=>{
-		      		console.log(response);
-		      		
-		      	}, (err)=>{
-		      		console.log(err);
-		      	});
+			      	this.$http.post(api, formData).then((resp)=>{
+			      		resolve(resp);
+			      		
+			      	}, (err)=>{
+			      		Utils.err_process.call(this, err, '批量导入失败');
+			      	});
+		     	});
+		     },
+
+		     upData(event){
+		     	asyncReq.call(this);
+		     	async function asyncReq(){
+		     		let resp = await this.upFile(event),
+		     			students_data = resp.body,
+		     			api = global_.batch_upload;
+		     			
+			      	let data = {
+			      		'data': students_data,
+			      		'group': global_.student_group,
+			      		'overwrite': 1
+			      	};
+
+			      	this.$http.post(api, data).then((resp)=>{
+			      		Utils.lalert('批量导入成功');
+			      		this.loadPage(1);
+
+			      	}, (err)=>{
+			      		Utils.err_process.call(this, err, '批量导入失败');
+			      	});
+		     	}
 		     }			
 
 		},

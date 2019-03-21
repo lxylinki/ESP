@@ -10,8 +10,7 @@
 		<div>
 			<div class='texts'>
 				<div> 用户名： 
-					<input class="longinput" type="text" v-model="username">
-					<!--<el-input class="usrenter" v-model="username" placeholder=""></el-input>-->
+					<input class="longinput" type="text" v-model="username" disabled="true">
 					<span class="redalert" v-show="!username">*</span>
 					<span class="whitedefault"v-show="username">*</span>
 					<!---->
@@ -19,14 +18,12 @@
 				<div style="height: 30px;"></div>
 				<div> 密码： 
 					<input class="longinput" type="password" v-model="password">
-					<!--<el-input class="usrenter" v-model="password" placeholder=""></el-input>-->
-					<span class="redalert" v-show="!password">*</span>
-					<span class="whitedefault" v-show="password">*</span>
+					<!--<span class="redalert" v-show="!password">*</span>-->
+					<span class="whitedefault">*</span>
 				</div>
 				<div style="height: 30px;"></div>
 				<div> 姓名： 
 					<input class="longinput" type="text" v-model="realname">
-					<!--<el-input class="usrenter" v-model="name" placeholder=""></el-input>-->
 					<span class="redalert" v-show="!realname">*</span>
 					<span class="whitedefault" v-show="realname">*</span>
 				</div>
@@ -50,7 +47,7 @@
 				</div>
 				<div style="height: 30px;"></div>
 				<div class="btn-group">
-					<el-button class="confirm" v-on:click="saveEdit()">确定</el-button>
+					<el-button class="confirm" v-on:click="preCheck()">确定</el-button>
 					<el-button class="goback" v-on:click="goBack()">返回</el-button>
 				</div>
 			</div>
@@ -70,7 +67,7 @@
 				user_id:'',
 				username: '',
 				password: '',
-				epassword:'',
+				//epassword:'',
 				realname: '',
 				status: 0,
 				gender: 1
@@ -82,28 +79,44 @@
 				this.$router.go(-1);
 			},
 
+			preCheck(){
+				if(!this.realname) {
+					Utils.lalert('请输入真实姓名');
+					return;
+
+				} else if(this.password && this.password.split('').length<6) {
+					Utils.lalert('密码长度不得小于6位');
+					return;
+
+				} else {
+					this.saveEdit();
+				}
+			},
+
 			saveEdit(){
 				asyncReq.call(this);
 				async function asyncReq(){
-					this.epassword = await Utils.encrypt.call(this, this.password);
-					//console.log(this.epassword);
 					
-					var api = global_.teacher_update;
+					let api = global_.teacher_update;
 					let data = {
 						'user_id': this.user_id,
 						'realname': this.realname,
 						'username': this.username,
-						'password': this.epassword,
+						//'password': this.epassword,
 						'status': this.status,
 						'gender': this.gender
 					}
+
+					if(this.password) {
+						data.password = await Utils.encrypt.call(this, this.password);
+					}
+
 					this.$http.post(api, data).then((resp)=>{
 						Utils.lalert('编辑教师成功');
 						this.$router.go(-1);
 						
 					},(err)=>{
-						Utils.lalert('保存编辑失败');
-						console.log(err);
+						Utils.err_process.call(this, err, '保存编辑失败');
 					});
 				}				
 			}

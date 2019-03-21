@@ -3,22 +3,19 @@
 		<div class='navigation'>
 
 			<el-container>
+
 				<el-header style="background: #20222d; height: 100px; overflow: hidden;">
-					<img src="./assets/esplogo.png" class="logo">
-					
+					<img src="./assets/esplogo.png" class="logo">					
 					<div class="welcometext" v-show="isAdmin">{{hellotext}}： 管理员</div>
 					<div class="welcometext" v-show="isTeacher">{{hellotext}}： 老师</div>
 					<div class="welcometext" v-show="isStudent">{{hellotext}}： 同学</div>
 
 					<div class='ctrl'>
 						<div class="setting">
-							<!--<i class="el-icon-setting" style="color: white"></i>-->
 							<i class="iconfont" style="color: white">&#xe606;</i>
-							<!--<el-button type="primary" icon="el-icon-search">搜索</el-button>-->
 							<el-button type="text" style="color: white;" v-on:click="goPersonal()">设置</el-button>
 						</div>
 						<div class="logoff">
-							<!--<i class="el-icon-delete" style="color: white;"></i>-->
 							<i class="iconfont" style="color: white;">&#xe62e;</i>
 							<el-button type="text" style="color: white" v-on:click="quit()">退出</el-button>
 						</div>
@@ -26,19 +23,17 @@
 				</el-header>
 
 
-				<el-container>
-        			<el-aside>
-        				<!--<div style="height: 110px; background: #31313c"></div>-->
-        				<Nav v-bind:menuList='menuList'
-        				     v-bind:curGroup='current_group'></Nav>
-        				<!--<div class="navbg"></div>-->
-        			</el-aside>
-        
-        			<el-main>
-        				<!--main content area-->
-        				<router-view></router-view>
-        			</el-main>
-      			</el-container>
+    			<el-aside>
+    				<!--<div style="height: 110px; background: #31313c"></div>-->
+    				<Nav v-bind:menuList='menuList'
+    				     v-bind:curGroup='current_group'></Nav>
+    				<!--<div class="navbg"></div>-->
+    			</el-aside>
+    
+    			<el-main>
+    				<!--main content area-->
+    				<router-view></router-view>
+    			</el-main>
 
 			</el-container>
 

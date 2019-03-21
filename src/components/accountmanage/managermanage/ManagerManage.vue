@@ -242,9 +242,7 @@
 						resolve(resp);
 						
 					},(err)=>{
-						Utils.lalert('请求管理员列表失败');
-						console.log(err);
-						layer.close(this.loading);
+						Utils.err_process.call(this, err, '请求管理员列表失败');
 					});
 				});
 			},
@@ -254,11 +252,11 @@
 				asyncReq.call(this);
 				async function asyncReq(){
 					let resp = await this.reqMngList(usr_name, real_name, sch_name, page);
-
+					/*
 					this.$store.commit('sign', this.mod_name);
 			    	this.$store.commit('setRowNumBefore', resp.body.total);
 			    	this.$store.commit('setRowNumAfter', resp.body.total);
-			    	this.$store.commit('setRowsPerPage', this.rowsPerPage);
+			    	this.$store.commit('setRowsPerPage', this.rowsPerPage);*/
 
 					this.tableData = resp.body._list;
 					this.totalPage = resp.body.total_page;
@@ -268,11 +266,11 @@
 
 			editRow(row){
 				//console.log(row);
-				this.$store.commit('sign', this.mod_name);
+				//this.$store.commit('sign', this.mod_name);
 				this.$store.commit('setEdit', true);
 				this.$store.commit('pickRow', row);
-				this.$store.commit('setCurPage', this.curPage);
-				this.$store.commit('setCurSearch', this.search_state);
+				//this.$store.commit('setCurPage', this.curPage);
+				//this.$store.commit('setCurSearch', this.search_state);
 				this.$router.push('/manageredit');
 			},
 
@@ -308,8 +306,8 @@
 		
 		mounted(){
 			Utils.page_check_status.call(this);
-			var name = this.$store.state.last_author;
-
+			//var name = this.$store.state.last_author;
+			/*
 			if(name === this.mod_name) {
 				var before = this.$store.state.row_num_before,
 					after = this.$store.state.row_num_after,
@@ -332,11 +330,8 @@
 				} else if(curpage > 0) {
 					this.curPage = curpage;
 				} 				
-			}
-
-			this.reqData('', '', '', this.curPage);
-			//layer.close(this.loading);
-
+			}*/
+			this.reqData('', '', '', 1);
 		}
 	}
 </script>

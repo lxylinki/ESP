@@ -43,7 +43,7 @@
 		
 		<div style="display: inline-block; margin-left: 30px;">
 			<div class='box'>
-				<input type="file" id="uploadfile" v-on:change="upFile($event)">
+				<input type="file" id="uploadfile" v-on:change="upData($event)">
 				<label for='uploadfile' style="cursor: pointer;"></label>
 				<el-button plain ><i class="iconfont">&#xe69c;</i>  批量导入</el-button>
 			</div>
@@ -226,11 +226,11 @@
 			},
 			
 			editRow(row){
-				this.$store.commit('sign', this.mod_name);
+				//this.$store.commit('sign', this.mod_name);
 				this.$store.commit('setEdit', true);
 				this.$store.commit('pickRow', row);
-				this.$store.commit('setCurPage', this.curPage);
-				this.$store.commit('setCurSearch', this.search_state);
+				//this.$store.commit('setCurPage', this.curPage);
+				//this.$store.commit('setCurSearch', this.search_state);
 				this.$router.push('/teacheredit');
 			},
 
@@ -261,8 +261,11 @@
 					this.reqData(this.search_state, this.curPage);
 
 				}, (err)=>{
-					Utils.lalert('删除教师失败');
-					console.log(err);
+					if(err.body.error.hasOwnProperty('id')){
+						Utils.err_process.call(this, err, '无法删除：已分配到班级');
+					} else {
+						Utils.err_process.call(this, err, '删除教师失败');
+					}
 				});
 			},
 
@@ -276,22 +279,46 @@
 			},
 
 		     upFile(event) {
-		      	this.ufile = event.target.files[0];
+		     	return new Promise((resolve, reject)=>{
+			      	this.ufile = event.target.files[0];
 
-		      	var formData = new FormData();
-		      	formData.append('batch-signup', this.ufile);
-		      	formData.append('group', global_.teacher_group);
+			      	let formData = new FormData();
+			      	formData.append('batch_signup', this.ufile);
+			      	formData.append('group', global_.teacher_group);
+			      	formData.append('overwrite', 1);
 
-		      	//upload request
-		      	var api = global_.batch_upload;
-		      	this.$http.post(api, formData).then((response)=>{
-		      		Utils.lalert('批量导入成功');
-		      		
-		      	}, (err)=>{
-		      		Utils.lalert('批量导入失败');
-		      		console.log(err);
-		      	});
+			      	//upload request
+			      	let api = global_.batch_upload;
+			      	this.$http.post(api, formData).then((resp)=>{
+			      		resolve(resp);
+			      		
+			      	}, (err)=>{
+			      		Utils.err_process.call(this, err, '上传文件失败');
+			      	});
+		     	});
+		     },
 
+		     upData(event) {
+		     	asyncReq.call(this);
+		     	async function asyncReq(){
+		     		let resp = await this.upFile(event),
+		     			teachers_data = resp.body,
+		     			api = global_.batch_upload;
+		     			
+			      	let data = {
+			      		'data': teachers_data,
+			      		'group': global_.teacher_group,
+			      		'overwrite': 1
+			      	};
+
+			      	this.$http.post(api, data).then((resp)=>{
+			      		Utils.lalert('批量导入成功');
+			      		this.loadPage(1);
+
+			      	}, (err)=>{
+			      		Utils.err_process.call(this, err, '批量导入失败');
+			      	});
+		     	}
 		     },
 
 		     reqData(keyword, page){
@@ -312,19 +339,20 @@
 
 			    this.$http.post(list_api, req_data).then((resp)=>{
 			    	//console.log(resp);
+			    	/*
 			    	this.$store.commit('sign', this.mod_name);
 			    	this.$store.commit('setRowNumBefore', resp.body.total);
 			    	this.$store.commit('setRowNumAfter', resp.body.total);
 			    	this.$store.commit('setRowsPerPage', this.rowsPerPage);
+			    	*/
+
 					this.tableData = resp.body._list;
 					this.totalPage = resp.body.total_page;
 			    	this.filterData(page);
 			    	layer.close(this.loading);
 
 			    },(err)=>{
-			    	Utils.lalert('请求列表失败');
-			    	console.log(err);
-			    	layer.close(this.loading);
+			    	Utils.err_process.call(this, err, '请求列表失败');
 			    });
 		     },
 
@@ -345,8 +373,9 @@
 		},
 		mounted(){
 			Utils.page_check_status.call(this);
-			var name = this.$store.state.last_author;
 
+			/*
+			var name = this.$store.state.last_author;
 			if(name === this.mod_name) {
 				var before = this.$store.state.row_num_before,
 					after = this.$store.state.row_num_after,
@@ -369,9 +398,8 @@
 				} else if(curpage > 0) {
 					this.curPage = curpage;
 				} 				
-			}
-			this.reqData(this.search_state, this.curPage);
-			//layer.close(this.loading);
+			}*/
+			this.reqData(this.search_state, 1);
 		}
 	}
 </script>
@@ -404,28 +432,28 @@
 }*/
 
 /* operations text buttons */
- .op {
-  	position: relative;
-  	bottom: 8px;
-  	vertical-align: top;
-  	line-height: 0;
-  }  
+.op {
+	position: relative;
+	bottom: 8px;
+	vertical-align: top;
+	line-height: 0;
+}  
 
-  .box{
-  	position: relative;
-  }
+.box{
+	position: relative;
+}
 
-  #uploadfile {
-  	position: absolute;
-  	left: -9999px;
-  	opacity: 0;
-  }
+#uploadfile {
+	position: absolute;
+	left: -9999px;
+	opacity: 0;
+}
 
-  label {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	bottom: 0px;
-  	right: 0px;
-  }
+label {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+}
 </style>

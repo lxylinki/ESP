@@ -184,7 +184,7 @@ input::-webkit-input-placeholder {
 	height: 100%;
 	border: 1px solid #cccccc;
 	border-radius: 4px;
-	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 	overflow-y: scroll; 
 	height: 190px;
 	overflow: auto;
