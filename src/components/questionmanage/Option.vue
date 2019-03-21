@@ -28,12 +28,6 @@
 <script type="text/javascript">
 	export default {
 		props:['opt', 'opts_num', 'idx'],
-		data(){
-			return {
-
-			}
-		},
-
 		methods: {
 			del(){
 				this.$emit('delete', this.opt);
@@ -118,7 +112,7 @@
 
 .opt-input input {
 	width:600px;
-	height:36px;
+	height:32px;
 	background:rgba(255,255,255,1);
 	border:1px solid rgba(153,153,153,0.5);
 	border-radius:4px;

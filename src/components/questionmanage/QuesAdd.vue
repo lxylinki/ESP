@@ -75,12 +75,12 @@
 		<div class="anls">
 			<div class="anls-title">题目解析：</div>	
 			<div class="anls-body">
-				<el-input type="textarea" class="anals-body-input" v-model="analyze"></el-input>
+				<el-input type="textarea" class="anals-body-input" v-model="analysis"></el-input>
 			</div>
 		</div>
 				
 		<div class="btn-group">
-			<el-button class="confirm" v-on:click="">确定</el-button>
+			<el-button class="confirm" v-on:click="preCheck()">确定</el-button>
 			<el-button class="goback" v-on:click="goBack()">返回</el-button>
 		</div>
 	</div>
@@ -89,6 +89,7 @@
 <script type="text/javascript">
 	import Option from './Option.vue';
 	import Utils from '@/components/Utils.js';
+	import global_ from '@/components/Global.js';
 	export default {
 		components: {
 			'Option': Option
@@ -99,7 +100,8 @@
 				exp_value: null,
 				exp_options: [],
 				question: '',
-				analyze: '',
+				answer: '',
+				analysis: '',
 				opts_num: 0,
 				//name as id
 				opt_list: [
@@ -267,6 +269,72 @@
 						active_opts[i].name = this.opt_names[i];
 					}					
 				}
+			},
+
+			preCheck(){
+				let final_opts = this.active_rows();
+				
+				for(let opt of final_opts) {
+					if(opt.correct) {
+						this.answer += opt.name.split('').pop();
+					}
+				}
+				//console.log(this.answer);
+			
+				if(!this.exp_value) {
+					Utils.lalert('请选择所属实验');
+					return;
+
+				} else if(!this.question) {
+					Utils.lalert('请输入题干');
+					return;
+
+				} else if((!final_opts[0].text) || (!final_opts[1].text)) {
+					Utils.lalert('请输入选项');
+					return;
+
+				} else if(this.answer.length === 0) {
+					Utils.lalert('请选择正确选项');
+					return;
+
+				} else {
+					this.addCreate();
+				}
+			},
+
+			addCreate(){
+				let final_opts = this.active_rows();
+				let api = global_.ques_create,
+					data = {
+						eid: this.exp_value,
+						type: this.type,
+						question: this.question,
+						answer: this.answer,
+						option_a: final_opts[0].text,
+						option_b: final_opts[1].text,
+						analysis: this.analysis
+					};	
+
+				if(final_opts[2]) {
+					data.option_c = final_opts[2].text;
+				}
+
+				if(final_opts[3]) {
+					data.option_d = final_opts[3].text;
+				}
+				
+				if(final_opts[4]) {
+					data.option_e = final_opts[4].text;
+				}
+
+				this.$http.post(api, data).then((resp)=>{
+					//console.log(resp);
+					Utils.lalert('试题创建成功');
+					this.$router.go(-1);
+
+				}, (err)=>{
+					Utils.err_process.call(this, err, '试题创建失败')
+				});			
 			}
 
 		},
