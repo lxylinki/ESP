@@ -1,5 +1,5 @@
 <template>
-	<div id="quesedit">
+	<div id="quesadd">
 		<div style="width: 100%; height: 35px;">
 			<span style="color: #1890ff; font-weight: bold">|</span> 
 			公共题库管理
@@ -61,7 +61,7 @@
 					<div class="opt-label">选项A</div>
 					<!--input-->
 					<div class="opt-input">
-						<input class="longinput" type="text" v-model="options[0]" placeholder="必填">
+						<input class="longinput" type="text" v-model="options[0]">
 					</div>				
 					<!--add-->
 					<div class="opt-add-del">
@@ -85,7 +85,7 @@
 					<div class="opt-label">选项B</div>
 					<!--input-->
 					<div class="opt-input">
-						<input class="longinput" type="text" v-model="options[1]" placeholder="必填">
+						<input class="longinput" type="text" v-model="options[1]">
 					</div>				
 					<!--add-->
 					<div class="opt-add-del">
@@ -207,12 +207,9 @@
 	export default {
 		data(){
 			return{
-				mod_name: 'ques-manage',
-				//will not change once set	
+				mod_name: 'ques-manage',	
 				options: [null, null, null, null, null],
 				choices: [false, false, false, false, false],
-				new_options: [],
-				new_choices: [],
 
 				//1 单选 2 多选
 				type:'',
@@ -241,34 +238,28 @@
 					this.exp_options.unshift({'name': '所有实验', 'id': null});
 				}				
 			},
-
+			
 			rows_num(){
             	let	$show = $(".opts-div").find('.ans-opt:visible');
             	return $show.length;
-			},	
+			},
 
-			exchange(arr, i, j){
+			//helper functions
+			exchange(arr, i,  j) {
 				let tmp = arr[i];
 				arr[i] = arr[j];
 				arr[j] = tmp;
-			},
-
+			},	
+			
 			//only minimum num of options are showed at the beginning
 			initShow(){
 				let $opts = $('.opts-div');
 				let	opt_c = $opts.find('.answer-c'),
 					opt_d = $opts.find('.answer-d'),
 					opt_e = $opts.find('.answer-e');
-
-				if(!this.options[2]) {
-					opt_c.hide();
-				}
-				if(!this.options[3]) {
-					opt_d.hide();
-				}
-				if(!this.options[4]) {
-					opt_e.hide();
-				}
+				opt_c.hide();
+				opt_d.hide();
+				opt_e.hide();
 			},
 
 			prepAdd(){
@@ -291,10 +282,12 @@
                         return false;
                     }
 
-                    //show first hidden
-                    $parent.after($hide.eq(0));
+                    let $first_hide = $hide.eq(0);
+                    $parent.after($first_hide);
                     len = $show.length + 1;
-                    $hide.eq(0).show();
+                    $first_hide.show();
+
+
                     oldTextName = $hide.eq(0).find(".opt-label").text();
                     $li = $list.find(".ans-opt");
 
@@ -302,9 +295,11 @@
 					    newTextName = $li.eq(i).find(".opt-label").text();
 					    $li.eq(i).find(".opt-label").text(oldTextName);
 					    oldTextName = newTextName;
-					}	
-					_this.opts_num = _this.rows_num();				
+					}
+					//update
+					_this.opts_num = _this.rows_num();			
 				});
+
 			},
 
 			prepDel(){
@@ -329,18 +324,15 @@
 
                     $show.eq($show.length - 1).after($parent);
                     len = $show.length;
-                    oldTextName = $parent.find(".opt-label").text();
 
-                    //内外都清空数据
+                   	//内外都清空数据
                     $parent.find('.checkbox').prop('checked', false);
                     $parent.find('.opt-input').find('input').val('');
-                    //here the index is wrong
                     _this.options[index] = null;
                     _this.choices[index] = false;
-                    
                     $parent.hide();
-
-                    
+                  
+                    oldTextName = $parent.find(".opt-label").text();
                     $li = $list.find(".ans-opt");
 
                     for (var i = index; i < len; i++) {
@@ -348,7 +340,7 @@
                         $li.eq(i).find(".opt-label").text(oldTextName);
                         oldTextName = newTextName;
                     }	
-                    _this.opts_num = _this.rows_num();					
+                    _this.opts_num = _this.rows_num();	
 				});
 			},
 
@@ -371,26 +363,23 @@
 
                     $prev = $li.eq(index - 1);                    
                     $prev.css("marginTop", ($parent.height() + liMarginTop) + "px");
-                  
+                    
                     $parent.stop().animate({
                         "top": "-" + (liMarginBottom + $prev.height() + liMarginTop + $parent.height()) + "px"
-                    }, 400, function () {
+                    }, 500, function () {
                         $parent.css("top", "0px");
                         $prev.css("marginTop", liMarginTop + "px");
                         prevName = $prev.find(".opt-label").text();
+                        $prev.before($parent);
 
-                        //update answer                       
+                        //update answer after move
                         let new_index = index-1,
                         	old_ans = currName.split('').pop(),
                         	new_ans = prevName.split('').pop();
 
-                        _this.exchange(_this.new_options, index, new_index);
-                        if(_this.answer.indexOf(new_ans) == -1){
-                        	_this.answer = _this.answer.replace(old_ans, new_ans);
-                        }
-                        
-                        $prev.before($parent);
-                        console.log(_this.options, _this.new_options);
+                        _this.exchange(_this.options, index, new_index);
+                        _this.exchange(_this.choices, index, new_index);
+                        _this.answer = _this.answer.replace(old_ans, new_ans);
 
                         $prev.find(".opt-label").text(currName);
                         $parent.find(".opt-label").text(prevName);
@@ -413,32 +402,29 @@
                     if (index >= $li.length - 1) {
                         return false;
                     }
+
                     $next = $li.eq(index + 1);
                     $next.css("marginBottom", ($parent.height() + liMarginBottom) + "px");
                     $parent.stop().animate({
                         "top": liMarginBottom + $next.height() + liMarginBottom + $parent.height() + "px"
-                    }, 400, function () {
+                    }, 500, function () {
                         $parent.css("top", "0px");
                         $next.css("marginBottom", liMarginBottom + "px");
-
                         nextName = $next.find(".opt-label").text();
-                      	
-                      	//update answer
-                        let new_index = index+1,
+                        $next.after($parent);
+
+                        //update answer
+                        let new_index = index-1,
                         	old_ans = currName.split('').pop(),
                         	new_ans = nextName.split('').pop();
 
-                         _this.exchange(_this.new_options, index, new_index);
-                        if(_this.answer.indexOf(new_ans) == -1){
-                        	_this.answer = _this.answer.replace(old_ans, new_ans);
-                        }
-                        
-                        $next.after($parent);
-                        console.log(_this.options, _this.new_options);
+                        _this.exchange(_this.options, index, new_index);
+                        _this.exchange(_this.choices, index, new_index);
+                        _this.answer = _this.answer.replace(old_ans, new_ans);
 
                         $next.find(".opt-label").text(currName);
                         $parent.find(".opt-label").text(nextName);
-                    });					
+                    });				
 				});
 			},
 
@@ -463,7 +449,6 @@
 						return;								
 					}
 
-					//only one can be selected
 					if(opt.checked && _this.type == 1){
 						for(let i in _this.choices) {
 							if(i == index) {
@@ -504,15 +489,13 @@
 					Utils.lalert('请选择正确选项');
 					return;
 				} else {
-					this.saveEdit();
+					this.addCreate();
 				}
 			},
 
-			saveEdit(){
-				let api = global_.ques_update,
-				    ans = this.answer,
+			addCreate(){
+				let api = global_.ques_create,
 					data = {
-					id: this.id,
 					eid: this.exp_value,
 					type: this.type,
 					question: this.question,
@@ -520,7 +503,7 @@
 					option_a: this.options[0],
 					option_b: this.options[1],
 					analysis: this.analyze
-				}
+				};
 
 				if(this.options[2]) {
 					data.option_c = this.options[2];
@@ -534,81 +517,33 @@
 					data.option_e = this.options[4];
 				}
 
+				//console.log(data);
+
 				this.$http.post(api, data).then((resp)=>{
 					//console.log(resp);
-					Utils.lalert('试题编辑成功');
+					Utils.lalert('试题创建成功');
 					this.$router.go(-1);
 
 				}, (err)=>{
-					Utils.err_process.call(this, err, '试题编辑失败');
+					Utils.err_process.call(this, err, '试题创建失败')
 				});
 			},
 
 		},
 
-		mounted() {
+		mounted(){		
 			Utils.page_check_status.call(this).then(resp=>{
 				this.fillExpSelect(resp);
 			});	
 
-			let edit = this.$store.state.edit;
-			
-			if(!edit) {
-				this.$router.go(-1);
-
-			} else {			
-				this.type = 1;
-				this.prepDel();
-				this.prepAdd();
-				this.prepUp();
-				this.prepDown();
-				this.prepCorrect();
-				this.opts_num = this.rows_num();
-
-				let row = this.$store.state.row;
-				this.id = row.id;
-				this.type = row.type;
-				this.exp_value = row.eid;
-				this.question = row.question;
-				this.options[0] = row.option_a;
-				this.options[1] = row.option_b;
-				
-				if(row.option_c) {
-					this.options[2] = row.option_c;
-				}
-
-				if(row.option_d) {
-					this.options[3] = row.option_d;
-				}
-
-				if(row.option_e) {
-					this.options[4] = row.option_e;
-				}
-
-				this.initShow();
-				this.new_options = this.options.slice(0);
-				this.new_choices = this.choices.slice(0);
-
-				this.answer = row.answer;
-
-				if(row.answer.indexOf('A') != -1) {
-					this.choices[0] = true;
-				}
-				if(row.answer.indexOf('B') != -1) {
-					this.choices[1] = true;
-				}
-				if(row.answer.indexOf('C') != -1) {
-					this.choices[2] = true;
-				}
-				if(row.answer.indexOf('D') != -1) {
-					this.choices[3] = true;
-				}
-				if(row.answer.indexOf('E') != -1) {
-					this.choices[4] = true;
-				}
-				this.analyze = row.analysis;
-				console.log(this.new_options, this.options);
-			}
+			this.type = 1;
+			this.prepDel();
+			this.prepAdd();
+			this.prepUp();
+			this.prepDown();
+			this.prepCorrect();		
+			this.initShow();
+			this.opts_num = this.rows_num();			
 		}
 	}
 </script>
