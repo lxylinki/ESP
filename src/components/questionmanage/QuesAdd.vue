@@ -133,6 +133,7 @@
 						correct: false,
 					},																				
 				],
+				//
 				opt_names: ['选项A', '选项B', '选项C', '选项D', '选项E']
 			}
 		},
@@ -159,6 +160,16 @@
 				}				
 			},
 
+			//helper
+			findIdx(target_opt){
+				for(let i in this.opt_list) {
+					if(this.opt_list[i].id === target_opt.id) {
+						return Number(i);
+					}
+				}
+				return -1;
+			},
+
 			del_opt(opt) {
 				opt.show = false;
 				opt.text = '';
@@ -169,26 +180,26 @@
 					active_opts[i].name = this.opt_names[i];
 				}
 				this.opts_num = active_opts.length;
-				console.log(this.opt_list);
 			},
 
+			//idx is orig index in list
 			add_opt(idx) {
-				/*
-				if(idx === 4) {
-					console.log('reacherd max');
-					return;
+				let inactive_opts = this.inactive_rows(),
+					add_target = this.opt_list[idx];
 
-				} else {
-					let next_opt = this.opt_list[idx+1];
-					if(!next_opt.show) {
-						next_opt.show = true;
+				if(inactive_opts.length > 0) {
+					let i = this.findIdx(inactive_opts[0]);
+					let first_hidden = this.opt_list.splice(i, 1)[0];
+					let new_idx = this.findIdx(add_target);
+					this.opt_list.splice(new_idx+1, 0, first_hidden);
+					first_hidden.show = true;
+				}
 
-					} else {
-						let inactive_opts = this.inactive_rows();
-						inactive_opts[0].show = true;
-						console.log(inactive_opts[0]);
-					}
-				}*/
+				let active_opts = this.active_rows();
+				for(let i in active_opts) {
+					active_opts[i].name = this.opt_names[i];
+				}
+				this.opts_num = active_opts.length;
 			}
 		},
 
