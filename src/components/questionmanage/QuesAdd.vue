@@ -57,12 +57,18 @@
 		
 			<div class="opts-div">
 				<Option v-for="(opt, idx) in opt_list" 
+					 
 					 v-bind:key="opt.id"
 					 v-bind:opts_num="opts_num"
 					 v-bind:idx="idx"
 					 v-bind:opt="opt"
+
 					 v-on:delete="del_opt"
-					 v-on:add="add_opt"></Option>
+					 v-on:add="add_opt"
+					 v-on:select="select_opt"
+					 v-on:unselect="unselect_opt"
+					 v-on:mvup="mv_up"
+					 v-on:mvdown="mv_down"></Option>
 			</div>
 		</div>
 			
@@ -133,7 +139,7 @@
 						correct: false,
 					},																				
 				],
-				//
+				//for ease of final naming
 				opt_names: ['选项A', '选项B', '选项C', '选项D', '选项E']
 			}
 		},
@@ -149,6 +155,10 @@
 
 			goBack(){
 				this.$router.go(-1);
+			},
+
+			exchange(arr, i, j) {
+				arr.splice(j,1,...arr.splice(i, 1 , arr[j]));
 			},
 
 			fillExpSelect(profile) {
@@ -170,6 +180,7 @@
 				return -1;
 			},
 
+			//delete is hide
 			del_opt(opt) {
 				opt.show = false;
 				opt.text = '';
@@ -200,7 +211,64 @@
 					active_opts[i].name = this.opt_names[i];
 				}
 				this.opts_num = active_opts.length;
+			},
+
+			select_opt(idx) {
+				if(this.type == 1) {
+					for(let i in this.opt_list) {
+						if(i == idx) {
+							this.opt_list[i].correct = true;
+						} else {
+							this.opt_list[i].correct = false;
+						}
+					}					
+				} else if(this.type == 2) {
+					this.opt_list[idx].correct = true;
+				}
+			},
+
+			unselect_opt(opt) {
+				opt.correct = false;
+			},
+
+			//exchange with the first active above
+			mv_up(idx) {
+				if(idx === 0) {
+					return;
+
+				} else {
+					for(let i=idx-1; i>=0; i--) {
+						if(this.opt_list[i].show) {
+							this.exchange(this.opt_list, idx, i);
+							break;
+						}
+					}
+					let active_opts = this.active_rows();
+					for(let i in active_opts) {
+						active_opts[i].name = this.opt_names[i];
+					}
+				}
+			},
+
+			//exchange with the first active below
+			mv_down(idx) {
+				if(idx === 4) {
+					return;
+
+				} else {
+					for(let i=idx+1; i<=4; i++) {
+						if(this.opt_list[i].show) {
+							this.exchange(this.opt_list, idx, i);
+							break;
+						}						
+					}
+					let active_opts = this.active_rows();
+					for(let i in active_opts) {
+						active_opts[i].name = this.opt_names[i];
+					}					
+				}
 			}
+
 		},
 
 		mounted(){

@@ -13,13 +13,13 @@
 			</div>
 			
 			<div class="checkicon opt-correct">
-				<i class="iconfont unchecked-box" v-show="!opt.correct" v-on:click="opt.correct=true">&#xe63c;</i>
-			    <i class="iconfont checked-box" v-show="opt.correct" v-on:click="opt.correct=false">&#xe63e;</i>
+				<i class="iconfont unchecked-box" v-show="!opt.correct" v-on:click="select()">&#xe63c;</i>
+			    <i class="iconfont checked-box" v-show="opt.correct" v-on:click="unselect()">&#xe63e;</i>
 			</div>
 			
 			<div class="opt-up-down">
-				<i class="iconfont opt-up">&#xe7c6;</i>
-				<i class="iconfont opt-down">&#xe8ed;</i>
+				<i class="iconfont opt-up" v-on:click="mvUp()">&#xe7c6;</i>
+				<i class="iconfont opt-down" v-on:click="mvDown()">&#xe8ed;</i>
 			</div>
 		</div>		
 	</div>
@@ -41,6 +41,22 @@
 
 			add(){
 				this.$emit('add', this.idx);
+			},
+
+			select(){
+				this.$emit('select', this.idx);
+			},
+
+			unselect(){
+				this.$emit('unselect', this.opt);
+			},
+
+			mvUp(){
+				this.$emit('mvup', this.idx);
+			},
+
+			mvDown(){
+				this.$emit('mvdown', this.idx);
 			}
 		}
 	}
@@ -107,6 +123,7 @@
 	border:1px solid rgba(153,153,153,0.5);
 	border-radius:4px;
 }
+
 .opt-label {
 	 display: inline-block; 
 	 margin-right: 20px;
