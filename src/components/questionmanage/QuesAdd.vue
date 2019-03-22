@@ -391,12 +391,6 @@
 
 		},
 
-		watch: {
-			up_id(newVal, oldVal) {
-				console.log(oldVal, newVal);
-			}
-		},
-
 		mounted(){
 			Utils.page_check_status.call(this).then(resp=>{
 				this.fillExpSelect(resp);
