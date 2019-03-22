@@ -68,7 +68,10 @@
 					 v-on:select="select_opt"
 					 v-on:unselect="unselect_opt"
 					 v-on:mvup="mv_up"
-					 v-on:mvdown="mv_down"></Option>
+					 v-on:mvdown="mv_down"
+
+					 v-bind:class="{'animated-opt-up': opt.id == up_id, 
+					 				'animated-opt-down': opt.id == down_id}"></Option>
 			</div>
 		</div>
 			
@@ -143,7 +146,10 @@
 					},																				
 				],
 				//for ease of final naming
-				opt_names: ['选项A', '选项B', '选项C', '选项D', '选项E']
+				opt_names: ['选项A', '选项B', '选项C', '选项D', '选项E'],
+				opts: ['A', 'B', 'C', 'D', 'E'],
+				up_id: null,
+				down_id: null
 			}
 		},
 
@@ -183,13 +189,21 @@
 				return -1;
 			},
 
+			findActIdx(target_opt) {
+				let active_opts = this.active_rows();
+				for(let i in active_opts) {
+					if(active_opts[i].id === target_opt.id) {
+						return Number(i);
+					}
+				}
+				return -1;
+			},
+
 			//delete is hide
 			del_opt(opt) {
 				opt.show = false;
 				opt.text = '';
 				opt.correct= false;
-				let ans = opt.name.split('').pop();
-				this.answer = this.answer.replace(ans, '');
 
 				let active_opts = this.active_rows();
 				for(let i in active_opts) {
@@ -234,60 +248,94 @@
 
 			unselect_opt(opt) {
 				opt.correct = false;
-				let ans = opt.name.split('').pop();
-				this.answer = this.answer.replace(ans, '');
+			},
+
+			//set up_id
+			pre_up(idx) {
+				//remove down class
+				this.down_id = null;
+				let act_idx = this.findActIdx(this.opt_list[idx]);
+				if(act_idx === 0) {
+					return;
+				} else {
+					this.up_id = this.opt_list[idx].id;
+				}
 			},
 
 			//exchange with the first active above
 			mv_up(idx) {
-				if(idx === 0) {
-					return;
+				this.pre_up(idx);				
+				let opt_clicked = document.querySelectorAll('#option')[idx],
+					_this = this;
+				opt_clicked.addEventListener('animationend', switchData, false);
 
-				} else {
+				function switchData(){
 					for(let i=idx-1; i>=0; i--) {
-						if(this.opt_list[i].show) {
-							this.exchange(this.opt_list, idx, i);
+						if(_this.opt_list[i].show) {
+							_this.exchange(_this.opt_list, idx, i);
 							break;
 						}
 					}
-					let active_opts = this.active_rows();
+
+					let active_opts = _this.active_rows();
 					for(let i in active_opts) {
-						active_opts[i].name = this.opt_names[i];
+						active_opts[i].name = _this.opt_names[i];
 					}
+					//reset
+					_this.up_id = null;
+					opt_clicked.removeEventListener('animationend', switchData, false);
+				}
+			},
+
+			//set down_id
+			pre_down(idx) {
+				//remove up class
+				this.up_id = null;
+				let act_idx = this.findActIdx(this.opt_list[idx]);
+				if(act_idx === this.opts_num-1) {
+					return;
+				} else {
+					this.down_id = this.opt_list[idx].id;
 				}
 			},
 
 			//exchange with the first active below
 			mv_down(idx) {
-				if(idx === 4) {
-					return;
+				this.pre_down(idx);
+				let opt_clicked = document.querySelectorAll('#option')[idx],
+					_this = this;
+				opt_clicked.addEventListener('animationend', switchData, false);
 
-				} else {
+				function switchData(event){
 					for(let i=idx+1; i<=4; i++) {
-						if(this.opt_list[i].show) {
-							this.exchange(this.opt_list, idx, i);
+						if(_this.opt_list[i].show) {
+							_this.exchange(_this.opt_list, idx, i);
 							break;
 						}						
 					}
-					let active_opts = this.active_rows();
+					let active_opts = _this.active_rows();
 					for(let i in active_opts) {
-						active_opts[i].name = this.opt_names[i];
-					}					
-				}
+						active_opts[i].name = _this.opt_names[i];
+					}	
+					//reset
+					_this.down_id = null;
+					opt_clicked.removeEventListener('animationend', switchData, false);			
+				}				
+			},
+
+			collectAns(active_opts){
+				this.answer = '';
+				for(let i in active_opts) {
+					let opt = active_opts[i];
+					if(opt.correct) {
+						this.answer += this.opts[i];
+					}
+				}				
 			},
 
 			preCheck(){
 				let final_opts = this.active_rows();
-				
-				for(let opt of final_opts) {
-					if(opt.correct) {
-						let ans = opt.name.split('').pop();
-						if(this.answer.indexOf(ans) === -1) {
-							this.answer += ans;
-						}
-					}
-				}
-				
+
 				if(!this.exp_value) {
 					Utils.lalert('请选择所属实验');
 					return;
@@ -305,6 +353,7 @@
 					return;
 
 				} else {
+					this.collectAns(final_opts);
 					this.saveEdit();
 				}
 			},
@@ -365,7 +414,7 @@
 
 			} else {
 				let row = this.$store.state.row;
-				console.log(row);
+				//console.log(row);
 				this.id = row.id;
 				this.type = row.type;
 				this.exp_value = row.eid;
@@ -375,25 +424,29 @@
 
 				this.opt_list[0].text = row.option_a;
 				this.opt_list[1].text = row.option_b;
+				this.opts_num = 2;
 				
 				if(row.option_c) {
 					this.opt_list[2].text = row.option_c;
 					this.opt_list[2].show = true;
+					this.opts_num += 1;
 				}
 
 				if(row.option_d) {
 					this.opt_list[3].text = row.option_d;
 					this.opt_list[3].show = true;
+					this.opts_num += 1;
 				}
 
 				if(row.option_e) {
 					this.opt_list[4].text = row.option_e;
 					this.opt_list[4].show = true;
+					this.opts_num += 1;
 				}
 
-				let opts = ['A', 'B', 'C', 'D', 'E'];
-				for(let i in opts) {
-					if(row.answer.indexOf(opts[i]) != -1) {
+				//let opts = ['A', 'B', 'C', 'D', 'E'];
+				for(let i in this.opts) {
+					if(row.answer.indexOf(this.opts[i]) != -1) {
 						this.opt_list[i].correct = true;
 					}					
 				}
@@ -562,5 +615,59 @@ div>.mchoice input {
 
 .longinput {
 	box-sizing: border-box;
+}
+
+#option {
+	position: relative;
+	/*transition: all 10s;*/
+}
+
+@keyframes mvup{
+	0%   {bottom: 0;}
+	100% {bottom: 60px;}	
+}
+
+@-moz-keyframes mvup {
+	0%   {bottom: 0;}
+	100% {bottom: 60px;}	
+}
+
+@-webkit-keyframes mvup {
+	0%   {bottom: 0;}
+	100% {bottom: 60px;}
+}
+
+@-o-keyframes mvup {
+	0%   {bottom: 0;}
+	100% {bottom: 60px;}	
+}
+
+@keyframes mvdown{
+	0%   {top: 0;}
+	100% {top: 60px;}	
+}
+
+@-moz-keyframes mvdown {
+	0%   {top: 0;}
+	100% {top: 60px;}	
+}
+
+@-webkit-keyframes mvdown {
+	0%   {top: 0;}
+	100% {top: 60px;}
+}
+
+@-o-keyframes mvdown {
+	0%   {top: 0;}
+	100% {top: 60px;}	
+}
+.animated-opt-up {
+	/*background: yellowgreen;*/
+	animation: mvup .5s ease-in-out 1;
+}
+
+.animated-opt-down {
+	/*background: pink;*/
+	animation: mvdown .5s ease-in-out 1;
 }
 </style>

@@ -305,8 +305,6 @@
 				loading: null,
 				focus_qids:[],
 				showQbank: false
-				//a question from bank to exam {in-exam id: in-bank id}
-				//quesExamMap:{}
 			}
 		},
 
@@ -544,6 +542,11 @@
 	vertical-align: top;
 	display: inline-block;
 	width: 40%;
+	/*
+	transition: width 2s;
+	-moz-transition: width 2s;
+	-webkit-transition: width 2s;	
+	-o-transition: width 2s;*/
 }
 
 #rtable.fulltable {

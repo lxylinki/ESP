@@ -70,7 +70,8 @@
 					 v-on:mvup="mv_up"
 					 v-on:mvdown="mv_down"
 
-					 class='animated'></Option>
+					 v-bind:class="{'animated-opt-up': opt.id == up_id, 
+					 				'animated-opt-down': opt.id == down_id}"></Option>
 			</div>
 		</div>
 			
@@ -144,7 +145,9 @@
 					},																				
 				],
 				//for ease of final naming
-				opt_names: ['选项A', '选项B', '选项C', '选项D', '选项E']
+				opt_names: ['选项A', '选项B', '选项C', '选项D', '选项E'],
+				up_id: null,
+				down_id: null
 			}
 		},
 
@@ -178,6 +181,16 @@
 			findIdx(target_opt){
 				for(let i in this.opt_list) {
 					if(this.opt_list[i].id === target_opt.id) {
+						return Number(i);
+					}
+				}
+				return -1;
+			},
+
+			findActIdx(target_opt) {
+				let active_opts = this.active_rows();
+				for(let i in active_opts) {
+					if(active_opts[i].id === target_opt.id) {
 						return Number(i);
 					}
 				}
@@ -235,54 +248,90 @@
 				opt.correct = false;
 			},
 
+			//set up_id
+			pre_up(idx) {
+				//remove down class
+				this.down_id = null;
+				let act_idx = this.findActIdx(this.opt_list[idx]);
+				if(act_idx === 0) {
+					return;
+				} else {
+					this.up_id = this.opt_list[idx].id;
+				}
+			},
+
 			//exchange with the first active above
 			mv_up(idx) {
-				if(idx === 0) {
-					return;
+				this.pre_up(idx);				
+				let opt_clicked = document.querySelectorAll('#option')[idx],
+					_this = this;
+				opt_clicked.addEventListener('animationend', switchData, false);
 
-				} else {
+				function switchData(){
 					for(let i=idx-1; i>=0; i--) {
-						if(this.opt_list[i].show) {
-							this.exchange(this.opt_list, idx, i);
+						if(_this.opt_list[i].show) {
+							_this.exchange(_this.opt_list, idx, i);
 							break;
 						}
 					}
-					let active_opts = this.active_rows();
+
+					let active_opts = _this.active_rows();
 					for(let i in active_opts) {
-						active_opts[i].name = this.opt_names[i];
+						active_opts[i].name = _this.opt_names[i];
 					}
+					//reset
+					_this.up_id = null;
+					opt_clicked.removeEventListener('animationend', switchData, false);
+				}
+			},
+
+			//set down_id
+			pre_down(idx) {
+				//remove up class
+				this.up_id = null;
+				let act_idx = this.findActIdx(this.opt_list[idx]);
+				if(act_idx === this.opts_num-1) {
+					return;
+				} else {
+					this.down_id = this.opt_list[idx].id;
 				}
 			},
 
 			//exchange with the first active below
 			mv_down(idx) {
-				if(idx === 4) {
-					return;
+				this.pre_down(idx);
+				let opt_clicked = document.querySelectorAll('#option')[idx],
+					_this = this;
+				opt_clicked.addEventListener('animationend', switchData, false);
 
-				} else {
+				function switchData(event){
 					for(let i=idx+1; i<=4; i++) {
-						if(this.opt_list[i].show) {
-							this.exchange(this.opt_list, idx, i);
+						if(_this.opt_list[i].show) {
+							_this.exchange(_this.opt_list, idx, i);
 							break;
 						}						
 					}
-					let active_opts = this.active_rows();
+					let active_opts = _this.active_rows();
 					for(let i in active_opts) {
-						active_opts[i].name = this.opt_names[i];
-					}					
-				}
+						active_opts[i].name = _this.opt_names[i];
+					}	
+					//reset
+					_this.down_id = null;
+					opt_clicked.removeEventListener('animationend', switchData, false);			
+				}				
 			},
 
-			preCheck(){
-				let final_opts = this.active_rows();
-				
-				for(let opt of final_opts) {
+			collectAns(active_opts){
+				for(let i in active_opts) {
+					let opt = active_opts[i];
 					if(opt.correct) {
-						this.answer += opt.name.split('').pop();
+						this.answer += this.opts[i];
 					}
-				}
-				//console.log(this.answer);
-			
+				}				
+			},			
+
+			preCheck(){			
+				let final_opts = this.active_rows();
 				if(!this.exp_value) {
 					Utils.lalert('请选择所属实验');
 					return;
@@ -300,6 +349,7 @@
 					return;
 
 				} else {
+					this.collectAns(final_opts);
 					this.addCreate();
 				}
 			},
@@ -339,6 +389,12 @@
 				});			
 			}
 
+		},
+
+		watch: {
+			up_id(newVal, oldVal) {
+				console.log(oldVal, newVal);
+			}
 		},
 
 		mounted(){
@@ -510,5 +566,59 @@ div>.mchoice input {
 
 .longinput {
 	box-sizing: border-box;
+}
+
+#option {
+	position: relative;
+	/*transition: all 10s;*/
+}
+
+@keyframes mvup{
+	0%   {bottom: 0;}
+	100% {bottom: 60px;}	
+}
+
+@-moz-keyframes mvup {
+	0%   {bottom: 0;}
+	100% {bottom: 60px;}	
+}
+
+@-webkit-keyframes mvup {
+	0%   {bottom: 0;}
+	100% {bottom: 60px;}
+}
+
+@-o-keyframes mvup {
+	0%   {bottom: 0;}
+	100% {bottom: 60px;}	
+}
+
+@keyframes mvdown{
+	0%   {top: 0;}
+	100% {top: 60px;}	
+}
+
+@-moz-keyframes mvdown {
+	0%   {top: 0;}
+	100% {top: 60px;}	
+}
+
+@-webkit-keyframes mvdown {
+	0%   {top: 0;}
+	100% {top: 60px;}
+}
+
+@-o-keyframes mvdown {
+	0%   {top: 0;}
+	100% {top: 60px;}	
+}
+.animated-opt-up {
+	/*background: yellowgreen;*/
+	animation: mvup .5s ease-in-out 1;
+}
+
+.animated-opt-down {
+	/*background: pink;*/
+	animation: mvdown .5s ease-in-out 1;
 }
 </style>
