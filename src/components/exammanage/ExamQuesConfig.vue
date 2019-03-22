@@ -87,9 +87,9 @@
 		<div style="height: 10px;"></div>
 
 		<div id='tables'>
-			<div id='ltable' v-show="showQbank">
-				<span>试题库</span><br>
-				<span style="font-size: 14px;">点击添加完成可收起列表</span><br>
+			<div id='ltable' v-bind:class="{showleft: showQbank, hideleft: !showQbank}">
+				<span v-show="showQbank">试题库</span><br>
+				<span v-show="showQbank" style="font-size: 14px;">点击添加完成可收起列表</span><br>
 
 				<template>
 				  <el-table
@@ -143,7 +143,7 @@
 				  </el-table>
 				</template>	
 
-				<div class="tablefooter">
+				<div class="tablefooter" v-show="showQbank">
 					<div class="rownum">
 						<span>显示 </span>
 							<select v-model="rowsPerPage" v-on:change="pageSizeChange()" style="width: 60px; height: 25px;">
@@ -169,7 +169,7 @@
 			</div>
 
 
-			<div id='rtable' v-bind:class="{ fulltable: !showQbank }">
+			<div id='rtable' v-bind:class="{ fulltable: !showQbank, halftable: showQbank}">
 				<span>{{exam_name}}</span><br>
 				<span style="font-size: 14px;">添加试题：{{current_count}}  / 题数限制：{{limit}}</span><br>
 				<template>
@@ -541,17 +541,11 @@
 	position: relative;
 	vertical-align: top;
 	display: inline-block;
-	width: 40%;
 	/*
 	transition: width 2s;
 	-moz-transition: width 2s;
 	-webkit-transition: width 2s;	
 	-o-transition: width 2s;*/
-}
-
-#rtable.fulltable {
-	width: 90%;
-	margin-left: 10px;
 }
 
 #rtable {
@@ -596,5 +590,49 @@
 .add-complete-icon, .add-ques-icon {
 	margin-left: 10px;
 	font-size: 100%;
+}
+
+
+@keyframes showleft{
+	0%   {width: 0;}
+	100% {width: 40%;}	
+}
+
+@keyframes hideleft {
+	0%   {width: 40%;}
+	100% {width: 0;}	
+}
+
+@keyframes fulltable {
+	0%   {width: 40%;}
+	100% {width: 90%;}	
+}
+
+@keyframes halftable {
+	0%   {width: 90%;}
+	100% {width: 40%;}	
+}
+
+
+#ltable.showleft {
+	animation: showleft .2s ease-in-out 1;
+	width: 40%;
+}
+
+#ltable.hideleft {
+	animation: hideleft .2s ease-in-out 1;
+	width: 0;
+}
+
+
+#rtable.fulltable {
+	animation: fulltable .2s ease-in-out 1;
+	width: 90%;
+	margin-left: 10px;
+}
+
+#rtable.halftable {
+	animation: halftable .2s ease-in-out 1;
+	margin-left: 10px;	
 }
 </style>
