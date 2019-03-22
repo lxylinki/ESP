@@ -548,10 +548,6 @@
 	-o-transition: width 2s;*/
 }
 
-#rtable {
-	margin-left: 100px;
-}
-
 #tables {
 	margin-top: 10px;
 }
@@ -633,6 +629,6 @@
 
 #rtable.halftable {
 	animation: halftable .2s ease-in-out 1;
-	margin-left: 10px;	
+	margin-left: 100px;	
 }
 </style>

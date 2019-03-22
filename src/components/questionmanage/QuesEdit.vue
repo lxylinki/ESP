@@ -627,40 +627,11 @@ div>.mchoice input {
 	100% {bottom: 60px;}	
 }
 
-@-moz-keyframes mvup {
-	0%   {bottom: 0;}
-	100% {bottom: 60px;}	
-}
-
-@-webkit-keyframes mvup {
-	0%   {bottom: 0;}
-	100% {bottom: 60px;}
-}
-
-@-o-keyframes mvup {
-	0%   {bottom: 0;}
-	100% {bottom: 60px;}	
-}
-
 @keyframes mvdown{
 	0%   {top: 0;}
 	100% {top: 60px;}	
 }
 
-@-moz-keyframes mvdown {
-	0%   {top: 0;}
-	100% {top: 60px;}	
-}
-
-@-webkit-keyframes mvdown {
-	0%   {top: 0;}
-	100% {top: 60px;}
-}
-
-@-o-keyframes mvdown {
-	0%   {top: 0;}
-	100% {top: 60px;}	
-}
 .animated-opt-up {
 	/*background: yellowgreen;*/
 	animation: mvup .5s ease-in-out 1;
