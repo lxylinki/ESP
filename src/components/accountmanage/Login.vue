@@ -36,7 +36,6 @@
 </template>
 
 <script type="text/javascript">
-
 	import global_ from '../Global.js';
 	//import {setCookie, getCookie} from '../../assets/js/cookie.js';
 	import RSAKey from '../../assets/js/rsa.min.js'
@@ -47,17 +46,13 @@
 		mounted(){
 			Utils.login_check_status.call(this);
 			document.querySelector('.usrid').focus();
-			/*
-			if(getCookie('username')){
-				this.$router.push('/managermanage');
-			}*/
-			//this.check_status();
 		},
 
 		data(){
 			return {
 				username:'',
-				password:''
+				password:'',
+				epassword:''
 			}
 		},
 
@@ -68,77 +63,33 @@
 				}
 			},
 
-			/*
-			check_status(){
-				var profile = global_.status_check;
-
-				this.$http.post(profile, {}).then((resp)=>{
-					if(resp.body.group == global_.student_group) {
-						this.$router.push('/studentstats');
-					} else {
-						this.$router.push('/expmanage');
-					}
-					
-				}, (err)=>{
-					return;
-				});
-			},*/
-
 			login(){
-				let nonce, pk, ts, encrypt, epassword;
+				asyncReq.call(this);
+				async function asyncReq(){
+					this.epassword = await Utils.encrypt.call(this, this.password);
+					var api = global_.school_usr_login;
 
-				if(this.username === '' || this.password === ''){
-					layer.alert('请输入用户名和密码');
-
-				} else {
+					let data = {
+							'school_alias':'zy',
+							'username': this.username, 
+							'password': this.epassword,
+							'remember': 0
+					};
 					
-					//var encryptapi = '/mengoo/index.php/site/pk';
-					var encryptapi = global_.password_encrypt;
-
-					this.$http.post(encryptapi, {}).then((encrypt_response)=>{
-
-						nonce = encrypt_response.body.nonce;
-						pk = encrypt_response.body.pk;
-						ts = encrypt_response.body.ts;
-
-						/*-----------------------------------------------------------------------------------*/
-						let newEncrypter = new RSAKey();
-						newEncrypter.setPublic(pk,"10001");
-						epassword = Base.hex2b64(newEncrypter.encrypt(JSON.stringify([ts, nonce, this.password])));
-						/*-----------------------------------------------------------------------------------*/
-						let data = {
-								'school_alias':'zy',
-								'username': this.username, 
-								'password': epassword,
-								'remember': 0
-						};
-						
-						//var api = '/mengoo/index.php/site/login';
-						var api = global_.school_usr_login;
-
-						//this.$http.post().then(success, failure);
-						this.$http.post(api, data).then((resp)=>{
-						
-						//console.log(response);
+					this.$http.post(api, data).then((resp)=>{
 						if(resp.body.group == global_.student_group) {
 							this.$router.push('/studentstats');
 
 						} else {
 							this.$router.push('/expmanage');
 						}
-
-						}, (err)=>{
-							layer.alert('登录失败');
-							console.log(err);
-						});		
-
-					}, function(encrypt_err){
-						console.log(encrypt_err);
+						
+					}, (err)=>{
+						Utils.err_process.call(this, err, '登陆失败');
 					});
-							
 				}
 			}
-		},
+		}
 	}
 </script>
 
