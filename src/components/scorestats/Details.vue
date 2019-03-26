@@ -206,7 +206,6 @@ input[type="radio"]:checked + label::before {
 
 .checked-box {
 	color: #5c9cec;
-	cursor: pointer;
 	font-size: 150%;
 }
 .unchecked-box{
