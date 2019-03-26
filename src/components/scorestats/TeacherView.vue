@@ -58,8 +58,7 @@
 			      :highlight-current-row="true"
 			      :data="scorelist"
 			      @row-click="invokeShowRight"
-			      :row-class-name="row_name"
-			      >
+			      :row-class-name="row_name">
 
 					<el-table-column
 					  label="序号"
@@ -103,7 +102,7 @@
 			      	</el-button> -->
 			      	<!--<el-button type="text" @click="tableData.splice(scope.$index, 1)">-->
 			      	<!--<el-button class="op" type="text" @click="delRow(scope.$index)">-->
-			      	<el-button class="op" style="color: #0099ff;" type="text" @click="showRight(scope.row, scope.$index)">
+			      	<el-button class="op" type="text">
 			      		详情 <!--<i class="iconfont" style="color: #0099ff;"> &#xe629;</i>-->
 			      	</el-button>
 
