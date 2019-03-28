@@ -68,16 +68,10 @@
 
 .clicked {
 	transform: rotate(180deg);
-	-o-transform: rotate(180deg);
-	-moz-transform: rotate(180deg);
-	-webkit-transform: rotate(180deg);
 }
 
 .unclicked {
 	transform: rotate(0deg);
-	-o-transform: rotate(0deg);
-	-moz-transform: rotate(0deg);
-	-webkit-transform: rotate(0deg);
 }
 
 .start-icon {
@@ -119,9 +113,7 @@
 .asideMenu .asideMenu .oneMenu {
 	box-sizing: border-box;
 	text-align: left;
-	border-top: none;
-	border-bottom: none;
-	border-right: none;
+	border: none;
 	padding-top: 5px;
 	padding-left: 15px;
 }
@@ -151,9 +143,6 @@
 .sub-items-enter-active, .sub-items-leave-active {
  	/*transition: max-height 3s ease;*/
 	transition: all .5s;
-	-moz-transition: all .5s; 
-	-webkit-transition: all .5s; 
-	-o-transition: all .5s; 
 }
 
 .sub-items-enter, .sub-items-leave-to {
