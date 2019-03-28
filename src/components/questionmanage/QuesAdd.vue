@@ -146,6 +146,7 @@
 				],
 				//for ease of final naming
 				opt_names: ['选项A', '选项B', '选项C', '选项D', '选项E'],
+				opts: ['A', 'B', 'C', 'D', 'E'],
 				up_id: null,
 				down_id: null
 			}
@@ -332,6 +333,8 @@
 
 			preCheck(){			
 				let final_opts = this.active_rows();
+				this.collectAns(final_opts);
+
 				if(!this.exp_value) {
 					Utils.lalert('请选择所属实验');
 					return;
@@ -349,7 +352,6 @@
 					return;
 
 				} else {
-					this.collectAns(final_opts);
 					this.addCreate();
 				}
 			},

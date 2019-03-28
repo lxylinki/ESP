@@ -335,6 +335,7 @@
 
 			preCheck(){
 				let final_opts = this.active_rows();
+				this.collectAns(final_opts);
 
 				if(!this.exp_value) {
 					Utils.lalert('请选择所属实验');
@@ -353,7 +354,6 @@
 					return;
 
 				} else {
-					this.collectAns(final_opts);
 					this.saveEdit();
 				}
 			},
