@@ -162,7 +162,8 @@
 						label:'50',
 						value: 50
 					}
-				],				
+				],	
+				loading: null			
 			}
 		},
 
@@ -206,6 +207,7 @@
 					this.totalPage = resp.body.total_page;
 					this.filterData(page);
 					//console.log(resp);
+					layer.close(this.loading);
 
 				}, (err)=>{
 					Utils.err_process.call(this, err, '请求模板列表失败');
@@ -247,6 +249,10 @@
 					Utils.err_process.call(this, err, '删除模板失败');
 				});
 			}
+		},
+
+		beforeMount(){
+			this.loading = layer.load(1, {shade: false});
 		},
 
 		mounted(){

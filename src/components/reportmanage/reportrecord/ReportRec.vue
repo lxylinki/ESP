@@ -285,6 +285,7 @@
 					}
 					this.filterData(page);
 					//console.log(resp);
+					layer.close(this.loading);
 
 				}, (err)=>{
 					Utils.err_process.call(this, err, '请求报告记录列表失败');
@@ -323,6 +324,10 @@
 				this.$store.commit('setCurSearch', this.search_state);
 				this.$router.push('/reportgrade');
 			}		
+		},
+		
+		beforeMount(){
+			this.loading = layer.load(1, {shade: false});
 		},
 
 		mounted(){
