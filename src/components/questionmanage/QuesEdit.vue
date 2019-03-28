@@ -236,7 +236,11 @@
 				if(this.type == 1) {
 					for(let i in this.opt_list) {
 						if(i == idx) {
-							this.opt_list[i].correct = true;
+							if(this.opt_list[i].text.length > 0) {
+								this.opt_list[i].correct = true;
+							} else {
+								Utils.lalert('请输入选项');
+							}
 						} else {
 							this.opt_list[i].correct = false;
 						}

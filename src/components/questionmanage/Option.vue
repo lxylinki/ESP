@@ -52,6 +52,17 @@
 			mvDown(){
 				this.$emit('mvdown', this.idx);
 			}
+		},
+
+		watch: {
+			opt: {
+				handler(newVal, oldVal) {
+					if(this.opt.text.length === 0) {
+						this.opt.correct = false;
+					}
+				},
+				deep: true
+			}
 		}
 	}
 </script>

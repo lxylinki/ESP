@@ -6,6 +6,7 @@ Vue.use(VueRouter);
 
 //0. log in page
 const Login = ()=> import('@/components/accountmanage/Login.vue');
+const TestLogin = ()=> import('@/components/accountmanage/TestLogin.vue');
 //const MobileLogin = ()=> import('@/components/accountmanage/MobileLogin.vue');
 const AppInner = ()=> import('@/AppInner.vue');
 
@@ -72,13 +73,12 @@ const viewGrade = ()=> import('@/components/reportmanage/studentscore/viewGrade.
 //2. set route paths
 const myRoutes = [
 	{path: '/login', meta: {title: '登陆'}, component: Login},
-	//{path: '/mlogin', meta: {title: '登陆'}, component: MobileLogin},
+	{path: '/test_login', meta: {title: '测试登陆'}, component: TestLogin},
 	/*Dummy page, not for visiting*/
 	{path: '/esp', 
 	 meta: {title: 'ESP'}, 
 	 component: AppInner,
 	 children:[
-	 	//{path: '/accmanage', meta: {title: '账号管理'}, component: AccountManage},
 		{path: '/classmanage',  meta: {title: '班级管理'}, component: ClassManage},
 		{path: '/classadd',  meta: {title: '班级创建'}, component: ClassAdd},
 		{path: '/classedit', meta: {title: '班级创建'}, component: ClassEdit},

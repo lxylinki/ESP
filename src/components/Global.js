@@ -3,6 +3,7 @@
 	const url_prefix = '/mengoo-esp/';
 
 	const school_usr_login = url_prefix + 'site/login';
+	const school_test_login = url_prefix + 'esp/site/login';
 	//const school_usr_login = url_prefix + 'esp/site/esp-login';
 
 	const password_encrypt = url_prefix + 'site/pk';
@@ -219,5 +220,7 @@
 		report_join,
 		report_upload,
 		report_answer,
-		report_submit
+		report_submit,
+
+		school_test_login
 	}
