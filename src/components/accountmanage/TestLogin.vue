@@ -44,7 +44,7 @@
 
 	export default {
 		mounted(){
-			Utils.login_check_status.call(this);
+			//Utils.test_login_check_status.call(this);
 			document.querySelector('.usrid').focus();
 		},
 
@@ -66,13 +66,15 @@
 			login(){
 				asyncReq.call(this);
 				async function asyncReq(){
-					this.epassword = await Utils.encrypt.call(this, this.password);
+					this.epassword = await Utils.test_encrypt.call(this, this.password);
 					var api = global_.school_test_login;
 
 					let data = {
-							'school_alias':'zy',
-							'username': this.username, 
-							'password': this.epassword
+							"data": {
+								'school_alias':'zy',
+								'username': this.username, 
+								'password': this.epassword
+							}
 					};
 					
 					this.$http.post(api, data).then((resp)=>{

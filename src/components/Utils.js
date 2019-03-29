@@ -49,6 +49,29 @@ function encrypt(pswd){
 	});
 }
 
+function test_encrypt(pswd){
+	return new Promise((resolve, reject)=>{
+		let nonce, pk, ts, encrypt, epassword;
+		var encryptapi = global_.test_encrypt;
+
+		this.$http.post(encryptapi, {}).then((encrypt_response)=>{
+
+			nonce = encrypt_response.body.data.nonce;
+			pk = encrypt_response.body.data.pk;
+			ts = encrypt_response.body.data.ts;	
+			
+			let newEncrypter = new RSAKey();
+			newEncrypter.setPublic(pk,"10001");
+			epassword = Base.hex2b64(newEncrypter.encrypt(JSON.stringify([ts, nonce, pswd])));
+			resolve(epassword);
+
+		},(err)=>{
+			Utils.lalert('请求加密失败');
+			console.log(err);
+		});			
+	});
+}
+
 function convTime(ntime) {
 	function add0(m){
 		return m<10?'0'+m:m 
@@ -290,5 +313,6 @@ export default {
 	reqTeacherList,
 	reqAllReport,
 	obj_equal,
-	contains_obj
+	contains_obj,
+	test_encrypt
 }

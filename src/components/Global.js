@@ -1,10 +1,11 @@
-	//const url_prefix = '/mengoo/index.php/';
-	//const url_prefix = '/mengoo/';
 	const url_prefix = '/mengoo-esp/';
 
 	const school_usr_login = url_prefix + 'site/login';
+
+	//test
 	const school_test_login = url_prefix + 'esp/site/login';
-	//const school_usr_login = url_prefix + 'esp/site/esp-login';
+	const test_encrypt = url_prefix + 'esp/site/pk';
+
 
 	const password_encrypt = url_prefix + 'site/pk';
 	const logout = url_prefix + 'site/logout';
@@ -222,5 +223,6 @@
 		report_answer,
 		report_submit,
 
-		school_test_login
+		school_test_login,
+		test_encrypt
 	}
