@@ -6,7 +6,7 @@
 				
 				<div class="loginheader">
 					<div class="decor"></div>
-					<div class="logintitle">用户登录</div>
+					<div class="logintitle">测试登录</div>
 					<img src="../../assets/esplogo.png" class="logo">
 				</div>
 
@@ -44,7 +44,7 @@
 
 	export default {
 		mounted(){
-			Utils.login_check_status.call(this);
+			//Utils.test_login_check_status.call(this);
 			document.querySelector('.usrid').focus();
 		},
 
@@ -66,22 +66,24 @@
 			login(){
 				asyncReq.call(this);
 				async function asyncReq(){
-					this.epassword = await Utils.encrypt.call(this, this.password);
-					var api = global_.school_usr_login;
+					this.epassword = await Utils.test_encrypt.call(this, this.password);
+					var api = global_.school_test_login;
 
 					let data = {
-							'school_alias':'zy',
-							'username': this.username, 
-							'password': this.epassword,
-							'remember': 0
+							"data": {
+								'school_alias':'zy',
+								'username': this.username, 
+								'password': this.epassword
+							}
 					};
 					
 					this.$http.post(api, data).then((resp)=>{
 						if(resp.body.group == global_.student_group) {
-							this.$router.push('/studentstats');
+							//this.$router.push('/studentstats');
+							console.log('This is student user.');
 
 						} else {
-							this.$router.push('/expmanage');
+							//this.$router.push('/expmanage');
 						}
 						
 					}, (err)=>{

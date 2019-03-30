@@ -235,6 +235,7 @@
 
 					this.filterData(page);
 					//console.log(resp);
+					layer.close(this.loading);
 				}, (err)=>{
 					Utils.err_process.call(this, err, '请求报告成绩失败');
 				});
@@ -282,6 +283,10 @@
 			pageSizeChange(){
 				this.loadPage(1);
 			}
+		},
+		
+		beforeMount(){
+			this.loading = layer.load(1, {shade: false});
 		},
 
 		mounted(){

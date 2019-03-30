@@ -257,6 +257,7 @@
 						item.end_time = Utils.convTime(item.ended_at);
 					}
 					this.filterData(page);
+					layer.close(this.loading);
 				}, (err)=>{
 					Utils.err_process.call(this, err, '请求实验报告列表失败');
 				});
@@ -354,6 +355,10 @@
 				this.$store.commit('setCurSearch', this.search_state);
   				this.$router.push('/reportstats');
   			}
+		},
+		
+		beforeMount(){
+			this.loading = layer.load(1, {shade: false});
 		},
 
 		mounted(){

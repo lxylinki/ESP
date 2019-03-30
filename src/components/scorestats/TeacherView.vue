@@ -58,8 +58,7 @@
 			      :highlight-current-row="true"
 			      :data="scorelist"
 			      @row-click="invokeShowRight"
-			      :row-class-name="row_name"
-			      >
+			      :row-class-name="row_name">
 
 					<el-table-column
 					  label="序号"
@@ -103,7 +102,7 @@
 			      	</el-button> -->
 			      	<!--<el-button type="text" @click="tableData.splice(scope.$index, 1)">-->
 			      	<!--<el-button class="op" type="text" @click="delRow(scope.$index)">-->
-			      	<el-button class="op" style="color: #0099ff;" type="text" @click="showRight(scope.row, scope.$index)">
+			      	<el-button class="op" type="text">
 			      		详情 <!--<i class="iconfont" style="color: #0099ff;"> &#xe629;</i>-->
 			      	</el-button>
 
@@ -375,7 +374,6 @@
 
 		     loadMore(){
 		     	let score_table = document.querySelector(".score_table .el-table__body-wrapper"),
-		     		jq_score_table = $(".score_table .el-table__body-wrapper"),
                 	scrollTop = score_table.scrollTop,
                 	scrollHeight = score_table.scrollHeight,
                 	viewHeight = score_table.offsetHeight;
@@ -403,30 +401,23 @@
 
 			 mousewheel(obj, downfn, upfn) {
 		        obj.onmousewheel = fn;
-
 		        if (obj.addEventListener) {
 		            obj.addEventListener('DOMMouseScroll', fn, false);
 		        }
 
 		        function fn(ev) {
-		            var ev = ev || event;
-		            var b = true;
+		            let up = true;
 		            if (ev.wheelDelta) {
-		                b = ev.wheelDelta > 0 ? true : false;
-
+		                up = ev.wheelDelta > 0 ? true : false;
 		            } else {
-		                b = ev.detail < 0 ? true : false;
+		                up = ev.detail < 0 ? true : false;
 		            }
-		            if(b) {
-		                upfn&&upfn();
 
+		            if(up) {
+		                upfn && upfn();
 		            } else {
-		                downfn&&downfn();
+		                downfn && downfn();
 		            }
-		            /*
-		            if (ev.preventDefault) {
-		                ev.preventDefault();
-		            }*/
 		            return true;
 		        }
 			}

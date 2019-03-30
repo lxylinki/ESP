@@ -74,7 +74,7 @@
 			       	<template slot-scope="scope">
 			      	<!--<el-button type="text" @click="tableData.splice(scope.$index, 1)">-->
 			      	<!--<el-button class="op" type="text" @click="delRow(scope.$index)">-->
-			      	<el-button class="op" type="text" @click="showRight(scope.row, scope.$index)">
+			      	<el-button class="op" type="text">
 			      		详情 <!--<i class="iconfont" style="color: #0099ff;"> &#xe629;</i>-->
 			      	</el-button>
 
@@ -186,10 +186,15 @@
 		     		//when body is not null
 		     		if(resp.body) {
 		     			this.scorelist = resp.body._list;
+		     		} else {
+		     			layer.close(this.loading);
+		     			return;
 		     		}
 
 		     		if (this.scorelist.length == 0) {
 		     			this.right_panel = false;
+		     			layer.close(this.loading);
+		     			return;
 
 		     		} else {
 		     			this.showRight(this.scorelist[0], this.scorelist[0].ridx);
@@ -216,7 +221,6 @@
 		     	this.isInit = true;
 		     	this.$refs.scoretable.setCurrentRow(this.$refs.scoretable.data[idx]);
 
-		     	//console.log(row);
 		     	this.class_value = row.class_id;
 		     	this.isLeft = true;
 		     	let api = global_.more_records;
@@ -231,20 +235,6 @@
 		     		this.right_panel = true;
 		     		this.records = resp.body;
 		     		layer.close(this.loading);
-
-		     		/*
-		     		let api = global_.exp_exam_list;
-		     		let data = {
-		     			"record_id": row.id
-		     		}		 
-		     		this.$http.post(api, data).then((resp)=>{
-		     			this.exam_records = resp.body;
-		     			//console.log(this.exam_records);
-		     			layer.close(this.loading);
-
-		     		}, (err)=>{
-		     			Utils.err_process.call(this, err, '请求实验考核记录失败');
-		     		});*/
 
 		     	}, (err)=>{
 		     		Utils.err_process.call(this, err, '请求实验考核记录失败');

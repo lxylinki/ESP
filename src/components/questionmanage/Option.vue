@@ -8,8 +8,8 @@
 			</div>				
 
 			<div class="opt-add-del">
-				<i class="iconfont opt-add" v-on:click="add()" v-bind:class="{black: opts_num < 5, white: opts_num === 5}">&#xe62d;</i>
-				<i class="iconfont opt-del" v-on:click="del()" v-bind:class="{black: opts_num > 2, white: opts_num === 2}">&#xe6a9;</i>
+				<i class="iconfont opt-add" v-on:click="add()" v-bind:class="{black: opts_num < 5, white: opts_num >= 5}">&#xe62d;</i>
+				<i class="iconfont opt-del" v-on:click="del()" v-bind:class="{black: opts_num > 2, white: opts_num <= 2}">&#xe6a9;</i>
 			</div>
 			
 			<div class="checkicon opt-correct">
@@ -52,6 +52,17 @@
 			mvDown(){
 				this.$emit('mvdown', this.idx);
 			}
+		},
+
+		watch: {
+			opt: {
+				handler(newVal, oldVal) {
+					if(this.opt.text.length === 0) {
+						this.opt.correct = false;
+					}
+				},
+				deep: true
+			}
 		}
 	}
 </script>
@@ -75,6 +86,7 @@
 
 .white {
 	color: white;
+	pointer-events: none;
 }
 
 .opt-up, .opt-down {

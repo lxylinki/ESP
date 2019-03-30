@@ -1,9 +1,11 @@
-	//const url_prefix = '/mengoo/index.php/';
-	//const url_prefix = '/mengoo/';
 	const url_prefix = '/mengoo-esp/';
 
 	const school_usr_login = url_prefix + 'site/login';
-	//const school_usr_login = url_prefix + 'esp/site/esp-login';
+
+	//for test only
+	const school_test_login = url_prefix + 'esp/site/login';
+	const test_encrypt = url_prefix + 'esp/site/pk';
+
 
 	const password_encrypt = url_prefix + 'site/pk';
 	const logout = url_prefix + 'site/logout';
@@ -11,8 +13,6 @@
 	const batch_upload = url_prefix + 'site/batch-signup';
 	const status_check = url_prefix + 'site/profile';
 
-
-	const school_list = url_prefix + 'user/school/search';
 
 	const teacher_list = url_prefix + 'user/teacher/search';
 	const teacher_create = url_prefix + 'user/teacher/create';
@@ -24,8 +24,6 @@
 	const student_update = url_prefix + 'user/student/update';
 	const student_delete = url_prefix + 'user/student/delete';
 
-
-	//const exp_list = url_prefix + 'esp_admin/experiment/search';
 	const exp_list = url_prefix + 'esp_admin/experiment-assign/assign-list';
 	const exp_slist = url_prefix + 'esp_admin/experiment-assign/list';
 	const exp_tlist = url_prefix + 'esp_admin/experiment-assign/teacher-list';
@@ -33,26 +31,21 @@
 	const exp_teacher_add = url_prefix + 'esp_admin/experiment-auth/add-teachers';
 	const exp_teacher_list = url_prefix + 'esp_admin/experiment-auth/list';
 	const exp_teacher_delete = url_prefix + 'esp_admin/experiment-auth/del-teachers';
-	//const exp_check = url_prefix + 'esp_admin/experiment/questions';
-	//const exp_create = url_prefix + 'esp_admin/experiment-assign/create';
-	//const exp_update = url_prefix + 'esp_admin/experiment/update';
-	//const exp_delete = url_prefix + 'esp_admin/experiment/delete';
+
 
 	const expcatag_list = url_prefix + 'esp_admin/experiment-category/list';
 
-	//const exam_list = url_prefix + 'esp_admin/exam/search';
 	const exam_list = url_prefix + 'esp_admin/examine/list';
-	//const exam_create = url_prefix + 'esp_admin/examine/create';
-	//const exam_update = url_prefix + 'esp_admin/exam/update';
-	//const exam_delete = url_prefix + 'esp_admin/exam/delete';
 	const exam_ques_list = url_prefix + 'esp_admin/examine-questions/list';
 	const exam_ques_create = url_prefix + 'esp_admin/examine-questions/create';
 	const exam_ques_delete = url_prefix + 'esp_admin/examine-questions/delete';
+
 
 	const ques_list = url_prefix + 'esp_admin/questions-bank/list';
 	const ques_create = url_prefix + 'esp_admin/questions-bank/create';
 	const ques_update = url_prefix + 'esp_admin/questions-bank/update';
 	const ques_delete = url_prefix + 'esp_admin/questions-bank/delete';
+
 
 	const class_create = url_prefix + 'user/school-class/create';
 	const class_addteacher = url_prefix + 'user/school-class/add-teacher';
@@ -115,7 +108,7 @@
 	const report_mark = url_prefix + 'exam/paper-card/mark'; //分数
 	const report_rec_mark = url_prefix + 'exam/exam-record/mark'; //评语，最终
 
-	// exp report score
+	//exp report score
 	const report_stats_list = url_prefix + 'exam/exam-stats/user-list';
 
 	export default {
@@ -128,8 +121,6 @@
 		get_template,
 		batch_upload,
 		status_check,
-
-		school_list,
 		
 		teacher_list,
 		teacher_create,
@@ -144,10 +135,6 @@
 		exp_list,
 		exp_tlist,
 		exp_slist,
-		//exp_check,
-		//exp_create,
-		//exp_update,
-		//exp_delete,
 		exp_teacher_add,
 		exp_teacher_list,
 		exp_teacher_delete,
@@ -155,9 +142,6 @@
 		expcatag_list,
 
 		exam_list,
-		//exam_create,
-		//exam_update,
-		//exam_delete,
 		exam_ques_list,
 		exam_ques_create,
 		exam_ques_delete,
@@ -219,5 +203,8 @@
 		report_join,
 		report_upload,
 		report_answer,
-		report_submit
+		report_submit,
+
+		school_test_login,
+		test_encrypt
 	}

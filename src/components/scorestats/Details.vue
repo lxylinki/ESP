@@ -206,14 +206,15 @@ input[type="radio"]:checked + label::before {
 
 .checked-box {
 	color: #5c9cec;
-	cursor: pointer;
 	font-size: 150%;
 }
+
 .unchecked-box{
 	color: #c2c7cb;
 	font-size: 150%;
 	display: inline-block;
 }
+
 .opt-a, .opt-b, .opt-c, .opt-d, .opt-e {
 	display: inline-block;
 }
