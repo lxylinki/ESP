@@ -155,7 +155,7 @@
 
 				//create template
 				function last(real_resp) {
-					console.log(real_resp.body);
+					//console.log(real_resp.body);
 					let api = global_.report_tpl_create;
 					let data = {
 						'name': _this.tpl_name,
@@ -178,6 +178,7 @@
 				function next(pre_resp){
 					if(pre_resp.body.id && pre_resp.body.fid) {
 						// file exists
+						Utils.lalert('文件已存在');
 						return;
 					} else {
 						// need to real upload
@@ -221,6 +222,7 @@
 					return;
 				}
 				
+				/*
 				let _this = this;
 				function next(pre_resp){
 					if(pre_resp.body.id && pre_resp.body.fid) {
@@ -232,7 +234,7 @@
 						_this.real_upload.call(_this, _this.upfile);
 					}
 				}
-				this.pre_upload(_this.upfile).then(next);
+				this.pre_upload(_this.upfile).then(next);*/
 			},
 
 			goBack(){
