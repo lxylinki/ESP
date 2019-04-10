@@ -160,8 +160,11 @@
 						'id': this.exam_id
 					}
 					this.$http.post(api, data).then((resp)=>{
-						this.exp_note = resp.body[0].paper[0].note;
-						this.full_score = resp.body[0].full_score;
+						let data = resp.body[0];
+						this.exp_note = data.paper[0].note;
+						this.full_score = data.full_score;
+						this.start_time = Utils.convTime(data.started_at);
+						this.end_time = Utils.convTime(data.ended_at);
 						resolve(resp);
 					}, (err)=>{
 						Utils.err_process.call(this, err, '查看实验详情失败');
@@ -264,8 +267,8 @@
 
 				this.record_id = this.exam_record.id;
 				this.exam_id = this.exam_record.exam_id;
-				this.start_time = Utils.convTime(this.exam_record.joined_at);
-				this.end_time = Utils.convTime(this.exam_record.updated_at);
+				// this.start_time = Utils.convTime(this.exam_record.joined_at);
+				// this.end_time = Utils.convTime(this.exam_record.updated_at);
 				this.graded_score = this.exam_record.score;
 				this.graded = this.exam_record.has_marked == 1?true:false;
 				this.comment = this.exam_record.mark_text;
