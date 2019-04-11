@@ -159,7 +159,7 @@
 	padding-left: 10px;
 	padding-right: 10px;
 	padding-top: 5px;
-	width: 85%;
+	width: 87%;
 	height: 36px;
 	border-radius: 4px;
 	border: 1px solid rgba(204, 204, 204, 0.5);
