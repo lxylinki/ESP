@@ -20,7 +20,10 @@
 		</div>
 
 		<div class="display-group">
-			<embed class="display-area" v-show="fileIsPdf()" :src="file_src" type="application/pdf" align="left">
+			<div class="display-area" v-show="fileIsPdf()">
+				<embed :src="file_src" type="application/pdf" align="left">
+				<el-button class="full-screen-btn addbtn" v-on:click="downloadFile()">进入全屏</el-button>
+			</div>
 
 			<div class="display-area" v-show="!fileIsPdf()">
 				<img class="thumbnail" src=""><br>
@@ -326,7 +329,7 @@
 	text-align: center;
 }
 
-.display-area {
+.display-area, .display-area embed {
 	width:1140px;
 	height:500px;
 	background:rgba(242, 242, 242, 1);
@@ -341,6 +344,13 @@
 .addbtn {
 	position: relative;
 	top: 140px;
+}
+
+.full-screen-btn.addbtn {
+	position: relative;
+	top: -80px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .img-label {
