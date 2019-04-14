@@ -4,8 +4,7 @@
 
 	    	<div class="select-header select-header-normal">
 		    	<input type="text" class="select-header-text" v-on:focus="showToggle=true" v-model="selected_item" readonly="readonly" placeholder="请选择"></input>
-				<i class="iconfont togglesign" v-on:click="toggleList()" v-show="!showToggle">&#xe607;</i>
-				<i class="iconfont togglesign" v-on:click="toggleList()" v-show="showToggle">&#xe608;</i>
+				<i class="iconfont togglesign" v-on:click="toggleList()" v-bind:class="{unclicked: !showToggle, clicked: showToggle}">&#xe637;</i>
 				<div class="place-holder" v-show="showToggle"></div>
 				<input type="text" class="select-sub-header" v-show="showToggle" v-model="item_search_state" placeholder="请搜索"></input>
 	    	</div>
@@ -109,6 +108,15 @@
 	position: relative;
 }
 
+
+.clicked {
+	transform: rotate(0deg);
+}
+
+.unclicked {
+	transform: rotate(180deg);
+}
+
 .select-header {
 	background: #ffffff;
 	box-sizing: border-box;
@@ -151,7 +159,7 @@
 	padding-left: 10px;
 	padding-right: 10px;
 	padding-top: 5px;
-	width: 85%;
+	width: 87%;
 	height: 36px;
 	border-radius: 4px;
 	border: 1px solid rgba(204, 204, 204, 0.5);
@@ -196,6 +204,8 @@ input::-webkit-input-placeholder {
 	font-size: 12px;
 	color: #cccccc;
 	cursor: pointer;
+	margin-top: 5px;
+	transition: all .3s ease 0s;
 }
 
 .select-header-text, .togglesign {
