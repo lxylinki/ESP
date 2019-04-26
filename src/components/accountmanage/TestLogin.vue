@@ -37,9 +37,6 @@
 
 <script type="text/javascript">
 	import global_ from '../Global.js';
-	//import {setCookie, getCookie} from '../../assets/js/cookie.js';
-	import RSAKey from '../../assets/js/rsa.min.js'
-	import Base from '../../assets/js/base64.js'
 	import Utils from '../Utils.js';
 
 	export default {
