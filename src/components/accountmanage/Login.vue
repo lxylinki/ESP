@@ -67,7 +67,8 @@
 					var api = global_.school_usr_login;
 
 					let data = {
-							'school_alias':'zy',
+							//'school_alias':'zy',
+							'school_alias': this.$route.query.school? this.$route.query.school: 'zy',
 							'username': this.username, 
 							'password': this.epassword,
 							'remember': 0

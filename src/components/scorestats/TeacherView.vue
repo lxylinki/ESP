@@ -281,6 +281,11 @@
 		     	this.$http.post(record_api, req_data).then((resp)=>{
 		     		if(resp.body) {
 		     			this.scorelist = resp.body._list;
+		     			if(this.scorelist.length === 0) {
+		     				if(this.loading) {
+		     					layer.close(this.loading);
+		     				}
+		     			}
 		     		}
 		     		if (this.scorelist.length == 0) {
 		     			this.right_panel = false;

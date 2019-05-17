@@ -274,8 +274,8 @@
 							item.class_name = resp.body.classes[item.class_id].name;
 						}
 						
-						item.submit_time = Utils.convTime(item.submitted_at);
-						item.grade_time = Utils.convTime(item.marked_at);
+						item.submit_time = item.submitted_at? Utils.convTime(item.submitted_at): '--';
+						item.grade_time = item.marked_at? Utils.convTime(item.marked_at): '--';
 						
 						if(resp.body.users[item.marked_by]) {
 							item.grader_name = resp.body.users[item.marked_by].realname;
